@@ -69,6 +69,7 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <CallingConvention>VectorCall</CallingConvention>
       <CompileAs>CompileAsC</CompileAs>
+      <UndefinePreprocessorDefinitions>SOURCE_HACK;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

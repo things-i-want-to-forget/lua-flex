@@ -20,6 +20,7 @@ public:
 	inline void Approach(const QAngle &other_ang, float amount);
 	inline bool IsZero(void) const;
 	inline void Zero(void);
+	inline const char *typestring(void) const { return "Angle"; }
 	inline Vector &ToVector(Vector &v) const
 	{
 		extern Vector &AngleVectors(const QAngle &angles, Vector &v);

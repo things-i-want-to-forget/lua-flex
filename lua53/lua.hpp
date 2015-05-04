@@ -8,6 +8,8 @@ extern "C" {
 #include "lauxlib.h"
 }
 
+#ifdef AIM_FLEX
+
 template<typename t>
 inline t &Get(lua_State *L, int where = -1)
 {
@@ -15,8 +17,10 @@ inline t &Get(lua_State *L, int where = -1)
 }
 
 template<typename t>
-inline void Push(lua_State *L, t what)
+inline void LPush(lua_State *L, t what, const char *meta)
 {
 	*(t *)(lua_newuserdata(L, sizeof(what))) = what;
 }
 
+#define LPush(state, what) LPush(state, what, (what).typestring())
+#endif

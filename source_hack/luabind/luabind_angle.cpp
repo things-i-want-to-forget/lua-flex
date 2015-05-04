@@ -81,13 +81,13 @@ int L_Angle_Max(lua_State *L)
 int L_Angle_Vector(lua_State *L)
 {
 	Vector v;
-	Push(L, Get<QAngle>(L, 1).ToVector(v));
+	LPush(L, Get<QAngle>(L, 1).ToVector(v));
 	return 1;
 }
 
 int L_Angle_Difference(lua_State *L)
 {
-	Push(L, Get<QAngle>(L, 1).Difference(Get<QAngle>(L, 2)));
+	LPush(L, Get<QAngle>(L, 1).Difference(Get<QAngle>(L, 2)));
 	return 1;
 }
 
@@ -99,25 +99,25 @@ int L_Angle_Clamp(lua_State *L)
 
 int L_Angle___add(lua_State *L)
 {
-	Push(L, Get<QAngle>(L, 1) + Get<QAngle>(L, 2));
+	LPush(L, Get<QAngle>(L, 1) + Get<QAngle>(L, 2));
 	return 1;
 }
 
 int L_Angle___sub(lua_State *L)
 {
-	Push(L, Get<QAngle>(L, 1) - Get<QAngle>(L, 2));
+	LPush(L, Get<QAngle>(L, 1) - Get<QAngle>(L, 2));
 	return 1;
 }
 
 int L_Angle___div(lua_State *L)
 {
-	Push(L, Get<QAngle>(L, 1) / lua_tonumber(L, 2));
+	LPush(L, Get<QAngle>(L, 1) / lua_tonumber(L, 2));
 	return 1;
 }
 
 int L_Angle___mul(lua_State *L)
 {
-	Push(L, Get<QAngle>(L, 1) * lua_tonumber(L, 2));
+	LPush(L, Get<QAngle>(L, 1) * lua_tonumber(L, 2));
 	return 1;
 }
 

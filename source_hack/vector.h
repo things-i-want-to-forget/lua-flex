@@ -34,6 +34,7 @@ public:
 			return z;
 		}
 	}
+	inline const char *typestring(void) const { return "Vector"; }
 	inline bool ToScreen(Vector &screen) const
 	{
 		return WorldToScreen(*this, screen);
