@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\lua53">
+      <UniqueIdentifier>{3c83c7e9-2386-4e58-99db-00a7ab048992}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -127,6 +130,84 @@
     </ClInclude>
     <ClInclude Include="clienttools.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\lapi.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\lauxlib.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\lcode.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\lctype.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\ldebug.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\ldo.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\lfunc.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\lgc.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\llex.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\llimits.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\lmem.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\lobject.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\lopcodes.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\lparser.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\lprefix.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\lstate.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\lstring.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\ltable.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\ltm.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\lua.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\lua.hpp">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\luaconf.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\lualib.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\lundump.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\lvm.h">
+      <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua53\lzio.h">
+      <Filter>Header Files\lua53</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

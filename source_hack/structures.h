@@ -1,6 +1,8 @@
 #ifndef STRUCTURES_H
 #define STRUCTURES_H
 
+struct lua_State;
+
 class CClient;
 class CInput;
 class CPrediction;
@@ -77,6 +79,7 @@ struct Structures
 	CMaterialSystem *materials;
 	CEngineVGui *engine_vgui;
 	CGameEventManager *event_manager;
+	lua_State *L;
 };
 
 extern Structures structs;

@@ -1,7 +1,11 @@
-Release/
 source_hack/Release/
 source_hack/Release/temp/
 lua53/Release
 #What is this? do we need it? It's locked.
 *.sdf
 *.opensdf
+
+*.exe
+*.dll
+*.lib
+*.pdb

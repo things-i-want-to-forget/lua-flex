@@ -2,6 +2,8 @@
 #define VS_EXTRA_LEAN
 #include <Windows.h>
 
+#pragma comment(lib, "lua53.lib")
+
 extern DWORD __stdcall source_hack();
 
 BOOL APIENTRY DllMain(HMODULE hMod, DWORD dwReason, LPVOID)

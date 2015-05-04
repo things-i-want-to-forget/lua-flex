@@ -1,4 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
+
+#include "lua.hpp"
 #include <Windows.h>
 #include <string>
 #include "engines.h"
@@ -513,8 +515,37 @@ void __fastcall PaintTraverse_Hook(VPanelWrapper *ths, void *, unsigned int pane
 	}
 }
 
+EXTERN_C IMAGE_DOS_HEADER __ImageBase;
+
 DWORD __stdcall source_hack(void)
 {
+	char *path;
+	// use this for temporary things needing path
+	char tpath[MAX_PATH + 1];
+	{
+		char dll_path[MAX_PATH + 1];
+
+		DWORD length = GetModuleFileNameA((HMODULE)&__ImageBase, dll_path, sizeof(dll_path));
+
+		path = dll_path;
+
+		while (length-- && *(path + length) != '/' && *(path + length) != '\\')
+			*(path + length) = 0;
+	}
+
+
+	MessageBoxA(0, path, path, 0);
+	structs.L = luaL_newstate();
+
+	FILE *file;
+	sprintf_s(tpath, "%s%s", path, "lua/init.lua");
+	fopen_s(&file, tpath, "rb");
+	fseek(file, 0, SEEK_END);
+	long length = ftell(file);
+	fseek(file, 0, SEEK_SET);
+	luaL_loadbuffer()
+	
+
 	version = GetEngineVersion(GetAppID());
 
 	structs.client = GetInterface<CClient *>("client.dll", "VClient");
