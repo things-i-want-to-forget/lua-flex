@@ -93,6 +93,7 @@
     <ClCompile Include="drawing.cpp" />
     <ClCompile Include="engines.cpp" />
     <ClCompile Include="exe_main.cpp" />
+    <ClCompile Include="lau\lau.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math.cpp" />
     <ClCompile Include="matrix.cpp" />
@@ -141,6 +142,7 @@
     <ClInclude Include="gameevent.h" />
     <ClInclude Include="gamemovement.h" />
     <ClInclude Include="globals.h" />
+    <ClInclude Include="lau\lau.h" />
     <ClInclude Include="math.h" />
     <ClInclude Include="matrix.h" />
     <ClInclude Include="matsystemsurface.h" />

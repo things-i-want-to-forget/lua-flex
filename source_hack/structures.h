@@ -1,8 +1,7 @@
 #ifndef STRUCTURES_H
 #define STRUCTURES_H
 
-struct lua_State;
-
+class Lau;
 class CClient;
 class CInput;
 class CPrediction;
@@ -57,6 +56,7 @@ class CPhysicsSurfaceProps;
 
 struct Structures
 {
+	Lau *L;
 	CLocalize *local;               // Localize_
 	CClientTools *tools;            // VCLIENTTOOLS
 	CPhysicsSurfaceProps *sprops;   // VPhysicsSurfaceProps

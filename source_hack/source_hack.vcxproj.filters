@@ -16,6 +16,9 @@
     <Filter Include="Header Files\lua53">
       <UniqueIdentifier>{3c83c7e9-2386-4e58-99db-00a7ab048992}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lau">
+      <UniqueIdentifier>{c6b0f72f-02c8-4e5d-bab6-5022e4af108c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -50,6 +53,9 @@
     </ClCompile>
     <ClCompile Include="bones.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lau\lau.cpp">
+      <Filter>lau</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -208,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="..\lua53\lzio.h">
       <Filter>Header Files\lua53</Filter>
+    </ClInclude>
+    <ClInclude Include="lau\lau.h">
+      <Filter>lau</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
