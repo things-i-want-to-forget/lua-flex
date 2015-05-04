@@ -83,14 +83,6 @@ int L_Vector__mul(lua_State *L) {
 	return 1;
 }
 
-int L_Vector__sub(lua_State *L) {
-	Vector &vector = Get<Vector>(L, 1);
-	Vector &vector2 = Get<Vector>(L, 2);
-
-	Push(L, vector - vector2);
-	return 1;
-}
-
 int L_Vector_ToScreen(lua_State *L) {
 	Vector *vector = &Get<Vector>(L, 1);
 	Vector newVector = Vector();
