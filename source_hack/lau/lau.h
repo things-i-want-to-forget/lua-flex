@@ -27,6 +27,7 @@ public:
 private:
 	lua_State *L;
 	char *luadir;
+	int metatables;
 };
 
 #endif

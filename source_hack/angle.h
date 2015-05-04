@@ -25,9 +25,23 @@ public:
 		extern Vector &AngleVectors(const QAngle &angles, Vector &v);
 		return AngleVectors(*this, v);
 	}
+	inline float operator[](int which)
+	{
+		switch (which)
+		{
+		default:
+		case 0:
+			return p;
+		case 1:
+			return y;
+		case 2:
+			return r;
+		}
+	}
 public:
 	float p, y, r;
 };
+
 
 inline QAngle operator-(const QAngle &a, const QAngle &b)
 {

@@ -19,6 +19,9 @@
     <Filter Include="lau">
       <UniqueIdentifier>{c6b0f72f-02c8-4e5d-bab6-5022e4af108c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\luabind">
+      <UniqueIdentifier>{4d55fa3b-f4c2-4fa9-b53c-3db1aa578ab9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -56,6 +59,9 @@
     </ClCompile>
     <ClCompile Include="lau\lau.cpp">
       <Filter>lau</Filter>
+    </ClCompile>
+    <ClCompile Include="luabind\luabind_angle.cpp">
+      <Filter>Source Files\luabind</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

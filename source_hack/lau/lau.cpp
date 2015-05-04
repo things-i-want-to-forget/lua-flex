@@ -17,7 +17,7 @@ Lau::Lau(void)
 		while (length-- && *(luadir + length) != '/' && *(luadir + length) != '\\')
 			*(luadir + length) = 0;
 
-		strcat(luadir, "lua/");
+		strcat_s(luadir, MAX_PATH + 1, "lua/");
 
 	}
 	L = luaL_newstate();
@@ -82,8 +82,20 @@ int Lau::RunLuaFile(const char *relpath)
 
 }
 
+extern luaL_Reg LuaAngleMetaTable[];
+
 void Lau::Init(void)
 {
+
+	lua_newtable(L);
+	{
+		lua_newtable(L); // value
+		{
+			luaL_setfuncs(L, LuaAngleMetaTable, 0);
+		}
+		lua_setfield(L, -2, "Angle");
+	}
+	metatables = luaL_ref(L, LUA_REGISTRYINDEX);
 
 	RunLuaFile("init.lua");
 

@@ -79,7 +79,6 @@ struct Structures
 	CMaterialSystem *materials;
 	CEngineVGui *engine_vgui;
 	CGameEventManager *event_manager;
-	lua_State *L;
 };
 
 extern Structures structs;
