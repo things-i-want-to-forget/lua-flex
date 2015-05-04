@@ -63,6 +63,9 @@
     <ClCompile Include="luabind\luabind_angle.cpp">
       <Filter>Source Files\luabind</Filter>
     </ClCompile>
+    <ClCompile Include="luabind\luabind_vector.cpp">
+      <Filter>Source Files\luabind</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vtable.h">

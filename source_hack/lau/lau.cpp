@@ -83,6 +83,7 @@ int Lau::RunLuaFile(const char *relpath)
 }
 
 extern luaL_Reg LuaAngleMetaTable[];
+extern luaL_Reg LuaVectorMetaTable[];
 
 void Lau::Init(void)
 {
@@ -94,6 +95,12 @@ void Lau::Init(void)
 			luaL_setfuncs(L, LuaAngleMetaTable, 0);
 		}
 		lua_setfield(L, -2, "Angle");
+
+		lua_newtable(L); // value
+		{
+			luaL_setfuncs(L, LuaVectorMetaTable, 0);
+		}
+		lua_setfield(L, -2, "Vector");
 	}
 	metatables = luaL_ref(L, LUA_REGISTRYINDEX);
 
