@@ -63,6 +63,7 @@ Vector &AngleVectors(const QAngle &angles, Vector &v)
 	v.y = cp*sy;
 	v.z = -sp;
 	v.Normalize();
+	return v;
 }
 
 void VectorAngles(const Vector &forward, QAngle &angles)
