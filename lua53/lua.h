@@ -455,6 +455,12 @@ struct lua_Debug {
   struct CallInfo *i_ci;  /* active function */
 };
 
+template<typename t>
+t &Get(lua_State *L, int where = -1) 
+{
+	return *(t*)lua_touserdata(L, where); 
+}
+
 /* }====================================================================== */
 
 

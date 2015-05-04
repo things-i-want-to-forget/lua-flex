@@ -39,11 +39,12 @@ int L_Angle___index(lua_State *L)
 int L_Angle___newindex(lua_State *L)
 {
 	QAngle *angle = (QAngle *)lua_touserdata(L, 1);
+	lua_Number value = lua_tonumber(L, 3);
 
 	if (lua_type(L, 2) == LUA_TNUMBER)
 	{
 		lua_Integer which = lua_tointeger(L, 2);
-		lua_pushnumber(L, (lua_Number)(*angle)[which]);
+		(*angle)[which] = value;
 		return 1;
 	}
 	else if (lua_type(L, 2) == LUA_TSTRING)
@@ -53,13 +54,13 @@ int L_Angle___newindex(lua_State *L)
 		{
 		default:
 		case 'p':
-			lua_pushnumber(L, angle->p);
+			angle->p = value;
 			break;
 		case 'y':
-			lua_pushnumber(L, angle->y);
+			angle->y = value;
 			break;
 		case 'r':
-			lua_pushnumber(L, angle->r);
+			angle->r = value;
 			break;
 		}
 		return 1;
