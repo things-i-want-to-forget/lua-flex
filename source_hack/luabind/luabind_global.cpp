@@ -5,6 +5,7 @@
 #include "../structures.h"
 #include "../lau/lau.h"
 #include "../engineclient.h"
+#include "../globals.h"
 #include <Windows.h>
 #pragma comment(lib, "tier0.lib")
 
@@ -70,6 +71,30 @@ int L_include(lua_State *L)
 
 }
 
+int L_CurTime(lua_State *L)
+{
+	lua_pushnumber(L, structs.globals->curtime());
+	return 1;
+}
+
+int L_FrameTime(lua_State *L)
+{
+	lua_pushnumber(L, structs.globals->frametime());
+	return 1;
+}
+
+int L_TickInterval(lua_State *L)
+{
+	lua_pushnumber(L, structs.globals->tickinterval());
+	return 1;
+}
+
+int L_MaxClients(lua_State *L)
+{
+	lua_pushnumber(L, structs.globals->maxclients());
+	return 1;
+}
+
 luaL_Reg GlobalLibrary[] = {
 	{ "print", L_print },
 	{ "Vector", L_Vector },
@@ -77,5 +102,9 @@ luaL_Reg GlobalLibrary[] = {
 	{ "FindMetaTable", L_FindMetaTable },
 	{ "include", L_include },
 	{ "IsInGame", L_IsInGame },
+	{ "CurTime", L_CurTime },
+	{ "FrameTime", L_FrameTime },
+	{ "TickInterval", L_TickInterval },
+	{ "MaxClients", L_MaxClients },
 	{ 0, 0 }
 };
