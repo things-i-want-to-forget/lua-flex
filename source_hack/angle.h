@@ -76,9 +76,15 @@ inline QAngle operator*(const QAngle &a, float b)
 {
 	return QAngle(a.p * b, a.y * b, a.r * b);
 }
+
 inline QAngle operator/(const QAngle &a, float b)
 {
 	return QAngle(a.p / b, a.y / b, a.r / b);
+}
+
+inline bool operator==(const QAngle &a, const QAngle &b)
+{
+	return a.y == b.y && a.p == b.p && a.r == b.r;
 }
 
 inline QAngle QAngle::Difference(const QAngle &other) const
