@@ -88,13 +88,14 @@ int L_Vector__eq(lua_State *L)
 }
 
 int L_Vector_ToScreen(lua_State *L) {
-	Vector vector = Get<Vector>(L, 1);
+	Vector &vector = Get<Vector>(L, 1);
 	Vector newVector = Vector();
 
-	vector.ToScreen(newVector);
+	bool onscreen = vector.ToScreen(newVector);
 
 	LPush(L, newVector, "Vector");
-	return 1;
+	lua_pushboolean(L, onscreen);
+	return 2;
 }
 
 int L_Vector_Normalize(lua_State *L) {
@@ -106,9 +107,8 @@ int L_Vector_Dot(lua_State *L) {
 	Vector &vector = Get<Vector>(L, 1);
 	Vector &vector2 = Get<Vector>(L, 2);
 
-	vector.Dot(vector2);
+	lua_pushnumber(L, vector.Dot(vector2));
 
-	LPush(L, vector, "Vector");
 	return 1;
 }
 

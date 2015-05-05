@@ -78,13 +78,28 @@ int L_surface_SetTextPos(lua_State *L)
 	structs.surface->DrawSetTextPos(lua_tointeger(L, 1), lua_tointeger(L, 2));
 	return 0;
 }
+int L_surface_SetTextColor(lua_State *L)
+{
+	Color c = GetColor(L, 1);
+	char temp[256];
+	sprintf_s(temp, "%i %i %i %i", c.r, c.g, c.b, c.a);
+	MessageBoxA(0, temp, temp, 0);
+	structs.surface->DrawSetTextColor(c);
+	return 0;
+}
+
+static wchar_t *chrtowc(const char* text)
+{
+	size_t size = strlen(text) + 1;
+	wchar_t* wa = new wchar_t[size];
+	mbstowcs(wa, text, size);
+	return wa;
+}
 
 int L_surface_DrawText(lua_State *L)
 {
-	const char *str = lua_tostring(L, 1);
-	wchar_t *temp = new wchar_t[strlen(str)];
-	int len = wsprintfW(temp, L"%S", str);
-	structs.surface->DrawPrintText(temp, len);
+	wchar_t *temp = chrtowc(lua_tostring(L, 1));
+	structs.surface->DrawPrintText(temp, lstrlenW(temp));
 	delete[] temp;
 	return 0;
 }
@@ -99,6 +114,7 @@ int L_surface_DrawLine(lua_State *L)
 
 luaL_Reg SurfaceLibrary[] = {
 	{ "DrawOutlinedRect", L_surface_DrawOutlinedRect },
+	{ "SetTextColor", L_surface_SetTextColor },
 	{ "SetDrawColor", L_surface_SetDrawColor },
 	{ "SetFontGlyph", L_surface_SetFontGlyph },
 	{ "SetTextPos", L_surface_SetTextPos },

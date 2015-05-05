@@ -106,6 +106,7 @@ extern luaL_Reg LuaEntityMetaTable[];
 
 extern luaL_Reg GlobalLibrary[];
 extern luaL_Reg SurfaceLibrary[];
+extern luaL_Reg PlayerLibrary[];
 
 void Lau::Init(void)
 {
@@ -137,11 +138,18 @@ void Lau::Init(void)
 	lua_pushglobaltable(L);
 	{
 		luaL_setfuncs(L, GlobalLibrary, 0);
+
 		lua_newtable(L);
 		{
 			luaL_setfuncs(L, SurfaceLibrary, 0);
 		}
 		lua_setfield(L, -2, "surface");
+
+		lua_newtable(L);
+		{
+			luaL_setfuncs(L, PlayerLibrary, 0);
+		}
+		lua_setfield(L, -2, "player");
 	}
 	lua_pop(L, 1);
 

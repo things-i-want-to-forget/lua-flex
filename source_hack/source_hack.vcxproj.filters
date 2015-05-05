@@ -71,6 +71,9 @@
     <ClCompile Include="luabind\luabind_entity.cpp">
       <Filter>Source Files\luabind</Filter>
     </ClCompile>
+    <ClCompile Include="luabind\luabindg_player.cpp">
+      <Filter>Source Files\luabind</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vtable.h">

@@ -95,6 +95,7 @@
     <ClCompile Include="engines.cpp" />
     <ClCompile Include="exe_main.cpp" />
     <ClCompile Include="lau\lau.cpp" />
+    <ClCompile Include="luabind\luabindg_player.cpp" />
     <ClCompile Include="luabind\luabindg_surface.cpp" />
     <ClCompile Include="luabind\luabind_angle.cpp" />
     <ClCompile Include="luabind\luabind_entity.cpp" />

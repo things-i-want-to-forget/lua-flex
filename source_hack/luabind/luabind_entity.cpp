@@ -2,6 +2,7 @@
 #include "../structures.h"
 #include "../clienttools.h"
 #include "../entities.h"
+#include "../engineclient.h"
 
 static ClientEntity *GetEntity(lua_State *L, int where = -1)
 {
@@ -117,8 +118,32 @@ int L_Entity_GetWeaponClass(lua_State *L)
 	ClientEntity *e = GetEntity(L, 1);
 	VALIDATE(e);
 	lua_pushstring(L, e->GetCSWpnData()->class_name);
+
 	return 1;
 }
+
+int L_Entity_Nick(lua_State *L)
+{
+	ClientEntity *e = GetEntity(L, 1);
+	VALIDATE(e);
+	player_info_t info;
+
+	structs.engine->GetPlayerInfo(e->GetRefEHandle() & 0xFFF, &info);
+
+	lua_pushstring(L, info.GetName());
+
+	return 1;
+}
+
+int L_Entity___index(lua_State *L)
+{
+	lua_getmetatable(L, 1);
+	lua_pushvalue(L, 2);
+	lua_rawget(L, -2);
+	lua_remove(L, -2);
+	return 1;
+}
+
 
 luaL_Reg LuaEntityMetaTable[] = {
 	{ "IsWeapon", L_Entity_IsWeapon },
@@ -134,5 +159,7 @@ luaL_Reg LuaEntityMetaTable[] = {
 	{ "GetPenetration", L_Entity_GetPenetration },
 	{ "GetDamage", L_Entity_GetPenetration },
 	{ "GetWeaponClass", L_Entity_GetWeaponClass },
+	{ "Nick", L_Entity_Nick },
+	{ "__index", L_Entity___index },
 	{ 0, 0 }
 };

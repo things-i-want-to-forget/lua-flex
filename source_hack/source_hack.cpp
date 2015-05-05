@@ -441,16 +441,6 @@ void __fastcall PaintTraverse_Hook(VPanelWrapper *ths, void *, unsigned int pane
 	OriginalFn(panel_vt->getold(PAINTTRAVERSE_INDEX))(ths, panel, something1, something2);
 	if (!strcmp(ths->GetName(panel), version == GARRYSMOD ? "OverlayPopupPanel" : "MatSystemTopPanel"))
 	{
-		auto state = structs.L->GetState();
-		structs.L->PushHookCall();
-
-		lua_pushstring(state, "Paint");
-		
-		const char *err = structs.L->SafeCall(1);
-		if (err)
-		{
-			ConColorMsg(print_color, "%s\n", err);
-		}
 
 		structs.surface->DrawSetTextFont(font);
 		structs.surface->DrawSetTextColor(Color(220, 30, 50));
@@ -527,6 +517,16 @@ void __fastcall PaintTraverse_Hook(VPanelWrapper *ths, void *, unsigned int pane
 
 				DrawBones(ent);
 			}
+		}
+		auto state = structs.L->GetState();
+		structs.L->PushHookCall();
+
+		lua_pushstring(state, "Paint");
+
+		const char *err = structs.L->SafeCall(1);
+		if (err)
+		{
+			ConColorMsg(print_color, "%s\n", err);
 		}
 	}
 }

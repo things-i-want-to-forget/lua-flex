@@ -15,8 +15,15 @@ local font = surface.CreateFont();
 -- font, textname, tall, weight, https://developer.valvesoftware.com/wiki/EFontFlags
 surface.SetFontGlyph(font, "Arial", 13, 300, 0x200);
 
-hook.Add("Paint", "wow", function() 
+hook.Add("Paint", "hackdeplayer", function()
+	if(not IsInGame()) then return; end
 	surface.SetFont(font);
-	surface.SetTextPos(200, 200);
-	surface.DrawText("lololol");
+	surface.SetTextColor(0,0,0,255);
+	for k,v in next, player.GetAll(), nil do
+		local scr, onscr = v:GetPos():ToScreen()
+		if(onscr) then
+			surface.SetTextPos(scr.x, scr.y);
+			surface.DrawText(v:Nick());
+		end
+	end
 end);
