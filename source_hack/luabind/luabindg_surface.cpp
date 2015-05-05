@@ -81,6 +81,8 @@ int L_surface_SetTextPos(lua_State *L)
 int L_surface_SetTextColor(lua_State *L)
 {
 	Color c = GetColor(L, 1);
+	char temp[256];
+	sprintf_s(temp, "%i %i %i %i", c.r, c.g, c.b, c.a);
 	structs.surface->DrawSetTextColor(c);
 	return 0;
 }
