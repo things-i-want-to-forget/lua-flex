@@ -90,13 +90,13 @@ int L_surface_DrawText(lua_State *L)
 }
 
 luaL_Reg SurfaceLibrary[] = {
-	{ "SetFontGlyph", L_surface_SetFontGlyph },
 	{ "DrawOutlinedRect", L_surface_DrawOutlinedRect },
-	{ "CreateFont", L_surface_CreateFont },
-	{ "DrawRect", L_surface_DrawRect },
 	{ "SetDrawColor", L_surface_SetDrawColor },
+	{ "SetFontGlyph", L_surface_SetFontGlyph },
 	{ "SetTextPos", L_surface_SetTextPos },
+	{ "CreateFont", L_surface_CreateFont },
 	{ "DrawText", L_surface_DrawText },
+	{ "DrawRect", L_surface_DrawRect },
 	{ "SetFont", L_surface_SetFont },
 	{ 0, 0 }
 };

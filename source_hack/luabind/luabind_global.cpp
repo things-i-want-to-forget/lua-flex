@@ -4,6 +4,7 @@
 #include "../angle.h"
 #include "../structures.h"
 #include "../lau/lau.h"
+#include "../engineclient.h"
 #include <Windows.h>
 #pragma comment(lib, "tier0.lib")
 
@@ -56,6 +57,11 @@ int L_FindMetaTable(lua_State *L)
 	lua_remove(L, -2);
 	return 1;
 }
+int L_IsInGame(lua_State *L)
+{
+	lua_pushboolean(L, structs.engine->IsInGame());
+	return 1;
+}
 
 int L_include(lua_State *L)
 {
@@ -70,5 +76,6 @@ luaL_Reg GlobalLibrary[] = {
 	{ "Angle", L_Angle },
 	{ "FindMetaTable", L_FindMetaTable },
 	{ "include", L_include },
+	{ "IsInGame", L_IsInGame },
 	{ 0, 0 }
 };
