@@ -122,6 +122,12 @@ int L_Angle___mul(lua_State *L)
 	return 1;
 }
 
+int L_Angle___eq(lua_State *L)
+{
+	lua_pushboolean(L, Get<QAngle>(L, 1) == Get<QAngle>(L, 2));
+	return 1;
+}
+
 
 luaL_Reg LuaAngleMetaTable[] = {
 	{ "__index", L_Angle___index },
@@ -137,5 +143,6 @@ luaL_Reg LuaAngleMetaTable[] = {
 	{ "__mul", L_Angle___mul },
 	{ "__add", L_Angle___add },
 	{ "__sub", L_Angle___sub },
+	{ "__eq", L_Angle___eq },
 	{ 0, 0 }
 };

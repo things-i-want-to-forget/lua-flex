@@ -81,6 +81,12 @@ int L_Vector__mul(lua_State *L) {
 	return 1;
 }
 
+int L_Vector__eq(lua_State *L)
+{
+	lua_pushboolean(L, Get<Vector>(L, 1) == Get<Vector>(L, 2));
+	return 1;
+}
+
 int L_Vector_ToScreen(lua_State *L) {
 	Vector vector = Get<Vector>(L, 1);
 	Vector newVector = Vector();
@@ -134,6 +140,7 @@ luaL_Reg LuaVectorMetaTable[] = {
 	{ "__add", L_Vector__add },
 	{ "__sub", L_Vector__sub },
 	{ "__mul", L_Vector__mul },
+	{ "__eq", L_Vector__eq },
 	{ "ToScreen", L_Vector_ToScreen },
 	{ "Normalize", L_Vector_Normalize },
 	{ "Dot", L_Vector_Dot },
