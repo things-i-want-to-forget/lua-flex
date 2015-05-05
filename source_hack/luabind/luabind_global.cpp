@@ -6,6 +6,7 @@
 #include "../lau/lau.h"
 #include "../engineclient.h"
 #include "../entities.h"
+#include "../globals.h"
 #include <Windows.h>
 #pragma comment(lib, "tier0.lib")
 
@@ -74,6 +75,30 @@ int L_include(lua_State *L)
 int L_LocalPlayer(lua_State *L)
 {
 	LPush<CBaseHandle>(L, structs.entity_list->GetClientEntity(structs.engine->GetLocalPlayer())->GetRefEHandle(), "Entity");
+	return 1;
+}
+int L_CurTime(lua_State *L)
+{
+	lua_pushnumber(L, structs.globals->curtime());
+	return 1;
+}
+
+int L_FrameTime(lua_State *L)
+{
+	lua_pushnumber(L, structs.globals->frametime());
+	return 1;
+}
+
+int L_TickInterval(lua_State *L)
+{
+	lua_pushnumber(L, structs.globals->tickinterval());
+	return 1;
+}
+
+int L_MaxClients(lua_State *L)
+{
+	lua_pushnumber(L, structs.globals->maxclients());
+	return 1;
 }
 
 luaL_Reg GlobalLibrary[] = {
@@ -83,5 +108,10 @@ luaL_Reg GlobalLibrary[] = {
 	{ "FindMetaTable", L_FindMetaTable },
 	{ "include", L_include },
 	{ "IsInGame", L_IsInGame },
+	{ "CurTime", L_CurTime },
+	{ "FrameTime", L_FrameTime },
+	{ "TickInterval", L_TickInterval },
+	{ "MaxClients", L_MaxClients },
+	{ "LocalPlayer", L_LocalPlayer },
 	{ 0, 0 }
 };

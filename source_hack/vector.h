@@ -102,6 +102,12 @@ inline Vector operator*(const Vector &v, const float &v2)
 {
 	return Vector(v.x * v2, v.y * v2, v.z * v2);
 }
+
+inline bool operator==(const Vector &v, const Vector &v2)
+{
+	return v.x == v2.x && v.y == v2.y && v.z == v2.z;
+}
+
 class VectorAligned : public Vector
 {
 public:
