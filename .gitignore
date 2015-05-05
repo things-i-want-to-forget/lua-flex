@@ -9,3 +9,4 @@ lua53/Release
 *.dll
 Release/*.lib
 *.pdb
+Release/settings.xml
