@@ -106,7 +106,7 @@ int L_surface_DrawText(lua_State *L)
 
 int L_surface_DrawLine(lua_State *L)
 {
-	structs.surface->DrawLine(lua_tonumber(L, 1), lua_tonumber(L, 2), lua_tonumber(L, 3), lua_tonumber(L, 4));
+	structs.surface->DrawLine(lua_tointeger(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), lua_tointeger(L, 4));
 	return 0;
 }
 
