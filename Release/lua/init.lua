@@ -16,9 +16,13 @@ local font = surface.CreateFont();
 surface.SetFontGlyph(font, "Arial", 13, 300, 0x200);
 
 hook.Add("Paint", "hackdeplayer", function()
-	if(not IsInGame()) then return; end
 	surface.SetFont(font);
-	surface.SetTextColor(0,0,0,255);
+	surface.SetTextColor(255,255,255,255);
+	if(not IsInGame()) then 
+		surface.SetTextPos(200,200);
+		surface.DrawText"wtf";
+		return;
+	end
 	for k,v in next, player.GetAll(), nil do
 		local scr, onscr = v:GetPos():ToScreen()
 		if(onscr) then

@@ -45,12 +45,12 @@ int L_surface_SetDrawColor(lua_State *L)
 }
 int L_surface_DrawRect(lua_State *L)
 {
-	structs.surface->DrawFilledRect(lua_tointeger(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), lua_tointeger(L, 4));
+	structs.surface->DrawFilledRect(lua_tonumber(L, 1), lua_tonumber(L, 2), lua_tonumber(L, 3), lua_tonumber(L, 4));
 	return 0;
 }
 int L_surface_DrawOutlinedRect(lua_State *L)
 {
-	structs.surface->DrawOutlinedRect(lua_tointeger(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), lua_tointeger(L, 4));
+	structs.surface->DrawOutlinedRect(lua_tonumber(L, 1), lua_tonumber(L, 2), lua_tonumber(L, 3), lua_tonumber(L, 4));
 	return 0;
 }
 int L_surface_CreateFont(lua_State *L)
@@ -75,7 +75,7 @@ int L_surface_SetFont(lua_State *L)
 
 int L_surface_SetTextPos(lua_State *L)
 {
-	structs.surface->DrawSetTextPos(lua_tointeger(L, 1), lua_tointeger(L, 2));
+	structs.surface->DrawSetTextPos(lua_tonumber(L, 1), lua_tonumber(L, 2));
 	return 0;
 }
 int L_surface_SetTextColor(lua_State *L)
@@ -103,7 +103,7 @@ int L_surface_DrawText(lua_State *L)
 
 int L_surface_DrawLine(lua_State *L)
 {
-	structs.surface->DrawLine(lua_tointeger(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), lua_tointeger(L, 4));
+	structs.surface->DrawLine(lua_tonumber(L, 1), lua_tonumber(L, 2), lua_tonumber(L, 3), lua_tonumber(L, 4));
 	return 0;
 }
 
