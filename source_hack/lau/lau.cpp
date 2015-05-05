@@ -102,6 +102,8 @@ void Lau::PushHookCall(void)
 
 extern luaL_Reg LuaAngleMetaTable[];
 extern luaL_Reg LuaVectorMetaTable[];
+extern luaL_Reg LuaEntityMetaTable[];
+
 extern luaL_Reg GlobalLibrary[];
 extern luaL_Reg SurfaceLibrary[];
 
@@ -122,6 +124,12 @@ void Lau::Init(void)
 			luaL_setfuncs(L, LuaVectorMetaTable, 0);
 		}
 		lua_setfield(L, -2, "Vector");
+
+		lua_newtable(L); // value
+		{
+			luaL_setfuncs(L, LuaEntityMetaTable, 0);
+		}
+		lua_setfield(L, -2, "Entity");
 	}
 	metatables = luaL_ref(L, LUA_REGISTRYINDEX);
 	

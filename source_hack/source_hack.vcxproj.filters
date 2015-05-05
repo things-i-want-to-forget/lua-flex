@@ -68,6 +68,9 @@
     <ClCompile Include="luabind\luabindg_surface.cpp">
       <Filter>Source Files\luabind</Filter>
     </ClCompile>
+    <ClCompile Include="luabind\luabind_entity.cpp">
+      <Filter>Source Files\luabind</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vtable.h">

@@ -13,6 +13,12 @@ public:
 	{
 		return get<bool(__thiscall *)(void *, void *)>(46)(this, w);
 	}
+
+	bool IsPlayer(void *p)
+	{
+		return get<bool(__thiscall *)(void *, void *)>(40)(this, p);
+	}
+
 };
 
 #endif

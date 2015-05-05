@@ -14,7 +14,7 @@ struct FileWeaponInfo_t
 	void *shit;
 	bool done;
 	bool _unk07;
-	char _unk08[80];
+	char class_name[80];
 	char printname[80];
 	char viewmodel[80];
 	char playermodel[80];

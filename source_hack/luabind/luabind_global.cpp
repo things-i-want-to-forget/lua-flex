@@ -5,6 +5,7 @@
 #include "../structures.h"
 #include "../lau/lau.h"
 #include "../engineclient.h"
+#include "../entities.h"
 #include <Windows.h>
 #pragma comment(lib, "tier0.lib")
 
@@ -68,6 +69,11 @@ int L_include(lua_State *L)
 
 	return structs.L->RunLuaFile(lua_tostring(L, 1));
 
+}
+
+int L_LocalPlayer(lua_State *L)
+{
+	LPush<CBaseHandle>(L, structs.entity_list->GetClientEntity(structs.engine->GetLocalPlayer())->GetRefEHandle(), "Entity");
 }
 
 luaL_Reg GlobalLibrary[] = {
