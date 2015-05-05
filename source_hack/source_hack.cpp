@@ -404,6 +404,11 @@ inline void connect(const Vector &a, const Vector &b)
 
 extern void DrawBones(ClientEntity *ent);
 
+#pragma comment(lib, "tier0.lib")
+
+extern Color print_color;
+__declspec(dllimport) void __cdecl ConColorMsg(const Color &, const char *, ...);
+
 void __fastcall PaintTraverse_Hook(VPanelWrapper *ths, void *, unsigned int panel, bool something1, bool something2)
 {
 	static int lastKey = GetAsyncKeyState('L');
@@ -436,6 +441,17 @@ void __fastcall PaintTraverse_Hook(VPanelWrapper *ths, void *, unsigned int pane
 	OriginalFn(panel_vt->getold(PAINTTRAVERSE_INDEX))(ths, panel, something1, something2);
 	if (!strcmp(ths->GetName(panel), version == GARRYSMOD ? "OverlayPopupPanel" : "MatSystemTopPanel"))
 	{
+		auto state = structs.L->GetState();
+		structs.L->PushHookCall();
+
+		lua_pushstring(state, "Paint");
+		
+		const char *err = structs.L->SafeCall(1);
+		if (err)
+		{
+			ConColorMsg(print_color, "%s\n", err);
+		}
+
 		structs.surface->DrawSetTextFont(font);
 		structs.surface->DrawSetTextColor(Color(220, 30, 50));
 		structs.surface->DrawSetTextPos(3, 2);

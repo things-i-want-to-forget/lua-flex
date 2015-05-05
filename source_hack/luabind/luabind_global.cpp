@@ -9,7 +9,7 @@
 
 #pragma warning(disable : 4244)
 
-static Color print_color = Color(255, 255, 0, 255);
+Color print_color = Color(255, 255, 0, 255);
 
 __declspec(dllimport) void __cdecl ConColorMsg(const Color &, const char *, ...);
 
@@ -57,10 +57,18 @@ int L_FindMetaTable(lua_State *L)
 	return 1;
 }
 
+int L_include(lua_State *L)
+{
+
+	return structs.L->RunLuaFile(lua_tostring(L, 1));
+
+}
+
 luaL_Reg GlobalLibrary[] = {
 	{ "print", L_print },
 	{ "Vector", L_Vector },
 	{ "Angle", L_Angle },
 	{ "FindMetaTable", L_FindMetaTable },
+	{ "include", L_include },
 	{ 0, 0 }
 };

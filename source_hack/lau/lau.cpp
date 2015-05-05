@@ -14,7 +14,8 @@ Lau::Lau(void)
 
 }
 
-#define _(x) MessageBoxA(0,x,x,0)
+//testing purposes
+#define _(x) 
 
 long Lau::ReadLuaFile(const char *relpath, char **output)
 {
@@ -68,8 +69,8 @@ int Lau::RunLuaFile(const char *relpath, bool safe)
 			if (safe)
 				return lua_pcall(L, 0, 0, 0);
 			else
-				lua_call(L, 0, 0);
-			return 0;
+				lua_call(L, 0, LUA_MULTRET);
+			return lua_gettop(L) - top;
 		}
 
 		lua_error(L);
@@ -81,9 +82,28 @@ int Lau::RunLuaFile(const char *relpath, bool safe)
 
 }
 
+const char *Lau::SafeCall(int args)
+{
+	if (lua_pcall(L, args, 0, 0) == 0)
+		return 0;
+	const char *ret = lua_tostring(L, -1);
+	lua_pop(L, 1);
+	return ret;
+}
+
+void Lau::PushHookCall(void)
+{
+	lua_pushglobaltable(L);
+	lua_getfield(L, -1, "hook");
+	lua_getfield(L, -1, "Call");
+	lua_remove(L, -2); // pop hook table
+	lua_remove(L, -2); // pop global table
+}
+
 extern luaL_Reg LuaAngleMetaTable[];
 extern luaL_Reg LuaVectorMetaTable[];
 extern luaL_Reg GlobalLibrary[];
+extern luaL_Reg SurfaceLibrary[];
 
 void Lau::Init(void)
 {
@@ -109,6 +129,11 @@ void Lau::Init(void)
 	lua_pushglobaltable(L);
 	{
 		luaL_setfuncs(L, GlobalLibrary, 0);
+		lua_newtable(L);
+		{
+			luaL_setfuncs(L, SurfaceLibrary, 0);
+		}
+		lua_setfield(L, -2, "surface");
 	}
 	lua_pop(L, 1);
 
