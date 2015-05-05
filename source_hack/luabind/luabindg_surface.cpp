@@ -89,6 +89,14 @@ int L_surface_DrawText(lua_State *L)
 	return 0;
 }
 
+int L_surface_DrawLine(lua_State *L)
+{
+	structs.surface->DrawLine(lua_tonumber(L, 1), lua_tonumber(L, 2), lua_tonumber(L, 3), lua_tonumber(L, 4));
+	return 0;
+}
+
+
+
 luaL_Reg SurfaceLibrary[] = {
 	{ "DrawOutlinedRect", L_surface_DrawOutlinedRect },
 	{ "SetDrawColor", L_surface_SetDrawColor },
@@ -98,5 +106,6 @@ luaL_Reg SurfaceLibrary[] = {
 	{ "DrawText", L_surface_DrawText },
 	{ "DrawRect", L_surface_DrawRect },
 	{ "SetFont", L_surface_SetFont },
+	{ "DrawLine", L_surface_DrawLine },
 	{ 0, 0 }
 };
