@@ -85,7 +85,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
-      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)/lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -96,6 +96,7 @@
     <ClCompile Include="exe_main.cpp" />
     <ClCompile Include="lau\lau.cpp" />
     <ClCompile Include="luabind\luabind_angle.cpp" />
+    <ClCompile Include="luabind\luabind_global.cpp" />
     <ClCompile Include="luabind\luabind_vector.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math.cpp" />

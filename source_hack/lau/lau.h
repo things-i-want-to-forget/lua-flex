@@ -10,9 +10,13 @@ public:
 	Lau(void);
 	~Lau(void) { };
 
-	lua_State *GetState()
+	lua_State *GetState(void)
 	{
 		return L;
+	}
+	int MetatableIndex(void)
+	{
+		return metatables;
 	}
 
 	int LoadBuffer(const char *contents, int content_length, const char *name = "=load");
@@ -20,7 +24,7 @@ public:
 
 	// returns the amount of returns from running the file
 	// or -1 on error
-	int RunLuaFile(const char *relpath);
+	int RunLuaFile(const char *relpath, bool safe = false);
 
 	void Init(void);
 

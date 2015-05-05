@@ -8,27 +8,27 @@ int L_Angle___index(lua_State *L)
 	QAngle *angle = &Get<QAngle>(L, 1);
 
 	const char *str = lua_tostring(L, 2);
-	switch (*str)
-	{
-	default:
+	if (*str && *(str + 1) == 0)
+		switch (*str)
+		{
+		default:
+		case 'p':
+		case 'x':
+			lua_pushnumber(L, angle->p);
+			break;
+		case 'y':
+			lua_pushnumber(L, angle->y);
+			break;
+		case 'r':
+		case 'z':
+			lua_pushnumber(L, angle->r);
+			break;
+		}
+	else
 	{
 		lua_getmetatable(L, 1);
 		lua_pushvalue(L, 2);
 		lua_rawget(L, -2);
-		lua_remove(L, -2);
-		return 1;
-	}
-	case 'p':
-	case 'x':
-		lua_pushnumber(L, angle->p);
-		break;
-	case 'y':
-		lua_pushnumber(L, angle->y);
-		break;
-	case 'r':
-	case 'z':
-		lua_pushnumber(L, angle->r);
-		break;
 	}
 	return 1;
 }
@@ -81,13 +81,13 @@ int L_Angle_Max(lua_State *L)
 int L_Angle_Vector(lua_State *L)
 {
 	Vector v;
-	LPush(L, Get<QAngle>(L, 1).ToVector(v));
+	LPush(L, Get<QAngle>(L, 1).ToVector(v), "Angle");
 	return 1;
 }
 
 int L_Angle_Difference(lua_State *L)
 {
-	LPush(L, Get<QAngle>(L, 1).Difference(Get<QAngle>(L, 2)));
+	LPush(L, Get<QAngle>(L, 1).Difference(Get<QAngle>(L, 2)), "Angle");
 	return 1;
 }
 
@@ -99,25 +99,25 @@ int L_Angle_Clamp(lua_State *L)
 
 int L_Angle___add(lua_State *L)
 {
-	LPush(L, Get<QAngle>(L, 1) + Get<QAngle>(L, 2));
+	LPush(L, Get<QAngle>(L, 1) + Get<QAngle>(L, 2), "Angle");
 	return 1;
 }
 
 int L_Angle___sub(lua_State *L)
 {
-	LPush(L, Get<QAngle>(L, 1) - Get<QAngle>(L, 2));
+	LPush(L, Get<QAngle>(L, 1) - Get<QAngle>(L, 2), "Angle");
 	return 1;
 }
 
 int L_Angle___div(lua_State *L)
 {
-	LPush(L, Get<QAngle>(L, 1) / lua_tonumber(L, 2));
+	LPush(L, Get<QAngle>(L, 1) / lua_tonumber(L, 2), "Angle");
 	return 1;
 }
 
 int L_Angle___mul(lua_State *L)
 {
-	LPush(L, Get<QAngle>(L, 1) * lua_tonumber(L, 2));
+	LPush(L, Get<QAngle>(L, 1) * lua_tonumber(L, 2), "Angle");
 	return 1;
 }
 

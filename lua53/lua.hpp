@@ -9,6 +9,8 @@ extern "C" {
 }
 
 #ifdef AIM_FLEX
+#include "../source_hack/structures.h"
+#include "../source_hack/lau/lau.h"
 
 template<typename t>
 inline t &Get(lua_State *L, int where = -1)
@@ -16,11 +18,16 @@ inline t &Get(lua_State *L, int where = -1)
 	return *(t*)lua_touserdata(L, where);
 }
 
+
 template<typename t>
 inline void LPush(lua_State *L, t what, const char *meta)
 {
 	*(t *)(lua_newuserdata(L, sizeof(what))) = what;
+	lua_rawgeti(L, LUA_REGISTRYINDEX, structs.L->MetatableIndex());
+	lua_pushstring(L, meta);
+	lua_rawget(L, -2);
+	lua_setmetatable(L, -3);
+	lua_pop(L, 1);
 }
 
-#define LPush(state, what) LPush(state, what, (what).typestring())
 #endif

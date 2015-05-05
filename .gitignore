@@ -7,5 +7,5 @@ lua53/Release
 
 *.exe
 *.dll
-*.lib
+Release/*.lib
 *.pdb

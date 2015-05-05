@@ -628,5 +628,11 @@ DWORD __stdcall source_hack(void)
 	panel_vt = new VTable(structs.panel);
 	panel_vt->hook(PAINTTRAVERSE_INDEX, &PaintTraverse_Hook);
 
+	
+	structs.L = new Lau();
+
+	structs.L->Init();
+	
+
 	return NULL;
 }
