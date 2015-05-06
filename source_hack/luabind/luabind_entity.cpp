@@ -1,8 +1,12 @@
 #include "lua.hpp"
+#include "../angle.h"
+#include "../vector.h"
 #include "../structures.h"
 #include "../clienttools.h"
 #include "../entities.h"
 #include "../engineclient.h"
+
+#pragma warning(disable : 4244)
 
 static ClientEntity *GetEntity(lua_State *L, int where = -1)
 {
@@ -135,6 +139,103 @@ int L_Entity_Nick(lua_State *L)
 	return 1;
 }
 
+int L_Entity_OBBMaxs(lua_State *L)
+{
+	ClientEntity *e = GetEntity(L, 1);
+	VALIDATE(e);
+
+	LPush(L, e->GetStudioHdr()->studio->hull_max, "Vector");
+	return 1;
+}
+
+int L_Entity_OBBMins(lua_State *L)
+{
+	ClientEntity *e = GetEntity(L, 1);
+	VALIDATE(e);
+
+	LPush(L, e->GetStudioHdr()->studio->hull_min, "Vector");
+	return 1;
+}
+
+int L_Entity_ModelName(lua_State *L)
+{
+	ClientEntity *e = GetEntity(L, 1);
+	VALIDATE(e);
+
+	lua_pushstring(L, e->GetStudioHdr()->studio->name);
+	return 1;
+}
+
+int L_Entity_EyePos(lua_State *L)
+{
+	ClientEntity *e = GetEntity(L, 1);
+	VALIDATE(e);
+
+	LPush(L, e->GetStudioHdr()->studio->eyepos, "Vector");
+	return 1;
+}
+
+int L_Entity_GetNWInt(lua_State *L)
+{
+	ClientEntity *e = GetEntity(L, 1);
+	VALIDATE(e);
+
+	int offset = -1;
+	if (lua_gettop(L) > 2)
+		offset = lua_tointeger(L, 3);
+
+	lua_pushinteger(L, e->getvar<int>(lua_tostring(L, 2), &offset));
+	lua_pushinteger(L, offset);
+
+
+	return 2;
+}
+int L_Entity_GetNWFloat(lua_State *L)
+{
+	ClientEntity *e = GetEntity(L, 1);
+	VALIDATE(e);
+
+	int offset = -1;
+	if (lua_gettop(L) > 2)
+		offset = lua_tointeger(L, 3);
+
+	lua_pushnumber(L, e->getvar<float>(lua_tostring(L, 2), &offset));
+	lua_pushinteger(L, offset);
+
+
+	return 2;
+}
+int L_Entity_GetNWVector(lua_State *L)
+{
+	ClientEntity *e = GetEntity(L, 1);
+	VALIDATE(e);
+
+	int offset = -1;
+	if (lua_gettop(L) > 2)
+		offset = lua_tointeger(L, 3);
+
+	LPush(L, e->getvar<Vector>(lua_tostring(L, 2), &offset), "Vector");
+	lua_pushinteger(L, offset);
+
+
+	return 2;
+}
+int L_Entity_GetNWAngle(lua_State *L)
+{
+	ClientEntity *e = GetEntity(L, 1);
+	VALIDATE(e);
+
+	int offset = -1;
+	if (lua_gettop(L) > 2)
+		offset = lua_tointeger(L, 3);
+
+	LPush(L, e->getvar<QAngle>(lua_tostring(L, 2), &offset), "QAngle");
+	lua_pushinteger(L, offset);
+
+
+	return 2;
+}
+
 int L_Entity___index(lua_State *L)
 {
 	lua_getmetatable(L, 1);
@@ -160,6 +261,14 @@ luaL_Reg LuaEntityMetaTable[] = {
 	{ "GetDamage", L_Entity_GetPenetration },
 	{ "GetWeaponClass", L_Entity_GetWeaponClass },
 	{ "Nick", L_Entity_Nick },
+	{ "OBBMins", L_Entity_OBBMins },
+	{ "OBBMaxs", L_Entity_OBBMaxs },
+	{ "EyePos", L_Entity_EyePos },
+	{ "ModelName", L_Entity_ModelName },
+	{ "GetNWInt", L_Entity_GetNWInt },
+	{ "GetNWFloat", L_Entity_GetNWFloat },
+	{ "GetNWAngle", L_Entity_GetNWAngle },
+	{ "GetNWVector", L_Entity_GetNWVector },
 	{ "__index", L_Entity___index },
 	{ 0, 0 }
 };

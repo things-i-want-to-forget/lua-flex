@@ -24,7 +24,7 @@ hook.Add("Paint", "hackdeplayer", function()
 		return;
 	end
 	for k,v in next, player.GetAll(), nil do
-		local scr, onscr = v:GetPos():ToScreen()
+		local scr, onscr = v:GetPos():ToScreen();
 		if(onscr) then
 			surface.SetTextPos(scr.x, scr.y);
 			surface.DrawText(v:Nick());
