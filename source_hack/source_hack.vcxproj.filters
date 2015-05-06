@@ -74,6 +74,9 @@
     <ClCompile Include="luabind\luabindg_player.cpp">
       <Filter>Source Files\luabind</Filter>
     </ClCompile>
+    <ClCompile Include="luaWatcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vtable.h">
@@ -234,6 +237,9 @@
     </ClInclude>
     <ClInclude Include="lau\lau.h">
       <Filter>lau</Filter>
+    </ClInclude>
+    <ClInclude Include="luaWatcher.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
