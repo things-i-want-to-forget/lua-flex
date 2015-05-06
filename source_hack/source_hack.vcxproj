@@ -101,6 +101,7 @@
     <ClCompile Include="luabind\luabind_entity.cpp" />
     <ClCompile Include="luabind\luabind_global.cpp" />
     <ClCompile Include="luabind\luabind_vector.cpp" />
+    <ClCompile Include="luaWatcher.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math.cpp" />
     <ClCompile Include="matrix.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="gamemovement.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="lau\lau.h" />
+    <ClInclude Include="luaWatcher.h" />
     <ClInclude Include="math.h" />
     <ClInclude Include="matrix.h" />
     <ClInclude Include="matsystemsurface.h" />

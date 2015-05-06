@@ -10,3 +10,4 @@ lua53/Release
 Release/*.lib
 *.pdb
 Release/settings.xml
+*.suo
