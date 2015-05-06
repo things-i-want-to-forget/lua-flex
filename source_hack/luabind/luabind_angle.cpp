@@ -6,7 +6,6 @@
 int L_Angle___index(lua_State *L)
 {
 	QAngle *angle = &Get<QAngle>(L, 1);
-
 	const char *str = lua_tostring(L, 2);
 	if (*str && *(str + 1) == 0)
 		switch (*str)

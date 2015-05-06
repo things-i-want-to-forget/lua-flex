@@ -77,6 +77,9 @@
     <ClCompile Include="luaWatcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="luabind_usercmd.cpp">
+      <Filter>Source Files\luabind</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vtable.h">
