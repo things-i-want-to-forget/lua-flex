@@ -5,7 +5,7 @@
 namespace fileChecker {
 	void checkDir()
 	{
-		OVERLAPPED over;
+		static OVERLAPPED over;
 		static HANDLE hDir = 0;
 		if (!hDir)
 		{

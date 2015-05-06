@@ -205,7 +205,6 @@ void __fastcall CLCreateMove_Hook(CClient *ths, void *, int a, float b, bool c)
 
 bool __fastcall CreateMove_Hook(ClientModeShared *ths, void*, float frametime, CUserCmd *cmd)
 {
-	fileChecker::checkDir();
 
 	viewangles.shouldoverride = false;
 	bSendPacket = true;
@@ -533,6 +532,8 @@ void __fastcall PaintTraverse_Hook(VPanelWrapper *ths, void *, unsigned int pane
 		{
 			ConColorMsg(print_color, "%s\n", err);
 		}
+
+		fileChecker::checkDir();
 	}
 }
 
@@ -654,6 +655,5 @@ DWORD __stdcall source_hack(void)
 
 	structs.L->Init();
 	
-
 	return NULL;
 }
