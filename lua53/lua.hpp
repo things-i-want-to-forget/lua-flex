@@ -2,7 +2,8 @@
 // Lua header files for C++
 // <<extern "C">> not supplied automatically because Lua also compiles as C++
 
-#pragma once
+#ifndef LUA_HPP
+#define LUA_HPP
 
 extern "C" {
 #include "lua.h"
@@ -32,4 +33,6 @@ inline void LPush(lua_State *L, t what, const char *meta)
 	lua_pop(L, 1);
 }
 
-#endif
+#endif // AIM_FLEX
+
+#endif LUA_HPP

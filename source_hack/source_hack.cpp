@@ -24,6 +24,7 @@
 #include "gameevent.h"
 #include "math.h"
 #include "sprops.h"
+#include "lau/lau.h"
 #include "clienttools.h"
 
 #include "luaWatcher.h"

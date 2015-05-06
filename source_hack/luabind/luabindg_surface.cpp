@@ -6,6 +6,8 @@
 #include <Windows.h>
 #include <string>
 
+#pragma warning(disable : 4996)
+
 #pragma warning(disable : 4244)
 
 inline Color GetColor(lua_State *state, int where = -1)
