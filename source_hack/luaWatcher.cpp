@@ -1,4 +1,4 @@
-#include "luaWatcher.h"
+#include "luawatcher.h"
 #include "structures.h"
 #include "lau/lau.h"
 

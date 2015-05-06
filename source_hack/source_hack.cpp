@@ -27,7 +27,7 @@
 #include "lau/lau.h"
 #include "clienttools.h"
 
-#include "luaWatcher.h"
+#include "luawatcher.h"
 
 #define C_AND_P
 
