@@ -59,7 +59,25 @@ int L_CMD___newindex(lua_State *L)
 	else if (str == "angles") {
 		cmd->angles = Get<QAngle>(L, 3);
 	}
-	return 1;
+	else if (str == "buttons") {
+		cmd->buttons() = lua_tonumber(L, 3);
+	}
+	else if (str == "mousex") {
+		cmd->mousex() = lua_tonumber(L, 3);
+	}
+	else if (str == "mousey") {
+		cmd->mousey() = lua_tonumber(L, 3);
+	}
+	else if (str == "sidemove") {
+		cmd->sidemove() = lua_tonumber(L, 3);
+	}
+	else if (str == "forwardmove") {
+		cmd->forwardmove() = lua_tonumber(L, 3);
+	}
+	else if (str == "movement") {
+		cmd->movement() = Get<Vector>(L, 3);
+	}
+	return 0;
 }
 
 luaL_Reg LuaCMDMetaTable[] = {

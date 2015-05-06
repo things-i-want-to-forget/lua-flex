@@ -52,7 +52,7 @@ int L_Angle___newindex(lua_State *L)
 		angle->r = value;
 		break;
 	}
-	return 1;
+	return 0;
 }
 
 int L_Angle_IsZero(lua_State *L)
