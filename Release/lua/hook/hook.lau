@@ -6,9 +6,12 @@ function hook.GetTable()
 	return Hooks;
 end
 
-function hook.Call(name, a,b,c,d,e,f,g)
+function hook.Call(name, a, b, c, d, e, f, g)
 	for k,v in next, (Hooks[name] or {}), nil do
-		v(a,b,c,d,e,f,g);
+		local ret = {v(a, b, c, d, e, f, g)}
+		if ret[1] then
+			return table.unpack(ret)
+		end
 	end
 end
 

@@ -82,9 +82,9 @@ int Lau::RunLuaFile(const char *relpath, bool safe)
 
 }
 
-const char *Lau::SafeCall(int args)
+const char *Lau::SafeCall(int args, int rets)
 {
-	if (lua_pcall(L, args, 0, 0) == 0)
+	if (lua_pcall(L, args, rets, 0) == 0)
 		return 0;
 	const char *ret = lua_tostring(L, -1);
 	lua_pop(L, 1);

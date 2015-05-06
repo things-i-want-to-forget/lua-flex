@@ -203,8 +203,26 @@ void __fastcall CLCreateMove_Hook(CClient *ths, void *, int a, float b, bool c)
 	*(*(unsigned char **)_ebp - 1) = bSendPacket;
 }
 
+extern Color print_color;
+
+__declspec(dllimport) void __cdecl ConColorMsg(const Color &, const char *, ...);
+
 bool __fastcall CreateMove_Hook(ClientModeShared *ths, void*, float frametime, CUserCmd *cmd)
 {
+	auto state = structs.L->GetState();
+	structs.L->PushHookCall();
+
+	lua_pushstring(state, "CreateMove");
+	LPush(state, cmd, "CUserCmd");
+
+	const char *err = structs.L->SafeCall(2, 1);
+	if (err)
+	{
+		ConColorMsg(print_color, "%s\n", err);
+	} else {
+		cmd = &Get<CUserCmd>(state, -1);
+	}
+
 
 	viewangles.shouldoverride = false;
 	bSendPacket = true;
@@ -409,9 +427,6 @@ inline void connect(const Vector &a, const Vector &b)
 extern void DrawBones(ClientEntity *ent);
 
 #pragma comment(lib, "tier0.lib")
-
-extern Color print_color;
-__declspec(dllimport) void __cdecl ConColorMsg(const Color &, const char *, ...);
 
 void __fastcall PaintTraverse_Hook(VPanelWrapper *ths, void *, unsigned int panel, bool something1, bool something2)
 {

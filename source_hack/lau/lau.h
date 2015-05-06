@@ -31,7 +31,7 @@ public:
 	int RunLuaFile(const char *relpath, bool safe = false);
 	void PushHookCall(void);
 
-	const char *SafeCall(int args);
+	const char *SafeCall(int args, int rets = 0);
 
 	void Init(void);
 

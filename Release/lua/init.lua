@@ -31,3 +31,9 @@ hook.Add("Paint", "hackdeplayer", function()
 		end
 	end
 end);
+
+hook.Add("CreateMove", "HAHA", function(cmd)
+	print(cmd.buttons)
+	cmd.angles.y = 0
+	return cmd
+end)
