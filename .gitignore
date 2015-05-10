@@ -1,13 +1,11 @@
 */Release
 */Debug
+Release/*
+Debug/*
 
 #What is this? do we need it? It's locked.
+/build
+/lib
+/proj
 *.sdf
-*.opensdf
-
-*.exe
-*.dll
-Release/*.lib
-*.pdb
-Release/settings.xml
 *.suo
