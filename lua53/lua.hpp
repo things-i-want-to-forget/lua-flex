@@ -12,8 +12,8 @@ extern "C" {
 }
 
 #ifdef AIM_FLEX
-#include "../source_hack/structures.h"
-#include "../source_hack/lau/lau.h"
+#include "../src/classes/structures.h"
+#include "../src/lau/lau.h"
 
 template<typename t>
 inline t &Get(lua_State *L, int where = -1)

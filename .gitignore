@@ -2,12 +2,6 @@
 */Debug
 
 #What is this? do we need it? It's locked.
-*.sdf
-*.opensdf
-
-*.exe
-*.dll
-Release/*.lib
-*.pdb
-Release/settings.xml
-*.suo
+/build
+/lib
+/proj
