@@ -56,4 +56,6 @@ public:
 
 };
 
+#undef offset
+
 #endif // VTABLE_H

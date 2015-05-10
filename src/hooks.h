@@ -1,10 +1,10 @@
 #include "vtable.h"
 
 namespace hook {
-	VTable *client_mode_vt = 0;
-	VTable *prediction_vt = 0;
-	VTable *panel_vt = 0;
-	VTable *client_vt = 0;
+	extern VTable *client_mode_vt;
+	extern VTable *prediction_vt;
+	extern VTable *panel_vt;
+	extern VTable *client_vt;
 
-	void Init_Hooks();
+	void InitHooks();
 }

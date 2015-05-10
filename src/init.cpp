@@ -17,12 +17,11 @@ EngineVersion version = GARRYSMOD;
 
 unsigned long font;
 
-void csgolua::init() {
-	version = GetEngineVersion(GetAppID());
+
+void csgolua::Init() {
+	version = CSGO; // todo add this back in
 
 	structs.client = GetInterface<CClient *>("client.dll", "VClient");
-
-	hook::Init_Hooks();
 
 	structs.trace = GetInterface<CEngineTrace *>("engine.dll", "EngineTraceClient");
 	structs.engine = GetInterface<CEngineClient *>("engine.dll", "VEngineClient");
@@ -46,9 +45,7 @@ void csgolua::init() {
 	structs.sprops = GetInterface<CPhysicsSurfaceProps *>("vphysics.dll", "VPhysicsSurfaceProps");
 	structs.tools = GetInterface<CClientTools *>("client.dll", "VCLIENTTOOLS");
 	structs.local = GetInterface<CLocalize *>("localize.dll", "Localize_");
-	if (!structs.local) MessageBoxA(0, "nope", ":(", 0);
 
-	//can be found with an xref to scripts/vgui_screens.txt
 
 	if (version == GARRYSMOD)
 	{
@@ -88,7 +85,10 @@ void csgolua::init() {
 		structs.client_mode = **(ClientModeShared ***)((char *)(addr)+0x7);
 	}
 
-	structs.surface->SetFontGlyphSet(structs.surface->CreateFont(), "Arial", 16, 500, 0, 0, FONTFLAG_OUTLINE);
+	font = structs.surface->CreateFont();
+	structs.surface->SetFontGlyphSet(font, "Arial", 16, 500, 0, 0, FONTFLAG_OUTLINE);
+
+	hook::InitHooks();
 
 	structs.L = new Lau();
 

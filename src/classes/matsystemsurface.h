@@ -53,6 +53,9 @@ public:
 	static const char gmod_offset = 10;
 	static const char csgo_offset = 13;
 
+#ifdef offset
+#undef offset
+#endif
 	unsigned short offset(void)
 	{
 		switch (version)

@@ -24,6 +24,11 @@
 #define PAINT_INDEX (13)
 #define CLCREATEMOVE_INDEX (21)
 
+VTable *hook::client_mode_vt = 0;
+VTable *hook::prediction_vt = 0;
+VTable *hook::panel_vt = 0;
+VTable *hook::client_vt = 0;
+
 
 extern EngineVersion version;
 extern unsigned long font;
@@ -41,16 +46,17 @@ void __fastcall CSGOCLCreateMove_Hook2(CClient *ths, void *, int a, float b, boo
 
 __declspec(naked) void __fastcall CSGOCLCreateMove_Hook(CClient *ths, void *, int a, float b, bool c)
 {
+	void *cl_ret;
 	__asm
 	{
-		push eax
-			mov eax, [esp + 4]
-			mov cl_ret, eax
-			pop eax
-			add esp, 4
-			call CSGOCLCreateMove_Hook2
-			mov bl, bSendPacket
-			jmp cl_ret
+		push eax;
+		mov eax, [esp + 4];
+		mov cl_ret, eax;
+		pop eax;
+		add esp, 4;
+		call CSGOCLCreateMove_Hook2;
+		mov bl, bSendPacket;
+		jmp cl_ret;
 	}
 }
 
@@ -80,9 +86,6 @@ bool __fastcall CreateMove_Hook(ClientModeShared *ths, void*, float frametime, C
 	if (err)
 	{
 		ConColorMsg(print_color, "%s\n", err);
-	}
-	else {
-		cmd = &Get<CUserCmd>(state, -1);
 	}
 
 	typedef bool(__thiscall *CreateMoveFn)(ClientModeShared *, float frametime, CUserCmd *cmd);
@@ -127,7 +130,7 @@ void __fastcall PaintTraverse_Hook(VPanelWrapper *ths, void *, unsigned int pane
 		structs.surface->DrawSetTextFont(font);
 		structs.surface->DrawSetTextColor(Color(220, 30, 50));
 		structs.surface->DrawSetTextPos(3, 2);
-		structs.surface->DrawPrintText(L"source_hack  ", 11);
+		structs.surface->DrawPrintText(L"source_hack", 11);
 		auto state = structs.L->GetState();
 		structs.L->PushHookCall();
 
@@ -143,7 +146,7 @@ void __fastcall PaintTraverse_Hook(VPanelWrapper *ths, void *, unsigned int pane
 	}
 }
 
-void hook::Init_Hooks() {
+void hook::InitHooks() {
 	client_vt = new VTable(structs.client);
 	if (version == CSGO)
 		client_vt->hook(CLCREATEMOVE_INDEX, &CSGOCLCreateMove_Hook);

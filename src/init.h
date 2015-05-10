@@ -3,7 +3,7 @@
 #include "classes/engines.h"
 
 namespace csgolua {
-	void init();
+	void Init();
 }
 
-#endif INIT_H
+#endif // INIT_H

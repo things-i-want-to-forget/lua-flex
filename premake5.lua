@@ -16,6 +16,8 @@ solution "lua-flex"
 
 		targetdir ("build/")
 		
+		buildoptions { "/Os", "/GL", "/MP", "/arch:SSE2" }
+		
 		libdirs {
 			"lib"
 		}

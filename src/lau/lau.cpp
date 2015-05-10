@@ -3,8 +3,6 @@
 #include <io.h>
 #include <Windows.h>
 
-EXTERN_C IMAGE_DOS_HEADER __ImageBase;
-
 Lau::Lau(void)
 {
 
