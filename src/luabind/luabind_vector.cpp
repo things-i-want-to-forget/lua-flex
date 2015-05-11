@@ -120,6 +120,11 @@ int L_Vector_Rotate(lua_State *L) {
 	return 1;
 }
 
+int L_Vector_Angle(lua_State *L)
+{
+	Vector &v = Get<Vector>(L, 1);
+}
+
 int L_Vector_LengthSqr(lua_State *L) {
 	Vector *vector = ( Vector * ) lua_touserdata(L, 1);
 

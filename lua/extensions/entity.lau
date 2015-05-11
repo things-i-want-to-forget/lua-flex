@@ -1,16 +1,18 @@
 local m = FindMetaTable"Entity";
 
-local function netvar(mt, type, name, var)
+local function nothing(self, w) return w end
+
+local function netvar(mt, type, name, var, mod)
 	local f = mt["GetNW"..type];
 	
 	local offset = -1;
 	local r;
 	mt[name] = function(self)
 		r, offset = f(self, var, offset);
-		return r;
+		return (mod or nothing)(self, r);
 	end
 end
 
 
 netvar(m, "Angle", "EyeAngles", "m_angEyeAngles[0]");
-netvar(m, "Vector", "ShootPos", "m_vecViewOffset[0]");
+netvar(m, "Vector", "ShootPos", "m_vecViewOffset[0]", function(self, w) return w + self:GetPos(); end);
