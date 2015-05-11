@@ -20,9 +20,17 @@ int L_CMD___index(lua_State *L)
 	{
 		lua_pushboolean(L, bSendPacket);
 	}
-	else if (!strcmp(str, "angles")) 
+	else if (!strcmp(str, "p")) 
 	{
-		LPush(L, cmd->angles, "Angle");
+		lua_pushnumber(L, cmd->angles.p);
+	}
+	else if (!strcmp(str, "y"))
+	{
+		lua_pushnumber(L, cmd->angles.y);
+	}
+	else if (!strcmp(str, "r"))
+	{
+		lua_pushnumber(L, cmd->angles.r);
 	}
 	else if (!strcmp(str, "buttons")) 
 	{
@@ -44,10 +52,6 @@ int L_CMD___index(lua_State *L)
 	{
 		lua_pushnumber(L, cmd->forwardmove());
 	}
-	else if (!strcmp(str, "movement")) 
-	{
-		LPush(L, cmd->movement(), "Vector");
-	} 
 	else 
 	{
 		lua_getmetatable(L, 1);
@@ -60,11 +64,23 @@ int L_CMD___index(lua_State *L)
 
 int L_CMD___newindex(lua_State *L)
 {
-	CUserCmd *cmd = &Get<CUserCmd>(L, 1);
+	CUserCmd *cmd = Get<CUserCmd *>(L, 1);
 
 	const char *str = lua_tostring(L, 2);
 	if (!strcmp(str, "angles")) {
 		cmd->angles = Get<QAngle>(L, 3);
+	}
+	else if (!strcmp(str, "p"))
+	{
+		cmd->angles.p = lua_tonumber(L, 3);
+	}
+	else if (!strcmp(str, "y"))
+	{
+		cmd->angles.y = lua_tonumber(L, 3);
+	}
+	else if (!strcmp(str, "r"))
+	{
+		cmd->angles.r = lua_tonumber(L, 3);
 	}
 	else if (!strcmp(str, "buttons")) {
 		cmd->buttons() = lua_tonumber(L, 3);
@@ -80,9 +96,6 @@ int L_CMD___newindex(lua_State *L)
 	}
 	else if (!strcmp(str, "forwardmove")) {
 		cmd->forwardmove() = lua_tonumber(L, 3);
-	}
-	else if (!strcmp(str, "movement")) {
-		cmd->movement() = Get<Vector>(L, 3);
 	}
 	else
 	{

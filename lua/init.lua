@@ -34,6 +34,6 @@ end);
 
 hook.Add("CreateMove", "HAHA", function(cmd)
 	print(cmd.buttons)
-	cmd.angles.p = 0;
+	cmd.p = 0;
 	return cmd
 end)

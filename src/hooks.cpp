@@ -76,20 +76,21 @@ __declspec(dllimport) void __cdecl ConColorMsg(const Color &, const char *, ...)
 
 bool __fastcall CreateMove_Hook(ClientModeShared *ths, void*, float frametime, CUserCmd *cmd)
 {
+	typedef bool(__thiscall *CreateMoveFn)(ClientModeShared *, float frametime, CUserCmd *cmd);
+	bool ret = CreateMoveFn(client_mode_vt->getold(CREATEMOVE_INDEX))(ths, frametime, cmd);
+
 	auto state = structs.L->GetState();
+
 	structs.L->PushHookCall();
 
 	lua_pushstring(state, "CreateMove");
 	LPush(state, cmd, "CUserCmd");
 
-	const char *err = structs.L->SafeCall(2, 1);
+	const char *err = structs.L->SafeCall(2, 0);
 	if (err)
 	{
 		ConColorMsg(print_color, "%s\n", err);
 	}
-
-	typedef bool(__thiscall *CreateMoveFn)(ClientModeShared *, float frametime, CUserCmd *cmd);
-	bool ret = CreateMoveFn(client_mode_vt->getold(CREATEMOVE_INDEX))(ths, frametime, cmd);
 
 	cmd->angles.Normalize();
 	cmd->angles.Clamp();
