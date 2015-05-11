@@ -1,0 +1,21 @@
+local m = FindMetaTable"Entity";
+
+do
+	local eye_off;
+	
+	function m:EyeAngles()
+		local r;
+		r, eye_off = self:GetNWAngle("m_angEyeAngles[0]", eye_off);
+		return r;
+	end
+end
+
+do
+	local shoot_off;
+	
+	function m:ShootPos()
+		local r;
+		r, shoot_off = self:GetNWAngle("m_vecViewOffset[0]", shoot_off);
+		return r + self:GetPos();
+	end
+end

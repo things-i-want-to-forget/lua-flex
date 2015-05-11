@@ -81,7 +81,7 @@ int L_Angle_Max(lua_State *L)
 int L_Angle_Vector(lua_State *L)
 {
 	Vector v;
-	LPush(L, Get<QAngle>(L, 1).ToVector(v), "Angle");
+	LPush(L, Get<QAngle>(L, 1).ToVector(v), "Vector");
 	return 1;
 }
 

@@ -171,7 +171,7 @@ int L_Entity_EyePos(lua_State *L)
 	ClientEntity *e = GetEntity(L, 1);
 	VALIDATE(e);
 
-	LPush(L, e->GetStudioHdr()->studio->eyepos, "Vector");
+	LPush(L, e->GetStudioHdr()->studio->eyepos + e->GetAbsOrigin(), "Vector");
 	return 1;
 }
 
@@ -181,7 +181,7 @@ int L_Entity_GetNWInt(lua_State *L)
 	VALIDATE(e);
 
 	int offset = -1;
-	if (lua_gettop(L) > 2)
+	if (lua_gettop(L) > 2 && lua_type(L, 3) == LUA_TNUMBER)
 		offset = lua_tointeger(L, 3);
 
 	lua_pushinteger(L, e->getvar<int>(lua_tostring(L, 2), &offset));
@@ -196,7 +196,7 @@ int L_Entity_GetNWFloat(lua_State *L)
 	VALIDATE(e);
 
 	int offset = -1;
-	if (lua_gettop(L) > 2)
+	if (lua_gettop(L) > 2 && lua_type(L, 3) == LUA_TNUMBER)
 		offset = lua_tointeger(L, 3);
 
 	lua_pushnumber(L, e->getvar<float>(lua_tostring(L, 2), &offset));
@@ -211,7 +211,7 @@ int L_Entity_GetNWVector(lua_State *L)
 	VALIDATE(e);
 
 	int offset = -1;
-	if (lua_gettop(L) > 2)
+	if (lua_gettop(L) > 2 && lua_type(L, 3) == LUA_TNUMBER)
 		offset = lua_tointeger(L, 3);
 
 	LPush(L, e->getvar<Vector>(lua_tostring(L, 2), &offset), "Vector");
@@ -226,10 +226,10 @@ int L_Entity_GetNWAngle(lua_State *L)
 	VALIDATE(e);
 
 	int offset = -1;
-	if (lua_gettop(L) > 2)
+	if (lua_gettop(L) > 2 && lua_type(L, 3) == LUA_TNUMBER)
 		offset = lua_tointeger(L, 3);
 
-	LPush(L, e->getvar<QAngle>(lua_tostring(L, 2), &offset), "QAngle");
+	LPush(L, e->getvar<QAngle>(lua_tostring(L, 2), &offset), "Angle");
 	lua_pushinteger(L, offset);
 
 

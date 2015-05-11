@@ -3,12 +3,15 @@
 
 #include "vector.h"
 #include "engines.h"
+#include "../offset.h"
+#include <Windows.h>
 
 extern EngineVersion version;
 
 struct Ray_t;
 class CTraceFilter;
 struct trace_t;
+class ClientEntity;
 class CEngineTrace
 {
 	template<typename t>

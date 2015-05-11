@@ -107,6 +107,7 @@ extern luaL_Reg LuaCMDMetaTable[];
 extern luaL_Reg GlobalLibrary[];
 extern luaL_Reg SurfaceLibrary[];
 extern luaL_Reg PlayerLibrary[];
+extern luaL_Reg TraceLibrary[];
 
 void Lau::Init(void)
 {
@@ -156,6 +157,12 @@ void Lau::Init(void)
 			luaL_setfuncs(L, PlayerLibrary, 0);
 		}
 		lua_setfield(L, -2, "player");
+
+		lua_newtable(L);
+		{
+			luaL_setfuncs(L, TraceLibrary, 0);
+		}
+		lua_setfield(L, -2, "trace");
 	}
 	lua_pop(L, 1);
 
