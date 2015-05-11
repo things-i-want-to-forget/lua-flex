@@ -56,7 +56,6 @@ public:
 
 		if (max != 0.00f)
 		{
-			max /= max;
 			z /= max;
 			x /= max;
 			y /= max;
