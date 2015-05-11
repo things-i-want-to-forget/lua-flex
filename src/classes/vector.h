@@ -43,16 +43,24 @@ public:
 	inline void Normalize(void)
 	{
 		float max;
-		if (x > y && x > z)
+		float _x, _y, _z;
+		_x = sqrtf(x * x);
+		_y = sqrtf(y * y);
+		_z = sqrtf(z * z);
+		if (_x > _y && _x > _z)
 			max = x;
-		else if (y > z)
-			max = y;
+		else if (_y > _z)
+			max = _y;
 		else
-			max = z;
+			max = _z;
 
-		z /= max;
-		x /= max;
-		y /= max;
+		if (max != 0.00f)
+		{
+			max /= max;
+			z /= max;
+			x /= max;
+			y /= max;
+		}
 	}
 	inline float Dot(const Vector &o) const
 	{
