@@ -34,7 +34,7 @@ int L_CMD___index(lua_State *L)
 	}
 	else if (!strcmp(str, "buttons")) 
 	{
-		lua_pushnumber(L, cmd->buttons());
+		lua_pushinteger(L, cmd->buttons());
 	}
 	else if (!strcmp(str, "mousex")) 
 	{
@@ -83,7 +83,7 @@ int L_CMD___newindex(lua_State *L)
 		cmd->angles.r = lua_tonumber(L, 3);
 	}
 	else if (!strcmp(str, "buttons")) {
-		cmd->buttons() = lua_tonumber(L, 3);
+		cmd->buttons() = lua_tointeger(L, 3);
 	}
 	else if (!strcmp(str, "mousex")) {
 		cmd->mousex() = lua_tonumber(L, 3);

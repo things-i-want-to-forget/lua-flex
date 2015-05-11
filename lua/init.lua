@@ -33,7 +33,5 @@ hook.Add("Paint", "hackdeplayer", function()
 end);
 
 hook.Add("CreateMove", "HAHA", function(cmd)
-	print(cmd.buttons)
 	cmd.p = 0;
-	return cmd
 end)
