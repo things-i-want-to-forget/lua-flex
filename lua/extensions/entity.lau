@@ -1,21 +1,16 @@
 local m = FindMetaTable"Entity";
 
-do
-	local eye_off;
+local function netvar(mt, type, name, var)
+	local f = mt["GetNW"..type];
 	
-	function m:EyeAngles()
-		local r;
-		r, eye_off = self:GetNWAngle("m_angEyeAngles[0]", eye_off);
+	local offset = -1;
+	local r;
+	mt[name] = function(self)
+		r, offset = f(self, var, offset);
 		return r;
 	end
 end
 
-do
-	local shoot_off;
-	
-	function m:ShootPos()
-		local r;
-		r, shoot_off = self:GetNWAngle("m_vecViewOffset[0]", shoot_off);
-		return r + self:GetPos();
-	end
-end
+
+netvar(m, "Angle", "EyeAngles", "m_angEyeAngles[0]");
+netvar(m, "Vector", "ShootPos", "m_vecViewOffset[0]");
