@@ -117,6 +117,7 @@ inline Vector operator*(const Vector &v, const float &v2)
 
 inline Vector operator/(const Vector &v, const float &v2)
 {
+	return Vector(v / v2);
 }
 
 
