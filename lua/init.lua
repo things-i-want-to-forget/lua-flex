@@ -11,6 +11,7 @@ end
 
 MASK_SHOT = 0x4600400B;
 
+include "extensions/in_buttons.lau";
 include "hook/hook.lau";
 include "extensions/entity.lau";
 
