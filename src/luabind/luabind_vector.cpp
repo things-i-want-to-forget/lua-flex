@@ -81,6 +81,11 @@ int L_Vector__mul(lua_State *L) {
 	return 1;
 }
 
+int L_Vector__div (lua_State *L) {
+	LPush(L, Get<Vector>(L, 1) / lua_tonumber(L, 2), "Vector");
+	return 1;
+}
+
 int L_Vector__eq(lua_State *L)
 {
 	lua_pushboolean(L, Get<Vector>(L, 1) == Get<Vector>(L, 2));
@@ -96,6 +101,11 @@ int L_Vector_ToScreen(lua_State *L) {
 	LPush(L, newVector, "Vector");
 	lua_pushboolean(L, onscreen);
 	return 2;
+}
+
+int L_Vector_GetNormalized(lua_State *L) {
+	LPush(L, Get<Vector>(L, 1).GetNormalized(), "Vector");
+	return 1;
 }
 
 int L_Vector_Normalize(lua_State *L) {
@@ -145,8 +155,10 @@ luaL_Reg LuaVectorMetaTable[] = {
 	{ "__add", L_Vector__add },
 	{ "__sub", L_Vector__sub },
 	{ "__mul", L_Vector__mul },
+	{ "__div", L_Vector__div },
 	{ "__eq", L_Vector__eq },
 	{ "ToScreen", L_Vector_ToScreen },
+	{ "GetNormalized", L_Vector_GetNormalized },
 	{ "Normalize", L_Vector_Normalize },
 	{ "Dot", L_Vector_Dot },
 	{ "Rotate", L_Vector_Rotate },

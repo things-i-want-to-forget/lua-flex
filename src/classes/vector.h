@@ -40,26 +40,12 @@ public:
 		return WorldToScreen(*this, screen);
 	}
 
+	inline Vector GetNormalized(void) {
+		return Vector(*this / this->Length());
+	}
 	inline void Normalize(void)
 	{
-		float max;
-		float _x, _y, _z;
-		_x = sqrtf(x * x);
-		_y = sqrtf(y * y);
-		_z = sqrtf(z * z);
-		if (_x > _y && _x > _z)
-			max = x;
-		else if (_y > _z)
-			max = _y;
-		else
-			max = _z;
-
-		if (max != 0.00f)
-		{
-			z /= max;
-			x /= max;
-			y /= max;
-		}
+		*this = GetNormalized();
 	}
 	inline float Dot(const Vector &o) const
 	{
@@ -81,6 +67,16 @@ public:
 	{
 		return sqrtf(LengthSqr());
 	}
+
+	Vector &operator *(float amount)
+	{
+		return Vector(x * amount, y * amount, z * amount);
+	}
+	Vector &operator /(float amount)
+	{
+		return Vector(*this * 1/amount);
+	}
+
 };
 
 inline Vector operator+(const Vector &a, const Vector &b)
@@ -105,10 +101,24 @@ inline Vector &operator *=(Vector &v, float n)
 	v.z *= n;
 	return v;
 }
+
+inline Vector &operator /=(Vector &v, float n)
+{
+	v.x /= n;
+	v.y /= n;
+	v.z /= n;
+	return v;
+}
+
 inline Vector operator*(const Vector &v, const float &v2)
 {
 	return Vector(v.x * v2, v.y * v2, v.z * v2);
 }
+
+inline Vector operator/(const Vector &v, const float &v2)
+{
+}
+
 
 inline bool operator==(const Vector &v, const Vector &v2)
 {
