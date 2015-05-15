@@ -67,7 +67,7 @@ public:
 
 	CNetChannel *GetNetChannel(void)
 	{
-		return get<CNetChannel *(__thiscall *)(void *)>(72)(this);
+		return get<CNetChannel *(__thiscall *)(void *)>(78)(this);
 	}
 };
 

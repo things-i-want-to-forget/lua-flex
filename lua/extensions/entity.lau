@@ -14,5 +14,21 @@ local function netvar(mt, type, name, var, mod)
 end
 
 
+--players
 netvar(m, "Angle", "EyeAngles", "m_angEyeAngles[0]");
 netvar(m, "Vector", "ShootPos", "m_vecViewOffset[0]", function(self, w) return w + self:GetPos(); end);
+netvar(m, "Int", "Health", "m_iHealth");
+netvar(m, "Int", "Team", "m_iTeamNum");
+netvar(m, "Int", "Ammo", "m_iAmmo");
+
+--localplayer
+
+netvar(m, "Angle", "Punch", "m_aimPunchAngle");
+
+--weapons
+netvar(m, "Float", "NextPrimaryAttack", "m_flNextPrimaryAttack");
+
+
+function m:CanShoot()
+	return self:Ammo() > 0 and self:GetActiveWeapon():NextPrimaryAttack() <= CurTime();
+end

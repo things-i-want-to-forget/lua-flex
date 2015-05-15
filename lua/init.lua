@@ -47,5 +47,65 @@ hook.Add("Paint", "hackdeplayer", function()
 	end
 end);
 
-hook.Add("CreateMove", "HAHA", function(cmd)
-end)
+local lastaim;
+--[[
+hook.Add("CreateMove", "noobaim", function(cmd)
+
+	local lp = LocalPlayer();
+	if(not lastaim and lp:Health() > 0 and lp:CanShoot()) then
+		
+		local shootpos = lp:ShootPos();
+		local world;
+	
+		for k,v in next, player.GetAll(), nil do
+			if(v ~= lp) then
+				local bones = v:SetupBones();
+				
+				for i = 1, v:GetHitboxCount() do
+					local group = v:GetHitboxGroup(i);
+					if(group <= 3 and group > 0) then
+						local bbmin, bbmax = v:GetHitboxBB(i);
+						local mid = (bbmin + bbmax) / 2;
+						world = mid:Transform(bones[v:GetHitboxBone(i)]);
+						
+						if(util.CanAutowall(v, shootpos, world)) then
+							print"FUCK"
+							goto _found;
+						end
+						world = nil;
+					end
+				end
+			end
+		end
+		
+		::_found::
+		if(world) then
+			
+			local antirecoil = lp:Punch() * -2;
+			
+			local ang = (world - shootpos);
+			
+			lastaim = ang + antirecoil;
+			
+			cmd.p = lastaim.p;
+			cmd.y = lastaim.y;
+			cmd.r = 0;
+			
+			cmd.sendpacket = false;
+			
+		end
+	
+	elseif(lastaim) then
+	
+		lastaim = false;
+		local ang = cmd.angles * 2 - lastaim;
+		
+		cmd.p = ang.p;
+		cmd.y = ang.y;
+		cmd.r = 0;
+		
+		cmd.sendpacket = true;
+		
+	end
+	
+end)]]

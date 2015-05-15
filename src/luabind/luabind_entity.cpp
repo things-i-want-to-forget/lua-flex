@@ -60,6 +60,72 @@ int L_Entity_IsDormant(lua_State *L)
 	return 1;
 }
 
+int L_Entity_SetupBones(lua_State *L)
+{
+	ClientEntity *e = GetEntity(L, 1);
+	VALIDATE(e);
+
+	float t = structs.globals->curtime();
+
+	if (lua_gettop(L) >= 2 && lua_type(L, 2) == LUA_TNUMBER)
+		t = lua_tonumber(L, 2);
+
+	matrix3x4_t bones[128];
+
+	e->SetupBones(bones, t);
+
+	lua_newtable(L);
+	for (int i = 0; i < 128; i++)
+	{
+		LPush(L, bones[i], "Matrix");
+		lua_rawseti(L, -2, i + 1);
+	}
+	return 1;
+}
+
+int L_Entity_GetHitBoxGroup(lua_State *L)
+{
+	ClientEntity *e = GetEntity(L, 1);
+	VALIDATE(e);
+
+	lua_pushinteger(L, e->GetHitbox(lua_tonumber(L, 2) - 1)->group);
+
+	return 1;
+}
+
+int L_Entity_GetHitboxBone(lua_State *L)
+{
+	ClientEntity *e = GetEntity(L, 1);
+	VALIDATE(e);
+
+	lua_pushinteger(L, e->GetHitbox(lua_tonumber(L, 2) - 1)->bone + 1);
+
+	return 1;
+}
+
+int L_Entity_GetHitboxName(lua_State *L)
+{
+	ClientEntity *e = GetEntity(L, 1);
+	VALIDATE(e);
+
+	lua_pushstring(L, e->GetHitbox(lua_tonumber(L, 2) - 1)->pszHitboxName());
+
+	return 1;
+}
+
+int L_Entity_GetHitBoxBB(lua_State *L)
+{
+	ClientEntity *e = GetEntity(L, 1);
+	VALIDATE(e); 
+	
+	auto hb = e->GetHitbox(lua_tonumber(L, 2) - 1);
+
+	LPush(L, hb->bbmin, "Vector");
+	LPush(L, hb->bbmax, "Vector");
+
+	return 2;
+}
+
 int L_Entity_GetHitboxCount(lua_State *L)
 {
 	ClientEntity *e = GetEntity(L, 1);
@@ -236,6 +302,12 @@ int L_Entity_GetNWAngle(lua_State *L)
 	return 2;
 }
 
+int L_Entity___eq(lua_State *L)
+{
+	lua_pushboolean(L, Get<CBaseHandle>(L, 1) == Get<CBaseHandle>(L, 2));
+	return 1;
+}
+
 int L_Entity___index(lua_State *L)
 {
 	lua_getmetatable(L, 1);
@@ -247,11 +319,16 @@ int L_Entity___index(lua_State *L)
 
 
 luaL_Reg LuaEntityMetaTable[] = {
+	{ "GetHitboxGroup", L_Entity_GetHitBoxGroup },
+	{ "GetHitboxBone", L_Entity_GetHitboxBone },
+	{ "GetHitboxBB", L_Entity_GetHitBoxBB },
+	{ "GetHitboxName", L_Entity_GetHitboxName },
 	{ "IsWeapon", L_Entity_IsWeapon },
 	{ "IsValid", L_Entity_IsValid },
 	{ "IsPlayer", L_Entity_IsPlayer },
 	{ "GetPos", L_Entity_GetPos },
 	{ "IsDormant", L_Entity_IsDormant },
+	{ "SetupBones", L_Entity_SetupBones },
 	{ "GetHitboxCount", L_Entity_GetHitboxCount },
 	{ "OnGround", L_Entity_OnGround },
 	{ "IsOnGround", L_Entity_OnGround },
@@ -270,5 +347,6 @@ luaL_Reg LuaEntityMetaTable[] = {
 	{ "GetNWAngle", L_Entity_GetNWAngle },
 	{ "GetNWVector", L_Entity_GetNWVector },
 	{ "__index", L_Entity___index },
+	{ "__eq", L_Entity___eq },
 	{ 0, 0 }
 };

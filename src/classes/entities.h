@@ -7,6 +7,7 @@
 #include "globals.h"
 #include <Windows.h>
 #include "../sigscan/sigscan.h"
+#include "math.h"
 
 
 struct FileWeaponInfo_t
@@ -34,7 +35,6 @@ struct FileWeaponInfo_t
 
 extern Structures structs;
 
-typedef float matrix3x4_t[3][4];
 
 #ifndef fuck 
 #define fuck(a) MessageBoxA(0, #a, #a, 0);

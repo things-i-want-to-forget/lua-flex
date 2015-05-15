@@ -1,9 +1,25 @@
 #ifndef MATH_H
 #define MATH_H
 
+class matrix3x4_t
+{
+
+	float d[3][4];
+public:
+
+	float *operator[](int what)
+	{
+		return d[what];
+	}
+
+	const float *operator[](int what) const
+	{
+		return d[what];
+	}
+};
+
 class Vector;
 class QAngle;
-typedef float matrix3x4_t[3][4];
 
 extern void VectorAngles(const Vector &forward, QAngle &angles);
 extern void MatrixPosition(const matrix3x4_t &matrix, Vector &pos);

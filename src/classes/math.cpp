@@ -1,7 +1,7 @@
 #include "angle.h"
 #include "vector.h"
+#include "math.h"
 #include <cmath>
-typedef float matrix3x4_t[3][4];
 
 #define M_PI (3.14159265358979323846)
 #define M_PI_F ((float)M_PI)
@@ -66,9 +66,12 @@ Vector &AngleVectors(const QAngle &angles, Vector &v)
 	return v;
 }
 
-void VectorAngles(const Vector &forward, QAngle &angles)
+void VectorAngles(const Vector &_forward, QAngle &angles)
 {
 	float	tmp, yaw, pitch;
+
+	Vector forward = _forward;
+	forward.Forward();
 
 	if (forward.y == 0 && forward.x == 0)
 	{

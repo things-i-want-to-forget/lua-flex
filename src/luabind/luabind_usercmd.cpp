@@ -9,12 +9,16 @@ extern bool bSendPacket;
 
 int L_CMD___index(lua_State *L)
 {
-	CUserCmd *cmd = &Get<CUserCmd>(L, 1);
+	CUserCmd *cmd = Get<CUserCmd *>(L, 1);
 
 	const char *str = lua_tostring(L, 2);
 	if (!strcmp(str, "command_number")) 
 	{
 		lua_pushnumber(L, cmd->command_number);
+	}
+	else if (!strcmp(str, "angles")) // beWARE READONLY
+	{
+		LPush(L, cmd->angles, "Angle");
 	}
 	else if (!strcmp(str, "sendpacket"))
 	{
@@ -69,6 +73,10 @@ int L_CMD___newindex(lua_State *L)
 	const char *str = lua_tostring(L, 2);
 	if (!strcmp(str, "angles")) {
 		cmd->angles = Get<QAngle>(L, 3);
+	}
+	else if (!strcmp(str, "sendpacket"))
+	{
+		bSendPacket = lua_toboolean(L, 3) != 0;
 	}
 	else if (!strcmp(str, "p"))
 	{

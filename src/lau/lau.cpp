@@ -105,8 +105,10 @@ extern luaL_Reg LuaEntityMetaTable[];
 extern luaL_Reg LuaCMDMetaTable[];
 
 extern luaL_Reg GlobalLibrary[];
+extern luaL_Reg PredictionLibrary[];
 extern luaL_Reg SurfaceLibrary[];
 extern luaL_Reg PlayerLibrary[];
+extern luaL_Reg UtilLibrary[];
 extern luaL_Reg TraceLibrary[];
 
 void Lau::Init(void)
@@ -163,6 +165,18 @@ void Lau::Init(void)
 			luaL_setfuncs(L, TraceLibrary, 0);
 		}
 		lua_setfield(L, -2, "trace");
+
+		lua_newtable(L);
+		{
+			luaL_setfuncs(L, PredictionLibrary, 0);
+		}
+		lua_setfield(L, -2, "predict");
+
+		lua_newtable(L);
+		{
+			luaL_setfuncs(L, UtilLibrary, 0);
+		}
+		lua_setfield(L, -2, "util");
 	}
 	lua_pop(L, 1);
 

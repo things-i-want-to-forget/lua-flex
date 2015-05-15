@@ -23,6 +23,7 @@
 #define PAINTTRAVERSE_INDEX (41)
 #define PAINT_INDEX (13)
 #define CLCREATEMOVE_INDEX (21)
+__declspec(dllimport) void __cdecl ConColorMsg(const Color &, const char *, ...);
 
 VTable *hook::client_mode_vt = 0;
 VTable *hook::prediction_vt = 0;
@@ -44,21 +45,78 @@ void __fastcall CSGOCLCreateMove_Hook2(CClient *ths, void *, int a, float b, boo
 	return OriginalFn(client_vt->getold(CLCREATEMOVE_INDEX))(ths, a, b, c);
 }
 
-__declspec(naked) void __fastcall CSGOCLCreateMove_Hook(CClient *ths, void *, int a, float b, bool c)
+void (__cdecl *CL_Move)(float extra_samples, bool bFinalTick) = 0;
+void(__cdecl *CL_SendMove)(void) = 0;
+
+
+enum OVERRIDE_TYPE
 {
+	OVERRIDE_FALSE = 0,
+	OVERRIDE_TRUE = 1,
+	OVERRIDE_NONE = 2,
+};
+OVERRIDE_TYPE bOverrideSendPacket;
+
+
+void *CL_MoveRealReturn;
+const int max_cmds = 20;
+static int current = max_cmds;
+bool INSIDE_HOOK = false;
+__declspec(naked) void CL_MoveReturn(void)
+{
+	__asm pushad;
+
+	INSIDE_HOOK = true;
+
+	while (current-- != 0)
+	{
+		bOverrideSendPacket = OVERRIDE_TRUE;
+		CL_Move(0, true);
+	}
+	current = max_cmds;
+
+	INSIDE_HOOK = false;
+
+	__asm popad;
+	__asm jmp CL_MoveRealReturn;
+}
+
+void *CL_MoveReturnAddr = &CL_MoveReturn;
+
+__declspec(naked) void __fastcall CSGOCLCreateMove_Hook(CClient *ths, void *, int a, float b, bool c)
+{ // big hack codes coming in
 	void *cl_ret;
 	__asm
 	{
 		push eax;
+
+		mov al, INSIDE_HOOK; // this is eax ok
+		cmp al, 1;
+		je noreturn;
+
+		mov eax, ebp;
+		add eax, 4; // return address
+
+		push esi;
+		mov esi, [eax];
+		mov CL_MoveRealReturn, esi;
+		mov esi, CL_MoveReturnAddr;
+		mov [eax], esi;
+		pop esi;
+
+	noreturn:
+
 		mov eax, [esp + 4];
 		mov cl_ret, eax;
 		pop eax;
 		add esp, 4;
 		call CSGOCLCreateMove_Hook2;
 		mov bl, bSendPacket;
+
 		jmp cl_ret;
 	}
 }
+
 
 void __fastcall CLCreateMove_Hook(CClient *ths, void *, int a, float b, bool c)
 {
@@ -72,28 +130,48 @@ void __fastcall CLCreateMove_Hook(CClient *ths, void *, int a, float b, bool c)
 
 extern Color print_color;
 
-__declspec(dllimport) void __cdecl ConColorMsg(const Color &, const char *, ...);
 
 bool __fastcall CreateMove_Hook(ClientModeShared *ths, void*, float frametime, CUserCmd *cmd)
 {
 	typedef bool(__thiscall *CreateMoveFn)(ClientModeShared *, float frametime, CUserCmd *cmd);
 	bool ret = CreateMoveFn(client_mode_vt->getold(CREATEMOVE_INDEX))(ths, frametime, cmd);
 
-	auto state = structs.L->GetState();
-
-	structs.L->PushHookCall();
-
-	lua_pushstring(state, "CreateMove");
-	LPush(state, cmd, "CUserCmd");
-
-	const char *err = structs.L->SafeCall(2, 0);
-	if (err)
+	if (cmd)
 	{
-		ConColorMsg(print_color, "%s\n", err);
+		auto state = structs.L->GetState();
+
+		structs.L->PushHookCall();
+
+		lua_pushstring(state, "CreateMove");
+		LPush(state, cmd, "CUserCmd");
+
+		const char *err = structs.L->SafeCall(2, 0);
+		if (err)
+		{
+			ConColorMsg(print_color, "%s\n", err);
+		}
 	}
 
 	cmd->angles.Normalize();
 	cmd->angles.Clamp();
+	if (current != max_cmds)
+	{
+		cmd->buttons() &= ~1;
+		cmd->forwardmove() = 0;
+		cmd->sidemove() = 0;
+	}
+	switch (bOverrideSendPacket)
+	{
+	case OVERRIDE_TRUE:
+		bSendPacket = true;
+		break;
+	case OVERRIDE_FALSE:
+		bSendPacket = false;
+	case OVERRIDE_NONE:
+	default: 
+		break;
+	}
+	bOverrideSendPacket = OVERRIDE_NONE;
 	return ret;
 }
 

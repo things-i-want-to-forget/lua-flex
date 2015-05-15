@@ -1,5 +1,7 @@
 #include "lua.hpp"
 #include "../classes/vector.h"
+#include "../classes/angle.h"
+#include "../classes/math.h"
 #pragma warning(disable : 4244)
 
 int L_Vector___index(lua_State *L) {
@@ -119,10 +121,24 @@ int L_Vector_Rotate(lua_State *L) {
 	vector.Rotate(angle);
 	return 1;
 }
+int L_Vector_Transform(lua_State *L)
+{
+	Vector &v = Get<Vector>(L, 1);
+	matrix3x4_t &m = Get<matrix3x4_t>(L, 2);
+
+	Vector w;
+	VectorTransform(v, m, w);
+
+	LPush(L, w, "Vector");
+	return 1;
+}
 
 int L_Vector_Angle(lua_State *L)
 {
-	Vector &v = Get<Vector>(L, 1);
+	Vector v = Get<Vector>(L, 1);
+	QAngle ang(0, 0, 0);
+	LPush(L, v.Angle(ang), "Angle");
+	return 1;
 }
 
 int L_Vector_LengthSqr(lua_State *L) {
@@ -139,11 +155,19 @@ int L_Vector_Length(lua_State *L) {
 	return 1;
 }
 
+int L_Vector___div(lua_State *L)
+{
+	Vector &v = Get<Vector>(L, 1);
+	LPush(L, v / (float)lua_tonumber(L, 2), "Vector");
+	return 1;
+}
+
 luaL_Reg LuaVectorMetaTable[] = {
 	{ "__index", L_Vector___index },
 	{ "__newindex", L_Vector___newindex },
 	{ "__add", L_Vector__add },
 	{ "__sub", L_Vector__sub },
+	{ "__div", L_Vector___div },
 	{ "__mul", L_Vector__mul },
 	{ "__eq", L_Vector__eq },
 	{ "ToScreen", L_Vector_ToScreen },
@@ -152,5 +176,7 @@ luaL_Reg LuaVectorMetaTable[] = {
 	{ "Rotate", L_Vector_Rotate },
 	{ "LengthSqr", L_Vector_LengthSqr },
 	{ "Length", L_Vector_Length },
+	{ "Transform", L_Vector_Transform },
+	{ "Angle", L_Vector_Angle },
 	{ 0, 0 }
 };

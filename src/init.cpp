@@ -16,9 +16,20 @@ using namespace util;
 EngineVersion version = GARRYSMOD;
 
 unsigned long font;
+extern void(__cdecl *CL_Move)(float extra_samples, bool bFinalTick);
+extern void(__cdecl *CL_SendMove)(void);
 
 
 void csgolua::Init() {
+
+	CL_Move = (decltype(CL_Move))(SigScan("\x55\x8B\xEC\x83\xEC\x4C\x53\x56\x57\x8B\x3D????\x8A\xF9\xF3\x0F\x11\x45?\x83\xBF", GetModuleHandleA("engine.dll")));
+
+	CL_SendMove = (decltype(CL_SendMove))(SigScan("\x55\x8B\xEC\xB8????\xE8????\x8B\x0D????\x56\x57\x8B\x81????\x8B\xB1????\x40\x03\xC6\x83\x3D", GetModuleHandleA("engine.dll")));
+
+	char temp[256];
+	sprintf_s(temp, "%p %p", CL_Move, CL_SendMove);
+	MessageBoxA(0, temp, temp, 0);
+
 	version = CSGO; // todo add this back in
 
 	structs.client = GetInterface<CClient *>("client.dll", "VClient");
