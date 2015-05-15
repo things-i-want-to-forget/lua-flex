@@ -68,13 +68,13 @@ public:
 		return sqrtf(LengthSqr());
 	}
 
-	Vector &operator *(float amount)
+	Vector operator *(float amount)
 	{
-		return Vector(x * amount, y * amount, z * amount);
+		return x * amount, y * amount, z * amount;
 	}
-	Vector &operator /(float amount)
+	Vector operator /(float amount)
 	{
-		return Vector(*this * 1/amount);
+		return *this * 1/amount;
 	}
 
 };
