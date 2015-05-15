@@ -149,6 +149,11 @@ int L_Vector_Length(lua_State *L) {
 	return 1;
 }
 
+int L_Vector_Distance(lua_State *L) {
+	lua_pushnumber(L, Get<Vector>(L, 1).Distance(Get<Vector>(L, 2)));
+	return 1;
+}
+
 luaL_Reg LuaVectorMetaTable[] = {
 	{ "__index", L_Vector___index },
 	{ "__newindex", L_Vector___newindex },
@@ -164,5 +169,6 @@ luaL_Reg LuaVectorMetaTable[] = {
 	{ "Rotate", L_Vector_Rotate },
 	{ "LengthSqr", L_Vector_LengthSqr },
 	{ "Length", L_Vector_Length },
+	{ "Distance", L_Vector_Distance },
 	{ 0, 0 }
 };

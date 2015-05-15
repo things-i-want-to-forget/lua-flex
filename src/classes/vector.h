@@ -68,6 +68,15 @@ public:
 		return sqrtf(LengthSqr());
 	}
 
+	inline float Distance(Vector v2) {
+		return (v2 - *this).Length();
+	}
+
+	Vector operator-(const Vector &b)
+	{
+		return Vector(x - b.x, y - b.y, z - b.z);
+	}
+
 	Vector operator *(float amount)
 	{
 		return Vector(x * amount, y * amount, z * amount);
