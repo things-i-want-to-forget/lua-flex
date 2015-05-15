@@ -5,11 +5,6 @@
 #include <cmath>
 #include "drawing.h"
 
-#ifndef M_PI
-#define M_PI (3.14159265358979323846)
-#define M_PI_F (float)(M_PI)
-#endif
-
 class Vector;
 class QAngle;
 
@@ -45,38 +40,12 @@ public:
 		return WorldToScreen(*this, screen);
 	}
 
+	inline Vector GetNormalized(void) {
+		return Vector(*this / this->Length());
+	}
 	inline void Normalize(void)
 	{
-		float max;
-		float _x, _y, _z;
-		_x = sqrtf(x * x);
-		_y = sqrtf(y * y);
-		_z = sqrtf(z * z);
-		if (_x > _y && _x > _z)
-			max = _x;
-		else if (_y > _z)
-			max = _y;
-		else
-			max = _z;
-
-		if (max != 0.00f)
-		{
-			z /= max;
-			x /= max;
-			y /= max;
-		}
-	}
-	inline Vector &Forward(void)
-	{
-		this->Normalize();
-		*this *= M_PI_F;
-		return *this;
-	}
-	inline QAngle &Angle(QAngle &ang)
-	{
-		extern void VectorAngles(const Vector &forward, QAngle &angles);
-		VectorAngles(*this, ang);
-		return ang;
+		*this = GetNormalized();
 	}
 	inline float Dot(const Vector &o) const
 	{
@@ -98,24 +67,27 @@ public:
 	{
 		return sqrtf(LengthSqr());
 	}
-	inline Vector &operator *=(float n)
-	{
-		Vector &v = *this;
-		v.x *= n;
-		v.y *= n;
-		v.z *= n;
-		return v;
+
+	inline float Distance(Vector v2) {
+		return (v2 - *this).Length();
 	}
+
+	Vector operator-(const Vector &b)
+	{
+		return Vector(x - b.x, y - b.y, z - b.z);
+	}
+
+	Vector operator *(float amount)
+	{
+		return Vector(x * amount, y * amount, z * amount);
+	}
+	Vector operator /(float amount)
+	{
+		return Vector(*this * (1/amount));
+	}
+
 };
 
-inline Vector operator /(const Vector &_v, float n)
-{
-	Vector v = _v;
-	v.x /= n;
-	v.y /= n;
-	v.z /= n;
-	return v;
-}
 inline Vector operator+(const Vector &a, const Vector &b)
 {
 	return Vector(a.x + b.x, a.y + b.y, a.z + b.z);
@@ -131,10 +103,32 @@ inline Vector &operator+=(Vector &a, const Vector &b)
 	a.z += b.z;
 	return a;
 }
+inline Vector &operator *=(Vector &v, float n)
+{
+	v.x *= n;
+	v.y *= n;
+	v.z *= n;
+	return v;
+}
+
+inline Vector &operator /=(Vector &v, float n)
+{
+	v.x /= n;
+	v.y /= n;
+	v.z /= n;
+	return v;
+}
+
 inline Vector operator*(const Vector &v, const float &v2)
 {
 	return Vector(v.x * v2, v.y * v2, v.z * v2);
 }
+
+inline Vector operator/(const Vector &v, const float &v2)
+{
+	return Vector(v / v2);
+}
+
 
 inline bool operator==(const Vector &v, const Vector &v2)
 {
@@ -155,6 +149,4 @@ public:
 	}
 };
 
-#undef M_PI
-#undef M_PI_F
 #endif

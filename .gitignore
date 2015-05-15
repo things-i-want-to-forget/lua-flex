@@ -9,3 +9,5 @@ Debug/*
 /proj
 *.sdf
 *.suo
+
+lua/scripts/*

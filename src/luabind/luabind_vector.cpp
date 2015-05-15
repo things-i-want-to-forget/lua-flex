@@ -1,7 +1,5 @@
 #include "lua.hpp"
 #include "../classes/vector.h"
-#include "../classes/angle.h"
-#include "../classes/math.h"
 #pragma warning(disable : 4244)
 
 int L_Vector___index(lua_State *L) {
@@ -83,6 +81,11 @@ int L_Vector__mul(lua_State *L) {
 	return 1;
 }
 
+int L_Vector__div (lua_State *L) {
+	LPush(L, Get<Vector>(L, 1) / lua_tonumber(L, 2), "Vector");
+	return 1;
+}
+
 int L_Vector__eq(lua_State *L)
 {
 	lua_pushboolean(L, Get<Vector>(L, 1) == Get<Vector>(L, 2));
@@ -98,6 +101,11 @@ int L_Vector_ToScreen(lua_State *L) {
 	LPush(L, newVector, "Vector");
 	lua_pushboolean(L, onscreen);
 	return 2;
+}
+
+int L_Vector_GetNormalized(lua_State *L) {
+	LPush(L, Get<Vector>(L, 1).GetNormalized(), "Vector");
+	return 1;
 }
 
 int L_Vector_Normalize(lua_State *L) {
@@ -121,24 +129,10 @@ int L_Vector_Rotate(lua_State *L) {
 	vector.Rotate(angle);
 	return 1;
 }
-int L_Vector_Transform(lua_State *L)
-{
-	Vector &v = Get<Vector>(L, 1);
-	matrix3x4_t &m = Get<matrix3x4_t>(L, 2);
-
-	Vector w;
-	VectorTransform(v, m, w);
-
-	LPush(L, w, "Vector");
-	return 1;
-}
 
 int L_Vector_Angle(lua_State *L)
 {
-	Vector v = Get<Vector>(L, 1);
-	QAngle ang(0, 0, 0);
-	LPush(L, v.Angle(ang), "Angle");
-	return 1;
+	Vector &v = Get<Vector>(L, 1);
 }
 
 int L_Vector_LengthSqr(lua_State *L) {
@@ -155,10 +149,8 @@ int L_Vector_Length(lua_State *L) {
 	return 1;
 }
 
-int L_Vector___div(lua_State *L)
-{
-	Vector &v = Get<Vector>(L, 1);
-	LPush(L, v / (float)lua_tonumber(L, 2), "Vector");
+int L_Vector_Distance(lua_State *L) {
+	lua_pushnumber(L, Get<Vector>(L, 1).Distance(Get<Vector>(L, 2)));
 	return 1;
 }
 
@@ -167,16 +159,16 @@ luaL_Reg LuaVectorMetaTable[] = {
 	{ "__newindex", L_Vector___newindex },
 	{ "__add", L_Vector__add },
 	{ "__sub", L_Vector__sub },
-	{ "__div", L_Vector___div },
 	{ "__mul", L_Vector__mul },
+	{ "__div", L_Vector__div },
 	{ "__eq", L_Vector__eq },
 	{ "ToScreen", L_Vector_ToScreen },
+	{ "GetNormalized", L_Vector_GetNormalized },
 	{ "Normalize", L_Vector_Normalize },
 	{ "Dot", L_Vector_Dot },
 	{ "Rotate", L_Vector_Rotate },
 	{ "LengthSqr", L_Vector_LengthSqr },
 	{ "Length", L_Vector_Length },
-	{ "Transform", L_Vector_Transform },
-	{ "Angle", L_Vector_Angle },
+	{ "Distance", L_Vector_Distance },
 	{ 0, 0 }
 };

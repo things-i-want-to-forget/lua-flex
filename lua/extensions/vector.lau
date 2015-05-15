@@ -1,0 +1,5 @@
+local v_meta = FindMetaTable"Vector";
+
+function v_meta:__tostring()
+	return self.x.."  "..self.y.."  "..self.z;
+end
