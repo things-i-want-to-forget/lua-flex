@@ -157,6 +157,15 @@ int L_Entity_OBBMins(lua_State *L)
 	return 1;
 }
 
+int L_Entity_OBBCenter(lua_State *L)
+{
+	ClientEntity *e = GetEntity(L, 1);
+	VALIDATE(e);
+
+	LPush(L, e->GetStudioHdr()->studio->hull_min + e->GetStudioHdr()->studio->hull_max / 2, "Vector");
+	return 1;
+}
+
 int L_Entity_ModelName(lua_State *L)
 {
 	ClientEntity *e = GetEntity(L, 1);
@@ -263,6 +272,7 @@ luaL_Reg LuaEntityMetaTable[] = {
 	{ "Nick", L_Entity_Nick },
 	{ "OBBMins", L_Entity_OBBMins },
 	{ "OBBMaxs", L_Entity_OBBMaxs },
+	{ "OBBCenter", L_Entity_OBBCenter },
 	{ "EyePos", L_Entity_EyePos },
 	{ "ModelName", L_Entity_ModelName },
 	{ "GetNWInt", L_Entity_GetNWInt },
