@@ -1,0 +1,6 @@
+local a_meta = FindMetaTable"Angle";
+
+
+function a_meta:__tostring()
+	return self.p.."  "..self.y.."  "..self.r;
+end
