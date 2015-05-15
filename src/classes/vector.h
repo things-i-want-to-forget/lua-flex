@@ -70,11 +70,11 @@ public:
 
 	Vector operator *(float amount)
 	{
-		return x * amount, y * amount, z * amount;
+		return Vector(x * amount, y * amount, z * amount);
 	}
 	Vector operator /(float amount)
 	{
-		return *this * 1/amount;
+		return Vector(*this * (1/amount));
 	}
 
 };
