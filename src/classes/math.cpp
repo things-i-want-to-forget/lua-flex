@@ -16,8 +16,9 @@ void VectorRotate(Vector &vec, const QAngle &angle)
 	matrix3x4_t mat;
 	AngleMatrix(angle, mat); 
 
-	VectorTransform(copy, mat, vec);
-
+	vec.x = copy.Dot(mat[0]);
+	vec.y = copy.Dot(mat[1]);
+	vec.z = copy.Dot(mat[2]);
 }
 
 void SinCos(float a, float *b, float *c)
@@ -26,9 +27,9 @@ void SinCos(float a, float *b, float *c)
 	*c = cosf(a);
 }
 
-void AngleMatrix(const QAngle& angles, matrix3x4_t& matrix)
+void AngleMatrix(const QAngle &angles, matrix3x4_t& matrix)
 {
-	float		sr, sp, sy, cr, cp, cy;
+	float sr, sp, sy, cr, cp, cy;
 
 	SinCos(DEG2RAD(angles.y), &sy, &cy);
 	SinCos(DEG2RAD(angles.p), &sp, &cp);
@@ -36,19 +37,25 @@ void AngleMatrix(const QAngle& angles, matrix3x4_t& matrix)
 
 	// matrix = (YAW * PITCH) * ROLL
 	matrix[0][0] = cp*cy;
-	matrix[0][1] = cp*sy;
-	matrix[0][2] = -sp;
-	matrix[1][0] = sr*sp*cy + cr*-sy;
-	matrix[1][1] = sr*sp*sy + cr*cy;
-	matrix[1][2] = sr*cp;
-	matrix[2][0] = (cr*sp*cy + -sr*-sy);
-	matrix[2][1] = (cr*sp*sy + -sr*cy);
-	matrix[2][2] = cr*cp;
-	matrix[0][3] = 0.f;
-	matrix[1][3] = 0.f;
-	matrix[2][3] = 0.f;
-}
+	matrix[1][0] = cp*sy;
+	matrix[2][0] = -sp;
 
+	float crcy = cr*cy;
+	float crsy = cr*sy;
+	float srcy = sr*cy;
+	float srsy = sr*sy;
+	matrix[0][1] = sp*srcy - crsy;
+	matrix[1][1] = sp*srsy + crcy;
+	matrix[2][1] = sr*cp;
+
+	matrix[0][2] = (sp*crcy + srsy);
+	matrix[1][2] = (sp*crsy - srcy);
+	matrix[2][2] = cr*cp;
+
+	matrix[0][3] = 0.0f;
+	matrix[1][3] = 0.0f;
+	matrix[2][3] = 0.0f;
+}
 Vector &AngleVectors(const QAngle &angles, Vector &v)
 {
 	float	sp, sy, cp, cy;

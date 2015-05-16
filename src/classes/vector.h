@@ -133,13 +133,6 @@ inline Vector &operator+=(Vector &a, const Vector &b)
 	a.z += b.z;
 	return a;
 }
-inline Vector &operator *=(Vector &v, float n)
-{
-	v.x *= n;
-	v.y *= n;
-	v.z *= n;
-	return v;
-}
 
 inline Vector &operator /=(Vector &v, float n)
 {

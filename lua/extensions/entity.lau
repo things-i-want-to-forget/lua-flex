@@ -21,6 +21,8 @@ netvar(m, "Int", "Health", "m_iHealth");
 netvar(m, "Int", "Team", "m_iTeamNum");
 netvar(m, "Int", "Ammo", "m_iAmmo");
 
+netvar(m, "Angle", "Rotation", "m_angRotation");
+
 --localplayer
 
 netvar(m, "Angle", "Punch", "m_aimPunchAngle");

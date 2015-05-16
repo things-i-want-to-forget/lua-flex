@@ -49,18 +49,8 @@ void (__cdecl *CL_Move)(float extra_samples, bool bFinalTick) = 0;
 void(__cdecl *CL_SendMove)(void) = 0;
 
 
-enum OVERRIDE_TYPE
-{
-	OVERRIDE_FALSE = 0,
-	OVERRIDE_TRUE = 1,
-	OVERRIDE_NONE = 2,
-};
-OVERRIDE_TYPE bOverrideSendPacket;
-
-
 void *CL_MoveRealReturn;
-const int max_cmds = 20;
-static int current = max_cmds;
+
 bool INSIDE_HOOK = false;
 __declspec(naked) void CL_MoveReturn(void)
 {
@@ -156,24 +146,7 @@ bool __fastcall CreateMove_Hook(ClientModeShared *ths, void*, float frametime, C
 
 	cmd->angles.Normalize();
 	cmd->angles.Clamp();
-	if (current != max_cmds)
-	{
-		cmd->buttons() &= ~1;
-		cmd->forwardmove() = 0;
-		cmd->sidemove() = 0;
-	}
-	switch (bOverrideSendPacket)
-	{
-	case OVERRIDE_TRUE:
-		bSendPacket = true;
-		break;
-	case OVERRIDE_FALSE:
-		bSendPacket = false;
-	case OVERRIDE_NONE:
-	default: 
-		break;
-	}
-	bOverrideSendPacket = OVERRIDE_NONE;
+
 	return ret;
 }
 
