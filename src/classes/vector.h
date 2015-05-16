@@ -4,6 +4,7 @@
 
 #include <cmath>
 #include "drawing.h"
+#include "math.h"
 
 class Vector;
 class QAngle;
@@ -51,6 +52,12 @@ public:
 	{
 		return x * o.x + y * o.y + z * o.z;
 	}
+	inline Vector Transform(matrix3x4_t matrix)
+	{
+		Vector out;
+		VectorTransform(*this, matrix, out);
+		return out;
+	}
 	inline float Dot(const float *o) const
 	{
 		return x * o[0] + y * o[1] + z * o[2];
@@ -58,6 +65,18 @@ public:
 	inline void Rotate(const QAngle &angle)
 	{
 		VectorRotate(*this, angle);
+	}
+	inline Vector &Forward(void)
+	{
+		this->Normalize();
+		*this *= M_PI_F;
+		return *this;
+	}
+	inline QAngle &Angle(QAngle &a)
+	{
+		extern void VectorAngles(const Vector &_forward, QAngle &angles);
+		VectorAngles(*this, a);
+		return a;
 	}
 	inline float LengthSqr(void) const
 	{
@@ -83,9 +102,20 @@ public:
 	}
 	Vector operator /(float amount)
 	{
-		return Vector(*this * (1/amount));
+		return Vector(x / amount, y / amount, z / amount);
 	}
 
+	Vector &operator *=(float amt)
+	{
+		*this = *this * amt;
+		return *this;
+	}
+
+	Vector &operator /=(float amt)
+	{
+		*this = *this / amt;
+		return *this;
+	}
 };
 
 inline Vector operator+(const Vector &a, const Vector &b)

@@ -5,6 +5,8 @@
 #include "../classes/prediction.h"
 #include "../classes/gamemovement.h"
 
+#pragma warning(disable : 4244)
+
 class CUserCmd;
 
 int L_predict_Predict(lua_State *L)

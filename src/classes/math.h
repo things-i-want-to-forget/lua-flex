@@ -1,6 +1,10 @@
 #ifndef MATH_H
 #define MATH_H
 
+
+#define M_PI (3.14159265358979323846)
+#define M_PI_F ((float)M_PI)
+
 class matrix3x4_t
 {
 

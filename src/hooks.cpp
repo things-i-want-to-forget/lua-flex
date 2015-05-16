@@ -64,6 +64,7 @@ static int current = max_cmds;
 bool INSIDE_HOOK = false;
 __declspec(naked) void CL_MoveReturn(void)
 {
+	/*
 	__asm pushad;
 
 	INSIDE_HOOK = true;
@@ -78,6 +79,7 @@ __declspec(naked) void CL_MoveReturn(void)
 	INSIDE_HOOK = false;
 
 	__asm popad;
+	*/
 	__asm jmp CL_MoveRealReturn;
 }
 

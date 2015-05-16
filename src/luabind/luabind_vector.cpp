@@ -1,5 +1,6 @@
 #include "lua.hpp"
 #include "../classes/vector.h"
+#include "../classes/angle.h"
 #pragma warning(disable : 4244)
 
 int L_Vector___index(lua_State *L) {
@@ -26,6 +27,12 @@ int L_Vector___index(lua_State *L) {
 		lua_pushvalue(L, 2);
 		lua_rawget(L, -2);
 	}
+	return 1;
+}
+
+int L_Vector_Transform(lua_State *L)
+{
+	LPush(L, Get<Vector>(L, 1).Transform(Get<matrix3x4_t>(L, 2)), "Vector");
 	return 1;
 }
 
@@ -133,6 +140,9 @@ int L_Vector_Rotate(lua_State *L) {
 int L_Vector_Angle(lua_State *L)
 {
 	Vector &v = Get<Vector>(L, 1);
+	QAngle a(0,0,0);
+	LPush(L, v.Angle(a), "Angle");
+	return 1;
 }
 
 int L_Vector_LengthSqr(lua_State *L) {
@@ -164,6 +174,7 @@ luaL_Reg LuaVectorMetaTable[] = {
 	{ "__eq", L_Vector__eq },
 	{ "ToScreen", L_Vector_ToScreen },
 	{ "GetNormalized", L_Vector_GetNormalized },
+	{ "Transform", L_Vector_Transform },
 	{ "Normalize", L_Vector_Normalize },
 	{ "Dot", L_Vector_Dot },
 	{ "Rotate", L_Vector_Rotate },

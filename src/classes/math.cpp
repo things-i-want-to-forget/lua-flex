@@ -3,8 +3,6 @@
 #include "math.h"
 #include <cmath>
 
-#define M_PI (3.14159265358979323846)
-#define M_PI_F ((float)M_PI)
 #define RAD2DEG(n) ((float)n * (float)(180.f / M_PI_F))
 #define DEG2RAD(n) ((float)n * (float)(M_PI_F / 180.f))
 
