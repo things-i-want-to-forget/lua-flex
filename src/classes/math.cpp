@@ -12,7 +12,7 @@ void AngleMatrix(const QAngle& angles, matrix3x4_t& matrix);
 
 void VectorRotate(Vector &vec, const QAngle &angle)
 {
-	Vector copy(vec);
+	Vector copy(vec.x, vec.y, vec.z);
 	matrix3x4_t mat;
 	AngleMatrix(angle, mat); 
 

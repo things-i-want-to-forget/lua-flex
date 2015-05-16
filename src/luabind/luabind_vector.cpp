@@ -134,6 +134,7 @@ int L_Vector_Rotate(lua_State *L) {
 	QAngle &angle = Get<QAngle>(L, 2);
 
 	vector.Rotate(angle);
+	lua_pushvalue(L, 1);
 	return 1;
 }
 

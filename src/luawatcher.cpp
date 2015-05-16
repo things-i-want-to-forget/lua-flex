@@ -35,7 +35,11 @@ namespace fileChecker {
 					notify = (FILE_NOTIFY_INFORMATION*)(buffer + offset);
 					offset += notify->NextEntryOffset;
 					if (notify->FileNameLength > 0) {
-						structs.L->RunLuaFile("init.lua");
+						if (structs.L->RunLuaFile("init.lua", true) == -1)
+						{
+							MessageBoxA(0, lua_tostring(structs.L->GetState(), -1), "ERROR", MB_OK);
+							lua_pop(structs.L->GetState(), 1);
+						}
 						break;
 					}
 				} while (notify && notify->NextEntryOffset != 0);

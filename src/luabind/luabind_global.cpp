@@ -29,6 +29,16 @@ inline const char *tostring(lua_State *L, int stk)
 
 }
 
+int L_GetAsyncKeyState(lua_State *L)
+{
+	if (lua_type(L, 1) == LUA_TNUMBER)
+		lua_pushinteger(L, GetAsyncKeyState(lua_tonumber(L, 1)));
+	else
+		lua_pushinteger(L, GetAsyncKeyState(*lua_tostring(L, 1)));
+
+	return 1;
+}
+
 int L_print(lua_State *L)
 {
 	for (int i = 1; i <= lua_gettop(L); i++)
@@ -113,5 +123,6 @@ luaL_Reg GlobalLibrary[] = {
 	{ "TickInterval", L_TickInterval },
 	{ "MaxClients", L_MaxClients },
 	{ "LocalPlayer", L_LocalPlayer },
+	{ "GetAsyncKeyState", L_GetAsyncKeyState },
 	{ 0, 0 }
 };

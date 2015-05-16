@@ -89,7 +89,7 @@ const char *Lau::SafeCall(int args, int rets)
 		return 0;
 	const char *ret = lua_tostring(L, -1);
 	lua_pop(L, 1);
-	return ret;
+	return ret ? ret : "unknown";
 }
 
 void Lau::PushHookCall(void)
