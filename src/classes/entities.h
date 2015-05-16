@@ -180,11 +180,6 @@ public:
 		return get<Vector &(__thiscall *)(void *)>(version == CSGO ? 10 : 9)(this);
 	}
 
-	inline bool IsDormant(void)
-	{
-		return get<bool(__thiscall *)(void *)>(79)(this);
-	}
-
 	inline CStudioHdr *GetStudioHdr(void)
 	{
 		CStudioHdr **ret = 0;
@@ -242,6 +237,11 @@ public:
 	{
 		static int flags_off = -1;
 		return this->getvar<int>("m_fFlags", &flags_off) & 1;
+	}
+
+	bool IsDormant(void)
+	{
+		return *(0xDD + (char *)this) != 0;
 	}
 
 	ClientEntity *GetActiveWeapon(void)

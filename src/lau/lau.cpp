@@ -65,7 +65,10 @@ int Lau::RunLuaFile(const char *relpath, bool safe)
 		if (code == 0)
 		{
 			if (safe)
-				return lua_pcall(L, 0, 0, 0);
+			{
+				int r = lua_pcall(L, 0, 0, 0);
+				return r != 0 ? -1 : 0;
+			}
 			else
 				lua_call(L, 0, LUA_MULTRET);
 			return lua_gettop(L) - top;
