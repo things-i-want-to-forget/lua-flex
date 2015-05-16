@@ -131,7 +131,7 @@ int L_Vector_Dot(lua_State *L) {
 
 int L_Vector_Rotate(lua_State *L) {
 	Vector &vector = Get<Vector>(L, 1);
-	QAngle &angle = Get<QAngle>(L, 1);
+	QAngle &angle = Get<QAngle>(L, 2);
 
 	vector.Rotate(angle);
 	return 1;
