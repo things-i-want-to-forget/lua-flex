@@ -179,6 +179,7 @@ luaL_Reg LuaVectorMetaTable[] = {
 	{ "Normalize", L_Vector_Normalize },
 	{ "Dot", L_Vector_Dot },
 	{ "Rotate", L_Vector_Rotate },
+	{ "Angle", L_Vector_Angle },
 	{ "LengthSqr", L_Vector_LengthSqr },
 	{ "Length", L_Vector_Length },
 	{ "Distance", L_Vector_Distance },
