@@ -11,12 +11,25 @@ solution "lua-flex"
 		defines {"NDEBUG"}
 		optimize "On"
 
+	project "lua-flex_overlay"
+		kind "SharedLib"
+		
+		targetdir "build/"
+		
+		buildoptions { "/Os", "/MP", "/arch:SSE2" }
+		
+		files {
+			"overlay/**.cpp",
+			"overlay/**.h",
+		}
+		
+	
 	project "lua-flex"
 		kind "SharedLib"
 
 		targetdir ("build/")
 		
-		buildoptions { "/Os", "/GL", "/MP", "/arch:SSE2" }
+		buildoptions { "/Os", "/MP", "/arch:SSE2" }
 		
 		libdirs {
 			"lib"
@@ -45,6 +58,8 @@ solution "lua-flex"
 		kind "StaticLib"
 		files "lua53/**"
 
+		buildoptions { "/Os", "/MP", "/arch:SSE2" }
+		
 		targetdir ("lib/")
 
 		defines {
