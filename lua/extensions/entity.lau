@@ -26,6 +26,7 @@ netvar(m, "Angle", "Rotation", "m_angRotation");
 --localplayer
 
 netvar(m, "Angle", "Punch", "m_aimPunchAngle");
+netvar(m, "Angle", "ViewPunch", "m_viewPunchAngle");
 
 --weapons
 netvar(m, "Float", "NextPrimaryAttack", "m_flNextPrimaryAttack");
