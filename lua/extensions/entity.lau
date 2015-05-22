@@ -35,3 +35,11 @@ netvar(m, "Float", "NextPrimaryAttack", "m_flNextPrimaryAttack");
 function m:CanShoot()
 	return self:Ammo() > 0 and self:GetActiveWeapon():NextPrimaryAttack() <= CurTime();
 end
+
+function m:Alive()
+	return self:Health() > 0
+end
+
+function m:AimVector()
+	return self:EyeAngles():Vector()
+end
