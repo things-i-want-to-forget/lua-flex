@@ -189,7 +189,7 @@ void __fastcall PaintTraverse_Hook(VPanelWrapper *ths, void *, unsigned int pane
 		structs.surface->DrawSetTextFont(font);
 		structs.surface->DrawSetTextColor(Color(220, 30, 50));
 		structs.surface->DrawSetTextPos(3, 2);
-		structs.surface->DrawPrintText(L"source_hack", 11);
+		structs.surface->DrawPrintText(L"aim-flex", 8);
 		auto state = structs.L->GetState();
 		structs.L->PushHookCall();
 
