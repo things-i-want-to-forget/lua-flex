@@ -151,6 +151,10 @@ public:
 		get<void(__thiscall *)(void *, const wchar_t *, int, int)>
 			(offset2() + 12)(this, text, len, drawtype);
 	}
+	inline void DrawGetTextSize(ulong font, wchar_t const *text, int &w, int &h)
+	{
+		get<void(__thiscall *)(void *, ulong, wchar_t const*, int &, int &)>(offset2() + 63)(this, font, text, w, h);
+	};
 #ifdef CreateFont
 #undef CreateFont
 #endif
