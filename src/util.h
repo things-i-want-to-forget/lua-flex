@@ -5,7 +5,7 @@ namespace util {
 	typedef void *(__cdecl *CreateInterfaceFn)(const char *name, int *found);
 
 	template<class t>
-	t GetInterface(const char *module, const char *name)
+	inline t GetInterface(const char *module, const char *name)
 	{
 		HMODULE hmodule = GetModuleHandleA(module);
 		CreateInterfaceFn create = (CreateInterfaceFn)GetProcAddress(hmodule, "CreateInterface");

@@ -10,19 +10,6 @@ solution "lua-flex"
 	configuration "Release"
 		defines {"NDEBUG"}
 		optimize "On"
-
-	project "lua-flex_overlay"
-		kind "SharedLib"
-		
-		targetdir "build/"
-		
-		buildoptions { "/Os", "/MP", "/arch:SSE2" }
-		
-		files {
-			"overlay/**.cpp",
-			"overlay/**.h",
-		}
-		
 	
 	project "lua-flex"
 		kind "SharedLib"
@@ -39,12 +26,18 @@ solution "lua-flex"
 		}
 
 		includedirs {
-			"lua53"
+			"lua53",
+			"hack",
+			"packets",
 		}
 
 		files {
 			"src/**.cpp",
-			"src/**.h"
+			"src/**.h",
+			"packets/**.h",
+			"packets/**.cpp",
+			"hack/**.h",
+			"hack/**.cpp",
 		}
 
 		defines {
@@ -67,3 +60,32 @@ solution "lua-flex"
 			"WIN32",
 			"_LIB",
 		}
+		
+	project "lua-flex-overlay"
+		kind "SharedLib"
+		
+		targetdir "build/"
+		
+		buildoptions { "/Os", "/MP", "/arch:SSE2" }
+		
+		includedirs {
+			"hack",
+			"packets",
+		}
+		
+		files {
+			"overlay/**.cpp",
+			"overlay/**.h",
+			"packets/**.h",
+			"packets/**.cpp",
+			"hack/**.h",
+			"hack/**.cpp",
+		}
+
+		defines {
+			"AIM_FLEX_OVERLAY",
+			"WIN32",
+			"_WINDOWS",
+			"_USRDLL"
+		}
+		

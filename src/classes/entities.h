@@ -6,7 +6,7 @@
 #include "cliententitylist.h"
 #include "globals.h"
 #include <Windows.h>
-#include "../sigscan/sigscan.h"
+#include "sigscan/sigscan.h"
 #include "math.h"
 
 

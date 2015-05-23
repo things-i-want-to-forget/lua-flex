@@ -1,11 +1,7 @@
-*/Release
-*/Debug
-Release/*
-Debug/*
-
 #What is this? do we need it? It's locked.
-/build
-/lib
+/build/lua-flex.dll
+/build/lua-flex-overlay.dll
+/lib/lua53.lib
 /proj
 *.sdf
 *.suo
