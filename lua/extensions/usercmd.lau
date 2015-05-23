@@ -1,0 +1,13 @@
+local u_meta = FindMetaTable"CUserCmd";
+
+function u_meta:KeyDown(key)
+	return (self.buttons & key) == 1
+end
+
+function u_meta:AddButton(key)
+	self.buttons = self.buttons | key
+end
+
+function u_meta:RemoveButton(key)
+	self.buttons = self.buttons ~ key
+end

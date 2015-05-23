@@ -265,6 +265,21 @@ int L_Entity_GetNWInt(lua_State *L)
 
 	return 2;
 }
+int L_Entity_GetNWBool(lua_State *L)
+{
+	ClientEntity *e = GetEntity(L, 1);
+	VALIDATE(e);
+
+	int offset = -1;
+	if (lua_gettop(L) > 2 && lua_type(L, 3) == LUA_TNUMBER)
+		offset = lua_tointeger(L, 3);
+
+	lua_pushboolean(L, e->getvar<bool>(lua_tostring(L, 2), &offset));
+	lua_pushinteger(L, offset);
+
+
+	return 2;
+}
 int L_Entity_GetNWFloat(lua_State *L)
 {
 	ClientEntity *e = GetEntity(L, 1);
@@ -356,6 +371,7 @@ luaL_Reg LuaEntityMetaTable[] = {
 	{ "GetNWFloat", L_Entity_GetNWFloat },
 	{ "GetNWAngle", L_Entity_GetNWAngle },
 	{ "GetNWVector", L_Entity_GetNWVector },
+	{ "GetNWBool", L_Entity_GetNWBool },
 	{ "__index", L_Entity___index },
 	{ "__eq", L_Entity___eq },
 	{ 0, 0 }
