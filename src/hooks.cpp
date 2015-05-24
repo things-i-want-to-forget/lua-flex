@@ -152,23 +152,28 @@ bool __fastcall CreateMove_Hook(ClientModeShared *ths, void*, float frametime, C
 }
 
 
-struct {
-	bool shouldoverride;
-	QAngle angles;
-} viewangles = { false, QAngle(0, 0, 0) };
-
-
 void __fastcall SetLocalViewAngles_Hook(CPrediction *ths, void *, QAngle &ang)
 {
 	typedef void(__thiscall *OriginalFn)(void *, QAngle &);
 	auto me = structs.entity_list->GetClientEntity(structs.engine->GetLocalPlayer());
 
-	if (version == CSGO && me)
+	if (me)
 	{
-		static int view_off = -1;
-		static int punch_off = -1;
-		if (viewangles.shouldoverride)
-			return OriginalFn(prediction_vt->getold(SETLOCALVIEWANGLES_INDEX))(ths, viewangles.angles - me->getvar<QAngle>("m_aimPunchAngle", &punch_off) - me->getvar<QAngle>("m_viewPunchAngle", &view_off));
+		lua_State *state = structs.L->GetState();
+		LPush(state, ang, "Angle");
+		structs.L->PushHookCall();
+		lua_pushstring(state, "SetLocalViewAngles");
+		lua_pushvalue(state, -3);
+		const char *err = structs.L->SafeCall(2, 0);
+		if (err)
+		{
+			ConColorMsg(print_color, "%s\n", err);
+		}
+		else {
+			QAngle ang = Get<QAngle>(state);
+			lua_pop(state, 1);
+			return OriginalFn(prediction_vt->getold(SETLOCALVIEWANGLES_INDEX))(ths, ang);
+		}
 	}
 	return OriginalFn(prediction_vt->getold(SETLOCALVIEWANGLES_INDEX))(ths, ang);
 }
@@ -195,7 +200,7 @@ void __fastcall PaintTraverse_Hook(VPanelWrapper *ths, void *, unsigned int pane
 		structs.surface->DrawSetTextFont(font);
 		structs.surface->DrawSetTextColor(Color(220, 30, 50));
 		structs.surface->DrawSetTextPos(3, 2);
-		structs.surface->DrawPrintText(L"source_hack", 11);
+		structs.surface->DrawPrintText(L"aim-flex", 8);
 		auto state = structs.L->GetState();
 		structs.L->PushHookCall();
 

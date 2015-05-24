@@ -111,6 +111,17 @@ int L_surface_DrawLine(lua_State *L)
 	return 0;
 }
 
+int L_surface_GetTextSize(lua_State *L)
+{
+	int w, h;
+	structs.surface->DrawGetTextSize(lua_tointeger(L, 1), chrtowc(lua_tostring(L, 2)), w, h);
+
+	lua_pushinteger(L, w);
+	lua_pushinteger(L, h);
+
+	return 2;
+}
+
 
 
 luaL_Reg SurfaceLibrary[] = {
@@ -124,5 +135,6 @@ luaL_Reg SurfaceLibrary[] = {
 	{ "DrawRect", L_surface_DrawRect },
 	{ "SetFont", L_surface_SetFont },
 	{ "DrawLine", L_surface_DrawLine },
+	{ "GetTextSize", L_surface_GetTextSize },
 	{ 0, 0 }
 };

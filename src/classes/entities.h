@@ -241,7 +241,8 @@ public:
 
 	bool IsDormant(void)
 	{
-		return *(0xDD + (char *)this) != 0;
+		static int dormant = 0xE9;
+		return this->getvar<bool>("m_bDormant", &dormant);
 	}
 
 	ClientEntity *GetActiveWeapon(void)
