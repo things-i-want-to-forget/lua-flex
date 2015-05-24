@@ -20,11 +20,15 @@ netvar(m, "Vector", "ShootPos", "m_vecViewOffset[0]", function(self, w) return w
 netvar(m, "Int", "Health", "m_iHealth");
 netvar(m, "Int", "Team", "m_iTeamNum");
 netvar(m, "Int", "Ammo", "m_iAmmo");
+netvar(m, "Vector", "VecMins", "m_vecMins");
+netvar(m, "Vector", "VecMaxs", "m_vecMaxs");
+netvar(m, "Float", "MaxSpeed", "m_flMaxspeed");
 
 netvar(m, "Angle", "Rotation", "m_angRotation");
 
 --localplayer
 
+netvar(m, "Float", "MaxSpeed", "m_flMaxspeed");
 netvar(m, "Angle", "Punch", "m_aimPunchAngle");
 netvar(m, "Angle", "ViewPunch", "m_viewPunchAngle");
 
