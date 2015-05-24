@@ -17,6 +17,7 @@
 #include "classes/panelwrapper.h"
 #include "classes/angle.h"
 #include "classes/math.h"
+#include "windows/espwind.h"
 
 #define CREATEMOVE_INDEX (version == CSGO ? 24 : 21)
 #define SETLOCALVIEWANGLES_INDEX (13)
@@ -180,7 +181,17 @@ void __fastcall PaintTraverse_Hook(VPanelWrapper *ths, void *, unsigned int pane
 	OriginalFn(panel_vt->getold(PAINTTRAVERSE_INDEX))(ths, panel, something1, something2);
 	if (!strcmp(ths->GetName(panel), version == GARRYSMOD ? "OverlayPopupPanel" : "MatSystemTopPanel"))
 	{
-
+		/*
+		StartPaint();
+		glBegin(GL_LINES);
+		{
+			glColor4ub(255, 255, 255, 255);
+			glVertex2i(0, 0);
+			glVertex2i(100, 100);
+		}
+		glEnd();
+		EndPaint();
+		*/
 		structs.surface->DrawSetTextFont(font);
 		structs.surface->DrawSetTextColor(Color(220, 30, 50));
 		structs.surface->DrawSetTextPos(3, 2);

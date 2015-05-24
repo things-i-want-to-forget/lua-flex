@@ -21,6 +21,7 @@ class CGameMovement;
 class CEngineVGui;
 class CMoveHelper;
 class CGameEventManager;
+class MSockAPI;
 
 struct model_t;
 class CStudioHdr;
@@ -79,6 +80,7 @@ struct Structures
 	CMaterialSystem *materials;
 	CEngineVGui *engine_vgui;
 	CGameEventManager *event_manager;
+	MSockAPI *sock;
 };
 
 extern Structures structs;

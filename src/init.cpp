@@ -8,8 +8,11 @@
 #include "classes/structures.h"
 #include "classes/panelwrapper.h"
 #include "classes/matsystemsurface.h"
+#include "msockapi.h"
 #include "vtable.h"
 #include "hooks.h"
+
+#include "windows/espwind.h"
 
 using namespace util;
 
@@ -21,6 +24,9 @@ extern void(__cdecl *CL_SendMove)(void);
 
 
 void csgolua::Init() {
+
+	CreateESPWind();
+
 
 	CL_Move = (decltype(CL_Move))(SigScan("\x55\x8B\xEC\x83\xEC\x4C\x53\x56\x57\x8B\x3D????\x8A\xF9\xF3\x0F\x11\x45?\x83\xBF", GetModuleHandleA("engine.dll")));
 
@@ -100,4 +106,17 @@ void csgolua::Init() {
 	structs.L = new Lau();
 
 	structs.L->Init();
+
+	structs.sock = new MSockAPI();
+	structs.sock->Connect("\\\\.\\pipe\\lf_esp");
+
+	if (!structs.sock->connected())
+	{
+		char temp[256];
+		sprintf_s(temp, "%i", GetLastError());
+		MessageBoxA(0, "not connected to sock", temp, 0);
+	}
+	else
+		MessageBoxA(0, "omg connected xd", "connect", 0);
+
 }

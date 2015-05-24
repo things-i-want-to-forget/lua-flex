@@ -1,6 +1,15 @@
 #ifndef MSOCKBUFF_H
 #define MSOCKBUFF_H
 
+enum MPACKET
+{
+	MPACKET_LINE           = 0,
+	MPACKET_OUTLINED_RECT  = 1,
+	MPACKET_FILLED_RECT    = 2,
+	MPACKET_FLUSH          = 3,
+	MPACKET_CLEAR          = 4
+};
+
 enum
 {
 	MSOCKBUFF_READNONE    = 0,
@@ -52,8 +61,6 @@ public:
 	{
 		return size;
 	}
-
-	virtual unsigned long process(void) = 0;
 
 public:
 	char *buf;

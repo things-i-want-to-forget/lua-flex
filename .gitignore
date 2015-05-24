@@ -1,6 +1,8 @@
 #What is this? do we need it? It's locked.
 /build/lua-flex.dll
-/build/lua-flex-overlay.dll
+/build/lua-flex-overlay.exe
+/build/lua-flex-overlay.pdb
+/build/lua-flex.pdb
 /lib/lua53.lib
 /proj
 *.sdf

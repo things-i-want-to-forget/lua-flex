@@ -22,7 +22,7 @@ solution "lua-flex"
 			"lib"
 		}
 		links {
-			"lua53"
+			"lua53",
 		}
 
 		includedirs {
@@ -34,8 +34,6 @@ solution "lua-flex"
 		files {
 			"src/**.cpp",
 			"src/**.h",
-			"packets/**.h",
-			"packets/**.cpp",
 			"hack/**.h",
 			"hack/**.cpp",
 		}
@@ -60,9 +58,9 @@ solution "lua-flex"
 			"WIN32",
 			"_LIB",
 		}
-		
+	
 	project "lua-flex-overlay"
-		kind "SharedLib"
+		kind "ConsoleApp"
 		
 		targetdir "build/"
 		
@@ -71,6 +69,16 @@ solution "lua-flex"
 		includedirs {
 			"hack",
 			"packets",
+			"sdl",
+		}
+		
+		libdirs {
+			"lib"
+		}
+		links {
+			"SDL2",
+			"opengl32",
+			"Dwmapi",
 		}
 		
 		files {
@@ -80,6 +88,7 @@ solution "lua-flex"
 			"packets/**.cpp",
 			"hack/**.h",
 			"hack/**.cpp",
+			"sdl/**.h",
 		}
 
 		defines {
@@ -88,4 +97,3 @@ solution "lua-flex"
 			"_WINDOWS",
 			"_USRDLL"
 		}
-		
