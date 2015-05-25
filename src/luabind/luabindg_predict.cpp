@@ -27,8 +27,7 @@ int L_predict_Predict(lua_State *L)
 	structs.game_movement->ProcessMovement(me, movedata);
 	structs.prediction->FinishMove(me, cmd, movedata);
 
-
-	structs.globals->curtime() = old_time;
+		structs.globals->curtime() = old_time;
 	structs.globals->frametime() = old_frame;
 
 	return 0;

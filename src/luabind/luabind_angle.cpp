@@ -100,7 +100,7 @@ int L_Angle_Clamp(lua_State *L)
 int L_Angle_Approach(lua_State *L)
 {
 	Get<QAngle>(L, 1).Approach(Get<QAngle>(L, 2), lua_tonumber(L, 3));
-	return 1;
+	return 0;
 }
 
 int L_Angle___add(lua_State *L)

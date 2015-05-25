@@ -136,8 +136,9 @@ bool __fastcall CreateMove_Hook(ClientModeShared *ths, void*, float frametime, C
 
 		lua_pushstring(state, "CreateMove");
 		LPush(state, cmd, "CUserCmd");
+		lua_pushnumber(state, frametime);
 
-		const char *err = structs.L->SafeCall(2, 0);
+		const char *err = structs.L->SafeCall(3, 0);
 		if (err)
 		{
 			ConColorMsg(print_color, "%s\n", err);
