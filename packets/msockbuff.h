@@ -1,13 +1,16 @@
 #ifndef MSOCKBUFF_H
 #define MSOCKBUFF_H
 
+#include <cstdlib>
+
 enum MPACKET
 {
 	MPACKET_LINE           = 0,
 	MPACKET_OUTLINED_RECT  = 1,
 	MPACKET_FILLED_RECT    = 2,
 	MPACKET_FLUSH          = 3,
-	MPACKET_CLEAR          = 4
+	MPACKET_CLEAR          = 4,
+	MPACKET_COLOR          = 5
 };
 
 enum
@@ -23,23 +26,35 @@ class MSockAPI;
 class MSockBuffer
 {
 public:
+	// input
 	MSockBuffer(void)
 	{
-		buf = 0;
 		size = 0;
 		state = MSOCKBUFF_READNONE;
 	}
+
+	MSockBuffer(MPACKET pid)
+	{
+		size = 0;
+		id = pid;
+	}
+
 	~MSockBuffer(void)
 	{
 		Reset();
 	}
 	bool Initialize(MSockAPI *api);
 
+	template<typename t>
+	void write(t val, unsigned long len = sizeof(t))
+	{
+		(*(t *)(buf + size)) = val;
+		size += len;
+	}
+
 	void Reset(void)
 	{
-		if (buf)
-			delete[] buf;
-		buf = 0;
+		cbuf = 0;
 		state = MSOCKBUFF_READNONE;
 		size = 0;
 	}
@@ -51,8 +66,8 @@ public:
 		{
 			return false;
 		}
-		memcpy(var, buf, varlen);
-		buf += varlen;
+		memcpy(var, cbuf, varlen);
+		cbuf += varlen;
 		size -= varlen;
 		return true;
 	}
@@ -63,7 +78,8 @@ public:
 	}
 
 public:
-	char *buf;
+	static char buf[4096];
+	char *cbuf;
 
 	unsigned long size;
 	

@@ -1,38 +1,52 @@
 #ifndef MSOCKAPI_H
 #define MSOCKAPI_H
 
+#include <WinSock2.h>
 #include <Windows.h>
+#include <type_traits>
+#include <ws2tcpip.h>
 
+class MSockBuffer;
 class MSockAPI
 {
 public:
 	MSockAPI() { _connected = false; };
 
-	void Connect(const char *pipename)
+	void Connect(void)
 	{
+		addrinfo hints, *result;
+		WSADATA wsaData;
+		ZeroMemory(&hints, sizeof(hints));
+		hints.ai_family = AF_UNSPEC;
+		hints.ai_socktype = SOCK_STREAM;
+		hints.ai_protocol = IPPROTO_TCP;
 
+		WSAStartup(MAKEWORD(2, 2), &wsaData);
+
+		// Resolve the server address and port
+		getaddrinfo("127.0.0.1", "54321", &hints, &result);
+
+		sock = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
 
 #ifdef AIM_FLEX_OVERLAY
-		//server
-		SECURITY_ATTRIBUTES attr;
-		SECURITY_DESCRIPTOR desc;
-		InitializeSecurityDescriptor(&desc, SECURITY_DESCRIPTOR_REVISION);
 
-		SetSecurityDescriptorDacl(&desc, TRUE, NULL, FALSE);
+		int err = bind(sock, result->ai_addr, result->ai_addrlen);
 
-		attr.lpSecurityDescriptor = &desc;
-		attr.nLength = sizeof(attr);
-		attr.bInheritHandle = FALSE;
+		freeaddrinfo(result);
+		if (err != INVALID_SOCKET)
+		{
+			listen(sock, 2);
+			SOCKET serv = sock;
+			sock = accept(serv, NULL, NULL);
+			_connected = sock != INVALID_SOCKET;
+		}
 
-		pipe = CreateNamedPipeA(pipename, PIPE_ACCESS_INBOUND | WRITE_DAC,
-			PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_NOWAIT, PIPE_UNLIMITED_INSTANCES, 512, 512,
-			NMPWAIT_USE_DEFAULT_WAIT, &attr);
-		_connected = pipe != INVALID_HANDLE_VALUE;
 #else
-		//client
-		pipe = CreateFileA(pipename, GENERIC_WRITE, 0,
-			NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-		_connected = pipe != INVALID_HANDLE_VALUE;
+
+		int err = connect(sock, result->ai_addr, result->ai_addrlen);
+		freeaddrinfo(result);
+
+		_connected = err != SOCKET_ERROR && sock != INVALID_SOCKET;
 
 #endif
 	}
@@ -45,28 +59,42 @@ public:
 	template <typename t>
 	bool read(t *val, unsigned long len = sizeof(t))
 	{
-		DWORD read;
-		DWORD shit;
-		PeekNamedPipe(pipe, val, len, &read, &shit, &shit);
+		DWORD read = ::recv(sock, (char *)val, len, MSG_PEEK);
 		if (read == len)
 		{
-			ReadFile(pipe, val, len, &read, NULL);
+			::recv(sock, (char *)val, len, 0);
 			return true;
 		}
 		return false;
 	}
 
-	template <typename t>
-	void write(t &val, unsigned long len = sizeof(t))
+	void send(MSockBuffer *buf);
+
+	void write(MSockBuffer &b)
 	{
-		DWORD written;
-		WriteFile(pipe, &val, len, &written, NULL);
+		send(&b);
+	}
+	void write(MSockBuffer *b)
+	{
+		send(b);
+	}
+
+	template <typename t>
+	void write(t val, unsigned long len = sizeof(t))
+	{
+		::send(sock, (const char *)&val, len, 0);
+	}
+
+	template <typename t>
+	void write(t *val, unsigned long len)
+	{
+		::send(sock, (const char *)val, len, 0);
 	}
 
 public:
 
 	bool _connected;
-	HANDLE pipe;
+	SOCKET sock;
 
 };
 

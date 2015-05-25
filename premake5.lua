@@ -23,6 +23,7 @@ solution "lua-flex"
 		}
 		links {
 			"lua53",
+			"Ws2_32",
 		}
 
 		includedirs {
@@ -36,6 +37,8 @@ solution "lua-flex"
 			"src/**.h",
 			"hack/**.h",
 			"hack/**.cpp",
+			"packets/**.cpp",
+			"packets/**.h",
 		}
 
 		defines {
@@ -79,6 +82,7 @@ solution "lua-flex"
 			"SDL2",
 			"opengl32",
 			"Dwmapi",
+			"Ws2_32",
 		}
 		
 		files {

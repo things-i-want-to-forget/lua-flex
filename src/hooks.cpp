@@ -1,3 +1,7 @@
+//must be first
+#include "msockapi.h"
+#include "msockbuff.h" 
+
 #include "hooks.h"
 #include "luawatcher.h"
 #include "lau/lau.h"
@@ -17,7 +21,6 @@
 #include "classes/panelwrapper.h"
 #include "classes/angle.h"
 #include "classes/math.h"
-#include "windows/espwind.h"
 
 #define CREATEMOVE_INDEX (version == CSGO ? 24 : 21)
 #define SETLOCALVIEWANGLES_INDEX (13)
@@ -178,29 +181,31 @@ void __fastcall SetLocalViewAngles_Hook(CPrediction *ths, void *, QAngle &ang)
 	return OriginalFn(prediction_vt->getold(SETLOCALVIEWANGLES_INDEX))(ths, ang);
 }
 
+
+
 void __fastcall PaintTraverse_Hook(VPanelWrapper *ths, void *, unsigned int panel, bool something1, bool something2)
 {
 	static int lastKey = GetAsyncKeyState('L');
 
 	typedef void(__thiscall *OriginalFn)(void *, ulong, bool, bool);
 	OriginalFn(panel_vt->getold(PAINTTRAVERSE_INDEX))(ths, panel, something1, something2);
+
 	if (!strcmp(ths->GetName(panel), version == GARRYSMOD ? "OverlayPopupPanel" : "MatSystemTopPanel"))
 	{
-		/*
-		StartPaint();
-		glBegin(GL_LINES);
-		{
-			glColor4ub(255, 255, 255, 255);
-			glVertex2i(0, 0);
-			glVertex2i(100, 100);
-		}
-		glEnd();
-		EndPaint();
-		*/
+		static float frametime = 0;
+
+		frametime += structs.globals->frametime();
+
+		if (frametime < 1 / 10) // only render at 10 fps
+			return;
+		frametime = 0;
+		structs.surface->clear();
+
 		structs.surface->DrawSetTextFont(font);
 		structs.surface->DrawSetTextColor(Color(220, 30, 50));
 		structs.surface->DrawSetTextPos(3, 2);
 		structs.surface->DrawPrintText(L"aim-flex", 8);
+
 		auto state = structs.L->GetState();
 		structs.L->PushHookCall();
 
@@ -211,6 +216,8 @@ void __fastcall PaintTraverse_Hook(VPanelWrapper *ths, void *, unsigned int pane
 		{
 			ConColorMsg(print_color, "%s\n", err);
 		}
+
+		structs.surface->flush();
 
 		fileChecker::checkDir();
 	}

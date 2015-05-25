@@ -1,6 +1,7 @@
 #ifndef MATSYSTEMSURFACE_H
 #define MATSYSTEMSURFACE_H
 
+
 #include "matrix.h"
 #include "color.h"
 #include "engines.h"
@@ -47,6 +48,7 @@ enum InputContextHandle_t__ { };
 
 extern EngineVersion version;
 
+#ifdef USE_OLD_SURFACE
 class CMatSystemSurface
 {
 public:
@@ -324,4 +326,88 @@ private:
 	virtual void *DrawSetSubTextureRGBA(int, int, int, uchar  const*, int, int) = 0;
 	virtual void *DrawTexturedSubRectGradient(int, int, int, int, float, float, float, float, Color, Color, bool) = 0;
 };
+
+#else
+#include "structures.h"
+#include "../../packets/msockapi.h"
+#include "../../packets/msockbuff.h"
+
+class CMatSystemSurface
+{
+public:
+	void clear(void)
+	{
+		static MSockBuffer buf_clear(MPACKET_CLEAR);
+		structs.sock->send(&buf_clear);
+	}
+
+	void flush(void)
+	{
+		static MSockBuffer buf_flush(MPACKET_FLUSH);
+
+		structs.sock->send(&buf_flush);
+	}
+
+	void DrawSetColor(Color col)
+	{
+		MSockBuffer pack(MPACKET_COLOR);
+		pack.write(col.r);
+		pack.write(col.g);
+		pack.write(col.b);
+		pack.write(col.a);
+		structs.sock->write(&pack);
+	}
+
+	void DrawFilledRect(int x1, int y1, int x2, int y2)
+	{
+		MSockBuffer pack(MPACKET_FILLED_RECT);
+		pack.write(x1);
+		pack.write(y1);
+		pack.write(x2);
+		pack.write(y2);
+		structs.sock->write(&pack);
+	}
+
+	void DrawLine(int x1, int y1, int x2, int y2)
+	{
+		MSockBuffer pack(MPACKET_LINE);
+		pack.write(x1);
+		pack.write(y1);
+		pack.write(x2);
+		pack.write(y2);
+		structs.sock->write(&pack);
+	}
+
+	void DrawOutlinedRect(int x1, int y1, int x2, int y2)
+	{
+		MSockBuffer pack(MPACKET_OUTLINED_RECT);
+		pack.write(x1);
+		pack.write(y1);
+		pack.write(x2);
+		pack.write(y1);
+		structs.sock->write(&pack);
+	}
+#undef CreateFont
+	int CreateFont() { return 0; }
+
+	bool SetFontGlyphSet(int font, char  const* font_name,
+		int tall, int weight, int blur, int scanlines, int flags, int a = 0, int b = 0)
+	{
+		return true;
+	}
+
+	void DrawSetTextFont(int font) { }
+
+	void DrawSetTextPos(int, int) { }
+
+	void DrawSetTextColor(Color c) { }
+
+	void DrawPrintText(wchar_t const *, size_t) { }
+
+	void DrawGetTextSize(int, const wchar_t *, int &, int &) { }
+
+};
+
+#endif
+
 #endif // MATSYSTEMSURFACE_H

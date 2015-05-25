@@ -1,6 +1,8 @@
 #include "msockbuff.h"
 #include "msockapi.h"
 
+char MSockBuffer::buf[4096];
+
 bool MSockBuffer::Initialize(MSockAPI *api)
 {
 	if (this->state != MSOCKBUFF_READALL
@@ -24,10 +26,9 @@ bool MSockBuffer::Initialize(MSockAPI *api)
 	}
 	if (this->state != MSOCKBUFF_READALL)
 	{
-		if (!buf)
-			buf = new char[this->size];
 		if (api->read(buf, this->size))
 		{
+			cbuf = buf;
 			this->state = MSOCKBUFF_READALL;
 			return true;
 		}

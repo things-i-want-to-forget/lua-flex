@@ -83,8 +83,6 @@ int L_surface_SetTextPos(lua_State *L)
 int L_surface_SetTextColor(lua_State *L)
 {
 	Color c = GetColor(L, 1);
-	char temp[256];
-	sprintf_s(temp, "%i %i %i %i", c.r, c.g, c.b, c.a);
 	structs.surface->DrawSetTextColor(c);
 	return 0;
 }
@@ -114,7 +112,10 @@ int L_surface_DrawLine(lua_State *L)
 int L_surface_GetTextSize(lua_State *L)
 {
 	int w, h;
-	structs.surface->DrawGetTextSize(lua_tointeger(L, 1), chrtowc(lua_tostring(L, 2)), w, h);
+	wchar_t *text = chrtowc(lua_tostring(L, 2));
+	structs.surface->DrawGetTextSize(lua_tointeger(L, 1), text, w, h);
+
+	delete[] text;
 
 	lua_pushinteger(L, w);
 	lua_pushinteger(L, h);

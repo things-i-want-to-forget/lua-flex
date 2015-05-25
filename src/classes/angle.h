@@ -118,7 +118,10 @@ inline void QAngle::Clamp(void)
 		p = -89;
 	else if (p > 89)
 		p = 89;
-	y = _fmodf(y + 180, 360) - 180;
+	if (y > 180)
+		y = 180;
+	else if (-180 >= y)
+		y = -179;
 	r = 0;
 }
 
