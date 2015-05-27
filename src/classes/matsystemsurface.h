@@ -5,6 +5,8 @@
 #include "color.h"
 #include "engines.h"
 
+#include "iappsystem.h"
+
 typedef unsigned char uchar;
 typedef unsigned int uint;
 typedef unsigned long ulong;
@@ -47,131 +49,80 @@ enum InputContextHandle_t__ { };
 
 extern EngineVersion version;
 
-class CMatSystemSurface
+class CMatSystemSurface : public IAppSystem
 {
-public:
-	static const char gmod_offset = 10;
-	static const char csgo_offset = 13;
-
-#ifdef offset
-#undef offset
-#endif
-	unsigned short offset(void)
-	{
-		switch (version)
-		{
-		case CSGO:
-			return csgo_offset;
-		default:
-		case GARRYSMOD:
-			return gmod_offset;
-		}
-
-	}
-
-	unsigned short offset2(void)
-	{
-		switch (version)
-		{
-		case CSGO:
-			return csgo_offset+2;
-		default:
-		case GARRYSMOD:
-			return gmod_offset;
-		}
-	}
-
 	template <typename t>
 	inline t get(unsigned short which)
 	{
 		return t((*(char ***)this)[which]);
 	}
 private:
-	virtual void *Connect(void * (*)(char  const*, int *)) = 0;
-	virtual void *Disconnect(void) = 0;
-	virtual void *QueryInterface(char  const*) = 0;
-	virtual void *Init(void) = 0;
-	virtual void *Shutdown(void) = 0;
-	virtual void *GetDependencies(void) = 0;
-	virtual void *GetTier(void) = 0;
-	virtual void *Reconnect(void * (*)(char  const*, int *), char  const*) = 0;
 	virtual void *RunFrame(void) = 0;
 	virtual void *CSGGetEmbeddedPanel(void) = 0;
 	virtual void *SetEmbeddedPanel(uint) = 0;
 	virtual void *PushMakeCurrent(uint, bool) = 0;
 	virtual void *PopMakeCurrent(uint) = 0;
-	virtual void *CSGDrawSetColor(int, int, int, int) = 0;
-	virtual void *CSGDrawSetColor(Color) = 0;
-	virtual void *CSGDrawFilledRect(int, int, int, int) = 0;
+	virtual void CSGDrawSetColor(int, int, int, int) = 0;
+	virtual void CSGDrawSetColor(Color) = 0;
+	virtual void CSGDrawFilledRect(int, int, int, int) = 0;
 	virtual void *DrawFilledRectArray(vgui::IntRect *, int) = 0;
-	virtual void *CSGDrawOutlinedRect(int, int, int, int) = 0;
-	virtual void *CSGDrawLine(int, int, int, int) = 0;
+	virtual void CSGDrawOutlinedRect(int, int, int, int) = 0;
+	virtual void CSGDrawLine(int, int, int, int) = 0;
 	virtual void *DrawPolyLine(int *, int *, int) = 0;
 	virtual void *DrawSetApparentDepth(float) = 0;
 	virtual void *DrawClearApparentDepth(void) = 0;
-	virtual void *CSGDrawSetTextFont(ulong) = 0;
-	virtual void *CSGDrawSetTextColor(int, int, int, int) = 0;
-	virtual void *CSGDrawSetTextColor(Color) = 0;
+	virtual void CSGDrawSetTextFont(ulong) = 0;
+	virtual void CSGDrawSetTextColor(int, int, int, int) = 0;
+	virtual void CSGDrawSetTextColor(Color) = 0;
 public:
-	inline unsigned int GetEmbeddedPanel(void)
-	{
-		return get<unsigned int (__thiscall *)(void *)>(version == CSGO ? 9 : 6)(this);
-	}
 	inline void DrawSetColor(Color col)
 	{
-		get<void (__thiscall *)(void *, int,int,int,int)>(offset() + 1)(this, col.r, col.g, col.b, col.a);
+		return CSGDrawSetColor(col);
 	}
 	inline void DrawFilledRect(int a, int b, int c, int d)
 	{
-		get<void (__thiscall *)(void *, int, int, int, int)>(offset() + 2)(this, a, b, c, d);
+		return CSGDrawFilledRect(a, b, c, d);
 	}
 	inline void DrawOutlinedRect(int a, int b, int c, int d)
 	{
-		get<void(__thiscall *)(void *, int, int, int, int)>(offset() + 4)(this, a, b, c, d);
+		return CSGDrawOutlinedRect(a, b, c, d);
 	}
 	inline void DrawLine(int a, int b, int c, int d)
 	{
-		get<void(__thiscall *)(void *, int, int, int, int)>(offset() + 5)(this, a, b, c, d);
+		return CSGDrawLine(a, b, c, d);
 	}
 	inline void DrawSetTextFont(ulong a)
 	{
-		get<void(__thiscall *)(void *, ulong)>(offset2() + 7)(this, a);
+		return CSGDrawSetTextFont(a);
 	}
 	inline void DrawSetTextColor(Color col)
 	{
-		get<void(__thiscall *)(void *, int, int, int, int)>(offset2() + 9)(
-			this, col.r, col.g, col.b, col.a);
+		return CSGDrawSetTextColor(col);
 	}
 	inline void DrawSetTextPos(int x, int y)
 	{
-		get<void(__thiscall *)(void *, int, int)>(offset2() + 10)(this, x, y);
+		return CSGDrawSetTextPos(x, y);
 	}
 	inline void DrawPrintText(const wchar_t *text, int len, int drawtype = 0)
 	{
-		get<void(__thiscall *)(void *, const wchar_t *, int, int)>
-			(offset2() + 12)(this, text, len, drawtype);
+		return CSGDrawPrintText(text, len, (FontDrawType_t)drawtype);
 	}
 #ifdef CreateFont
 #undef CreateFont
 #endif
 	inline ulong CreateFont(void)
 	{
-		if (version == CSGO)
-			return CSGCreateFont();
-		return get<ulong (__thiscall *)(void*)>(66)(this);
+		return CSGCreateFont();
 	}
 	inline bool SetFontGlyphSet(ulong font, char  const* font_name,
 		int tall, int weight, int blur, int scanlines, int flags, int a = 0, int b = 0)
 	{
-		if (version == CSGO)
-			return CSGSetFontGlyphSet(font, font_name, tall, weight, blur, scanlines, flags, a, b);
-		return get<bool (__thiscall *)(void*, ulong, const char *, int, int, int, int, int, int, int)>(67)(
-			this, font, font_name, tall, weight, blur, scanlines, flags, a, b);
+		return CSGSetFontGlyphSet(font, font_name, tall, weight, blur, scanlines, flags, a, b);
 	}
 private:
-	virtual void *CSGDrawSetTextPos(int, int) = 0;
+	virtual void CSGDrawSetTextPos(int, int) = 0;
 	virtual void *DrawGetTextPos(int &, int &) = 0;
-	virtual void *CSGDrawPrintText(wchar_t  const*, int, FontDrawType_t) = 0;
+	virtual void CSGDrawPrintText(wchar_t  const*, int, FontDrawType_t) = 0;
 	virtual void *DrawUnicodeChar(wchar_t, FontDrawType_t) = 0;
 	virtual void *DrawFlushText(void) = 0;
 	virtual void *CreateHTMLWindow(vgui::IHTMLEvents *, uint) = 0;

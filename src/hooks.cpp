@@ -18,6 +18,8 @@
 #include "classes/angle.h"
 #include "classes/math.h"
 
+#include <TlHelp32.h>
+
 #define CREATEMOVE_INDEX (version == CSGO ? 24 : 21)
 #define SETLOCALVIEWANGLES_INDEX (13)
 #define PAINTTRAVERSE_INDEX (41)
@@ -29,6 +31,52 @@ VTable *hook::client_mode_vt = 0;
 VTable *hook::prediction_vt = 0;
 VTable *hook::panel_vt = 0;
 VTable *hook::client_vt = 0;
+
+HHOOK KeyboardHookLLNext;
+
+LRESULT __stdcall KeyboardHookLL(int code, WPARAM wParam, LPARAM lParam)
+{
+	ConColorMsg(Color(255, 255, 255, 255), "imgay %p %p\n", wParam, lParam);
+	bool callnexthook = true;
+
+	if (code == HC_ACTION)
+	{
+
+		UINT vkey = ((PKBDLLHOOKSTRUCT)wParam)->vkCode;
+		char chr; // totally not stolen xdddd
+		if (wParam == VK_RETURN)
+		{
+			chr = '\n';
+		}
+		else
+		{
+			static BYTE ks[256];
+			GetKeyboardState(ks);
+
+			WORD w;
+			UINT scan = 0;
+			ToAscii(vkey, scan, ks, &w, 0);
+			chr = char(w);
+		}
+
+		auto state = structs.L->GetState();
+
+		structs.L->PushHookCall();
+		lua_pushstring(state, "KeyPressed");
+		lua_pushlstring(state, &chr, 1);
+		structs.L->SafeCall(2, 1);
+
+		if (lua_toboolean(state, -1))
+			callnexthook = false;
+
+		lua_pop(state, 1);
+	}
+
+	if (callnexthook)
+		return CallNextHookEx(KeyboardHookLLNext, code, wParam, lParam);
+
+	return 0;
+}
 
 
 extern EngineVersion version;
@@ -185,7 +233,6 @@ void __fastcall PaintTraverse_Hook(VPanelWrapper *ths, void *, unsigned int pane
 	OriginalFn(panel_vt->getold(PAINTTRAVERSE_INDEX))(ths, panel, something1, something2);
 	if (!strcmp(ths->GetName(panel), version == GARRYSMOD ? "OverlayPopupPanel" : "MatSystemTopPanel"))
 	{
-
 		structs.surface->DrawSetTextFont(font);
 		structs.surface->DrawSetTextColor(Color(220, 30, 50));
 		structs.surface->DrawSetTextPos(3, 2);
@@ -206,6 +253,16 @@ void __fastcall PaintTraverse_Hook(VPanelWrapper *ths, void *, unsigned int pane
 }
 
 void hook::InitHooks() {
+
+	KeyboardHookLLNext = SetWindowsHookExA(WH_KEYBOARD_LL, &KeyboardHookLL, GetModuleHandleA("kernel32.dll"), 0);
+
+	if (KeyboardHookLLNext == NULL)
+	{
+		char temp[256];
+		sprintf_s(temp, "%p, %p", KeyboardHookLLNext, GetLastError());
+		MessageBoxA(0, temp, temp, 0);
+	}
+
 	client_vt = new VTable(structs.client);
 	if (version == CSGO)
 		client_vt->hook(CLCREATEMOVE_INDEX, &CSGOCLCreateMove_Hook);
