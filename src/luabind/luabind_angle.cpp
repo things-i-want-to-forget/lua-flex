@@ -97,6 +97,12 @@ int L_Angle_Clamp(lua_State *L)
 	return 1;
 }
 
+int L_Angle_Approach(lua_State *L)
+{
+	Get<QAngle>(L, 1).Approach(Get<QAngle>(L, 2), lua_tonumber(L, 3));
+	return 0;
+}
+
 int L_Angle___add(lua_State *L)
 {
 	LPush(L, Get<QAngle>(L, 1) + Get<QAngle>(L, 2), "Angle");
@@ -138,6 +144,7 @@ luaL_Reg LuaAngleMetaTable[] = {
 	{ "Vector", L_Angle_Vector },
 	{ "Difference", L_Angle_Difference },
 	{ "Clamp", L_Angle_Clamp },
+	{ "Approach", L_Angle_Approach},
 	{ "__div", L_Angle___div },
 	{ "__mul", L_Angle___mul },
 	{ "__add", L_Angle___add },

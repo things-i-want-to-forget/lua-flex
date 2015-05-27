@@ -16,6 +16,10 @@ int L_CMD___index(lua_State *L)
 	{
 		lua_pushnumber(L, cmd->command_number);
 	}
+	else if (!strcmp(str, "tickcount")) // beWARE READONLY
+	{
+		lua_pushnumber(L, cmd->tickcount);
+	}
 	else if (!strcmp(str, "angles")) // beWARE READONLY
 	{
 		LPush(L, cmd->angles, "Angle");

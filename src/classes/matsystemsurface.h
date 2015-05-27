@@ -107,6 +107,10 @@ public:
 	{
 		return CSGDrawPrintText(text, len, (FontDrawType_t)drawtype);
 	}
+	inline void DrawGetTextSize(ulong font, wchar_t const *text, int &w, int &h)
+	{
+		get<void(__thiscall *)(void *, ulong, wchar_t const*, int &, int &)>(offset2() + 63)(this, font, text, w, h);
+	};
 #ifdef CreateFont
 #undef CreateFont
 #endif
