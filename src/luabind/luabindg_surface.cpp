@@ -114,7 +114,10 @@ int L_surface_DrawLine(lua_State *L)
 int L_surface_GetTextSize(lua_State *L)
 {
 	int w, h;
-	structs.surface->DrawGetTextSize(lua_tointeger(L, 1), chrtowc(lua_tostring(L, 2)), w, h);
+
+	wchar_t *temp = chrtowc(lua_tostring(L, 2));
+	structs.surface->DrawGetTextSize(lua_tointeger(L, 1), temp, w, h);
+	delete[] temp;
 
 	lua_pushinteger(L, w);
 	lua_pushinteger(L, h);
