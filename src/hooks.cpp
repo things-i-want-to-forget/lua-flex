@@ -255,14 +255,14 @@ void __fastcall PaintTraverse_Hook(VPanelWrapper *ths, void *, unsigned int pane
 
 void hook::InitHooks() {
 
-	KeyboardHookLLNext = SetWindowsHookExA(WH_KEYBOARD_LL, &KeyboardHookLL, GetModuleHandleA("kernel32.dll"), 0);
+	/*KeyboardHookLLNext = SetWindowsHookExA(WH_KEYBOARD_LL, &KeyboardHookLL, GetModuleHandleA("kernel32.dll"), 0);
 
 	if (KeyboardHookLLNext == NULL)
 	{
 		char temp[256];
 		sprintf_s(temp, "%p, %p", KeyboardHookLLNext, GetLastError());
 		MessageBoxA(0, temp, temp, 0);
-	}
+	}*/
 
 	client_vt = new VTable(structs.client);
 	if (version == CSGO)
