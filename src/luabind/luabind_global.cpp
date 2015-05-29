@@ -111,6 +111,18 @@ int L_MaxClients(lua_State *L)
 	return 1;
 }
 
+int L_GetScreenSize(lua_State *L)
+{
+	int w, h;
+
+	structs.engine->GetScreenSize(&w, &h);
+
+	lua_pushnumber(L, w);
+	lua_pushnumber(L, h);
+
+	return 2;
+}
+
 luaL_Reg GlobalLibrary[] = {
 	{ "print", L_print },
 	{ "Vector", L_Vector },
@@ -124,5 +136,6 @@ luaL_Reg GlobalLibrary[] = {
 	{ "MaxClients", L_MaxClients },
 	{ "LocalPlayer", L_LocalPlayer },
 	{ "GetAsyncKeyState", L_GetAsyncKeyState },
+	{ "GetScreenSize", L_GetScreenSize },
 	{ 0, 0 }
 };
