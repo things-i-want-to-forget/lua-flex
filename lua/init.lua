@@ -1,6 +1,7 @@
 include "hook/hook.lau";
 
 include "extensions/enums.lau";
+include "extensions/timer.lau";
 include "extensions/vector.lau";
 include "extensions/angle.lau";
 include "extensions/entity.lau";
