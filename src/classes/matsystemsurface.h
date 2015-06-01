@@ -110,6 +110,10 @@ public:
 	inline void DrawGetTextSize(ulong font, wchar_t const *text, int &w, int &h)
 	{
 		get<void(__thiscall *)(void *, ulong, wchar_t const*, int &, int &)>(79)(this, font, text, w, h);
+	}
+	inline void DrawGetCursorPos(int &x, int &y)
+	{
+		get<void(__thiscall *)(void *, int &, int &)>(100)(this, x, y);
 	};
 #ifdef CreateFont
 #undef CreateFont
