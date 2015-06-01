@@ -125,6 +125,17 @@ int L_surface_GetTextSize(lua_State *L)
 	return 2;
 }
 
+int L_surface_GetCursorPos(lua_State *L)
+{
+	int x, y;
+
+	structs.surface->DrawGetCursorPos(x, y);
+
+	lua_pushinteger(L, x);
+	lua_pushinteger(L, y);
+
+	return 2;
+}
 
 
 luaL_Reg SurfaceLibrary[] = {
@@ -139,5 +150,6 @@ luaL_Reg SurfaceLibrary[] = {
 	{ "SetFont", L_surface_SetFont },
 	{ "DrawLine", L_surface_DrawLine },
 	{ "GetTextSize", L_surface_GetTextSize },
+	{ "GetCursorPos", L_surface_GetCursorPos },
 	{ 0, 0 }
 };
