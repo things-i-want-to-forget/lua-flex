@@ -19,31 +19,30 @@ netvar(m, "Angle", "EyeAngles", "m_angEyeAngles[0]");
 netvar(m, "Vector", "ShootPos", "m_vecViewOffset[0]", function(self, w) return w + self:GetPos(); end);
 netvar(m, "Int", "Health", "m_iHealth");
 netvar(m, "Int", "Team", "m_iTeamNum");
-netvar(m, "Int", "Ammo", "m_iAmmo");
-netvar(m, "Vector", "VecMins", "m_vecMins");
-netvar(m, "Vector", "VecMaxs", "m_vecMaxs");
-netvar(m, "Float", "MaxSpeed", "m_flMaxspeed");
 
 netvar(m, "Angle", "Rotation", "m_angRotation");
 
 --localplayer
 
-netvar(m, "Float", "MaxSpeed", "m_flMaxspeed");
 netvar(m, "Angle", "Punch", "m_aimPunchAngle");
 netvar(m, "Angle", "ViewPunch", "m_viewPunchAngle");
+netvar(m, "Int", "TickBase", "m_nTickBase");
 
 --weapons
+netvar(m, "Int", "Ammo", "m_iClip1");
 netvar(m, "Float", "NextPrimaryAttack", "m_flNextPrimaryAttack");
 
-
-function m:CanShoot()
-	return self:Ammo() > 0 and self:GetActiveWeapon():NextPrimaryAttack() <= CurTime();
+local function CurTime()
+	return LocalPlayer():TickBase() * TickInterval();
 end
-
-function m:Alive()
-	return self:Health() > 0
+function m:CanShoot()
+	return self:GetActiveWeapon():Ammo() > 0 and self:GetActiveWeapon():NextPrimaryAttack() <= CurTime();
 end
 
 function m:AimVector()
 	return self:EyeAngles():Vector()
+end
+
+function m:Alive()
+	return self:Health() > 0
 end
