@@ -106,19 +106,22 @@ inline float _fmodf(float input, float modulo)
 inline void QAngle::Normalize(void)
 {
 	p = _fmodf(p + 180, 360) - 180;
-	if (p < -90) p = -90;
-	if (p >= 90) p = 90;
 	y = _fmodf(y + 180, 360) - 180;
 	r = _fmodf(r + 180, 360) - 180;
 }
 
 inline void QAngle::Clamp(void)
 {
-	if (p < -89)
-		p = -89;
-	else if (p > 89)
+	if (p > 89)
 		p = 89;
-	y = _fmodf(y + 180, 360) - 180;
+	else if (p < -89)
+		p = -89;
+		
+	if (y > 180)
+		y = -179
+	else if (y < -180)
+		y = 179
+		
 	r = 0;
 }
 
