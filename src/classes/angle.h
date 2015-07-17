@@ -118,9 +118,9 @@ inline void QAngle::Clamp(void)
 		p = -89;
 		
 	if (y > 180)
-		y = -179
+		y = -179;
 	else if (y < -180)
-		y = 179
+		y = 179;
 		
 	r = 0;
 }
