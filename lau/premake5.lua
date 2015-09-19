@@ -32,9 +32,10 @@ local lua_os_defines = {
 }
 
 
-project "lua53"
+project "lau531"
     flags "StaticRuntime"
     kind "StaticLib"
+    targetdir "lib"
 
     links ( lua_os_links[ os.get() ] )
 

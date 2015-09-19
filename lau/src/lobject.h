@@ -11,6 +11,7 @@
 
 #include <stdarg.h>
 #include <limits.h>
+#include <stdlib.h>
 #include <math.h>
 
 
