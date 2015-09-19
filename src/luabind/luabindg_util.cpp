@@ -1,4 +1,4 @@
-#include "lua.hpp"
+#include "lau/lau.h"
 #include <Windows.h>
 #include <string>
 #include "../offset.h"
@@ -106,9 +106,11 @@ bool CanAutowall(ClientEntity *other, const Vector &_startpos, const Vector &end
 // entity, startpos, endpos
 int L_util_CanAutowall(lua_State *L)
 {
-	ClientEntity *e = structs.entity_list->GetClientEntityFromHandle(Get<CBaseHandle>(L, 1));
-	Vector &start = Get<Vector>(L, 2);
-	Vector &endpos = Get<Vector>(L, 3);
+	Vector &GetVector(lua_State *L, int where = -1);
+
+	ClientEntity *e = structs.entity_list->GetClientEntityFromHandle(Get<CBaseHandle>(L, "Entity", 1));
+	Vector &start = GetVector(L, 2);
+	Vector &endpos = GetVector(L, 3);
 
 	lua_pushboolean(L, CanAutowall(e, start, endpos));
 	return 1;

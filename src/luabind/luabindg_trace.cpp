@@ -1,4 +1,4 @@
-#include "lua.hpp"
+#include "lau/lau.h"
 #include "../classes/structures.h"
 #include "../classes/enginetrace.h"
 #include "../classes/entities.h"
@@ -41,8 +41,11 @@ int Ltrace_Ray(lua_State *L)
 	Ray_t ray;
 	LuaFilter filter;
 	trace_t result;
-	CTraceFilter *passed_filter = 0;
-	ray.Init(Get<Vector>(L, 1), Get<Vector>(L, 2));
+	CTraceFilter *passed_filter = 0; 
+	
+	Vector &GetVector(lua_State *L, int where = -1);
+	ray.Init(GetVector(L, 1), GetVector(L, 2));
+
 	int mask = (int)lua_tonumber(L, 3);
 
 	if (lua_gettop(L) >= 4)

@@ -11,15 +11,21 @@ class CUserCmd;
 
 int L_predict_Predict(lua_State *L)
 {
-	CUserCmd *cmd = Get<CUserCmd *>(L, 1);
+	CUserCmd *&GetCUserCmd(lua_State *L, int where = -1);
+
+
+	CUserCmd *cmd = GetCUserCmd(L, 1);
 	float frametime = lua_tonumber(L, 2);
 
 	static char movedata[1024];
 	memset(movedata, 0, sizeof(movedata));
+
 	ClientEntity *me =
 		structs.entity_list->GetClientEntity(structs.engine->GetLocalPlayer());
+
 	float old_time = structs.globals->curtime();
 	float old_frame = structs.globals->frametime();
+
 	structs.globals->curtime() = me->getvar<int>("m_nTickBase") * structs.globals->tickinterval();
 	structs.globals->frametime() = frametime;
 
@@ -27,7 +33,7 @@ int L_predict_Predict(lua_State *L)
 	structs.game_movement->ProcessMovement(me, movedata);
 	structs.prediction->FinishMove(me, cmd, movedata);
 
-		structs.globals->curtime() = old_time;
+	structs.globals->curtime()   = old_time;
 	structs.globals->frametime() = old_frame;
 
 	return 0;

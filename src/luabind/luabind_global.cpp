@@ -20,59 +20,80 @@ inline const char *tostring(lua_State *L, int stk)
 {
 	lua_pushvalue(L, stk);
 	lua_pushglobaltable(L);
+
 	lua_getfield(L, -1, "tostring");
 	lua_pushvalue(L, -3);
+
 	lua_call(L, 1, 1);
+
 	const char *ret = lua_tostring(L, -1);
+
 	lua_pop(L, 3);
+
 	return ret;
 
 }
 
 int L_GetAsyncKeyState(lua_State *L)
 {
+
 	if (lua_type(L, 1) == LUA_TNUMBER)
 		lua_pushinteger(L, GetAsyncKeyState(lua_tonumber(L, 1)));
 	else
 		lua_pushinteger(L, GetAsyncKeyState(*lua_tostring(L, 1)));
 
 	return 1;
+
 }
 
 int L_print(lua_State *L)
 {
+
 	for (int i = 1; i <= lua_gettop(L); i++)
-	{
 		ConColorMsg(print_color, "%s\t", tostring(L, i));
-	}
+
 	ConColorMsg(print_color, "\n");
+
 	return 0;
+
 }
 
 int L_Vector(lua_State *L)
 {
+
 	LPush(L, Vector(lua_tonumber(L, 1), lua_tonumber(L, 2), lua_tonumber(L, 3)), "Vector");
+
 	return 1;
+
 }
 
 int L_Angle(lua_State *L)
 {
+
 	LPush(L, QAngle(lua_tonumber(L, 1), lua_tonumber(L, 2), lua_tonumber(L, 3)), "Angle");
+
 	return 1;
+
 }
 
 int L_FindMetaTable(lua_State *L)
 {
-	lua_rawgeti(L, LUA_REGISTRYINDEX, structs.L->MetatableIndex());
+
+	lua_rawget(L, LUA_REGISTRYINDEX);
+
 	lua_pushvalue(L, 1);
-	lua_rawget(L, -2);
-	lua_remove(L, -2);
+
 	return 1;
+
 }
+
 int L_IsInGame(lua_State *L)
 {
+
 	lua_pushboolean(L, structs.engine->IsInGame());
+
 	return 1;
+
 }
 
 int L_include(lua_State *L)
@@ -84,31 +105,50 @@ int L_include(lua_State *L)
 
 int L_LocalPlayer(lua_State *L)
 {
-	LPush<CBaseHandle>(L, structs.entity_list->GetClientEntity(structs.engine->GetLocalPlayer())->GetRefEHandle(), "Entity");
+
+	LPush<CBaseHandle>(L, 
+		structs.entity_list->GetClientEntity(
+			structs.engine->GetLocalPlayer()
+		)->GetRefEHandle(), "Entity");
+	
 	return 1;
+
 }
+
 int L_CurTime(lua_State *L)
 {
+
 	lua_pushnumber(L, structs.globals->curtime());
+
 	return 1;
+
 }
 
 int L_FrameTime(lua_State *L)
 {
+
 	lua_pushnumber(L, structs.globals->frametime());
+
 	return 1;
+
 }
 
 int L_TickInterval(lua_State *L)
 {
+
 	lua_pushnumber(L, structs.globals->tickinterval());
+
 	return 1;
+
 }
 
 int L_MaxClients(lua_State *L)
 {
+
 	lua_pushnumber(L, structs.globals->maxclients());
+
 	return 1;
+
 }
 
 int L_GetScreenSize(lua_State *L)

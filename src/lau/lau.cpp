@@ -2,6 +2,16 @@
 #include "lua.hpp"
 #include <io.h>
 #include <Windows.h>
+#include "classes/color.h"
+
+int L_pcallerrenhance(lua_State *L)
+{
+
+	luaL_traceback(L, L, lua_tostring(L, -1), 2);
+
+	return 1;
+
+}
 
 Lau::Lau(void)
 {
@@ -9,6 +19,10 @@ Lau::Lau(void)
 	luadir = "C:\\aim-flex\\lua\\";
 
 	L = luaL_newstate();
+
+	funcstack = lua_gettop(L);
+
+	lua_pushcfunction(L, &L_pcallerrenhance);
 
 }
 
@@ -83,13 +97,15 @@ int Lau::RunLuaFile(const char *relpath, bool safe)
 
 }
 
+
 const char *Lau::SafeCall(int args, int rets)
 {
-	if (lua_pcall(L, args, rets, 0) == 0)
+	if (lua_pcall(L, args, rets, funcstack - lua_gettop(L)) == 0)
 		return 0;
-	const char *ret = lua_tostring(L, -1);
+	const char *err = lua_tostring(L, -1);
 	lua_pop(L, 1);
-	return ret ? ret : "unknown";
+
+	return err;
 }
 
 void Lau::PushHookCall(void)
@@ -118,33 +134,29 @@ void Lau::Init(void)
 {
 	luaL_openlibs(L);
 
-	lua_newtable(L);
+	luaL_newmetatable(L, "Angle");
 	{
-		lua_newtable(L); // value
-		{
-			luaL_setfuncs(L, LuaAngleMetaTable, 0);
-		}
-		lua_setfield(L, -2, "Angle");
-
-		lua_newtable(L); // value
-		{
-			luaL_setfuncs(L, LuaVectorMetaTable, 0);
-		}
-		lua_setfield(L, -2, "Vector");
-
-		lua_newtable(L); // value
-		{
-			luaL_setfuncs(L, LuaEntityMetaTable, 0);
-		}
-		lua_setfield(L, -2, "Entity");
-
-		lua_newtable(L); // value
-		{
-			luaL_setfuncs(L, LuaCMDMetaTable, 0);
-		}
-		lua_setfield(L, -2, "CUserCmd");
+		luaL_setfuncs(L, LuaAngleMetaTable, 0);
 	}
-	metatables = luaL_ref(L, LUA_REGISTRYINDEX);
+	lua_pop(L, 1);
+
+	luaL_newmetatable(L, "Vector");
+	{
+		luaL_setfuncs(L, LuaVectorMetaTable, 0);
+	}
+	lua_pop(L, 1);
+
+	luaL_newmetatable(L, "Entity");
+	{
+		luaL_setfuncs(L, LuaEntityMetaTable, 0);
+	}
+	lua_pop(L, 1);
+
+	luaL_newmetatable(L, "CUserCmd");
+	{
+		luaL_setfuncs(L, LuaCMDMetaTable, 0);
+	}
+	lua_pop(L, 1);
 	
 
 	lua_pushglobaltable(L);

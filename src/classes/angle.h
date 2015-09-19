@@ -150,7 +150,7 @@ inline float QAngle::Max(void) const
 
 	_y = y;
 	if (_y < 0)
-		_y = -_y
+		_y = -_y;
 
 
 	if (_p > _r && _p > _y)

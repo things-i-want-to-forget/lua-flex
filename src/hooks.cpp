@@ -64,9 +64,9 @@ LRESULT __stdcall KeyboardHookLL(int code, WPARAM wParam, LPARAM lParam)
 		structs.L->PushHookCall();
 		lua_pushstring(state, "KeyPressed");
 		lua_pushlstring(state, &chr, 1);
-		structs.L->SafeCall(2, 1);
+		
 
-		if (lua_toboolean(state, -1))
+		if (structs.L->SafeCall(2, 1) == 0 && lua_toboolean(state, -1))
 			callnexthook = false;
 
 		lua_pop(state, 1);
@@ -207,21 +207,37 @@ void __fastcall SetLocalViewAngles_Hook(CPrediction *ths, void *, QAngle &ang)
 
 	if (me)
 	{
+
 		lua_State *state = structs.L->GetState();
-		LPush(state, ang, "Angle");
+
 		structs.L->PushHookCall();
+
 		lua_pushstring(state, "SetLocalViewAngles");
-		lua_pushvalue(state, -3);
-		const char *err = structs.L->SafeCall(2, 0);
+		LPush(state, ang, "Angle");
+
+		const char *err = structs.L->SafeCall(2, 1);
+
 		if (err)
-		{
 			ConColorMsg(print_color, "%s\n", err);
+
+		else
+		{
+
+			if (lua_type(state, -1) == LUA_TUSERDATA)
+			{
+
+				QAngle &GetAngle(lua_State *L, int where = -1);
+
+				ang = GetAngle(state, -1);
+
+			}
+
+		
 		}
-		else {
-			QAngle ang = Get<QAngle>(state);
-			lua_pop(state, 1);
-			return OriginalFn(prediction_vt->getold(SETLOCALVIEWANGLES_INDEX))(ths, ang);
-		}
+
+		lua_pop(state, 1);
+
+
 	}
 	return OriginalFn(prediction_vt->getold(SETLOCALVIEWANGLES_INDEX))(ths, ang);
 }
@@ -234,20 +250,15 @@ void __fastcall PaintTraverse_Hook(VPanelWrapper *ths, void *, unsigned int pane
 	OriginalFn(panel_vt->getold(PAINTTRAVERSE_INDEX))(ths, panel, something1, something2);
 	if (!strcmp(ths->GetName(panel), version == GARRYSMOD ? "OverlayPopupPanel" : "MatSystemTopPanel"))
 	{
-		structs.surface->DrawSetTextFont(font);
-		structs.surface->DrawSetTextColor(Color(220, 30, 50));
-		structs.surface->DrawSetTextPos(3, 2);
-		structs.surface->DrawPrintText(L"lua-flex", 8);
 		auto state = structs.L->GetState();
 		structs.L->PushHookCall();
 
 		lua_pushstring(state, "Paint");
 
 		const char *err = structs.L->SafeCall(1);
+
 		if (err)
-		{
 			ConColorMsg(print_color, "%s\n", err);
-		}
 
 		fileChecker::checkDir();
 	}

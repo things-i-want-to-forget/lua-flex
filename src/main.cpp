@@ -3,8 +3,6 @@
 #include <Windows.h>
 #include "init.h"
 
-#pragma comment(lib, "lua53.lib")
-
 
 BOOL APIENTRY DllMain(HMODULE hMod, DWORD dwReason, LPVOID)
 {

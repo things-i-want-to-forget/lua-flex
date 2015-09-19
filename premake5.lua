@@ -1,4 +1,3 @@
-include "lau"
 
 solution "lua-flex"
 	language "C++"
@@ -13,6 +12,9 @@ solution "lua-flex"
 		defines  { "NDEBUG" }
 		optimize "On"
 
+	include "lau"
+
+
 	project "lua-flex"
 
 		flags     "StaticRuntime"
@@ -20,15 +22,22 @@ solution "lua-flex"
 
 		targetdir "build"
 
-		buildoptions { "/Os", "/GL", "/MP", "/arch:SSE2" }
+		buildoptions { "/Os", "/MP", "/arch:SSE2" }
 
-		libdirs "lib"
-		links   "lau"
-		includedirs "lau/src"
+		libdirs { "lib", "lau/build" }
+		links   { "user32", "lau/lib/lau531" }
+		includedirs {
+			"lau/src",
+			"src"
+		}
 
 		files {
 			"src/**.cpp",
-			"src/**.h"
+			"src/**.h",
+			"src/**.hpp",
+			"lau/src/**.cpp",
+			"lau/src/**.h",
+			"lau/src/**.hpp"
 		}
 
 		defines {

@@ -1,16 +1,16 @@
-#include "lua.hpp"
-#include "../classes/angle.h"
-#include "../classes/vector.h"
-#include "../classes/structures.h"
-#include "../classes/clienttools.h"
-#include "../classes/entities.h"
-#include "../classes/engineclient.h"
+#include "lau/lau.h"
+#include "classes/angle.h"
+#include "classes/vector.h"
+#include "classes/structures.h"
+#include "classes/clienttools.h"
+#include "classes/entities.h"
+#include "classes/engineclient.h"
 
 #pragma warning(disable : 4244)
 
 static ClientEntity *GetEntity(lua_State *L, int where = -1)
 {
-	CBaseHandle &handle = Get<CBaseHandle>(L, where);
+	CBaseHandle &handle = Get<CBaseHandle>(L, "Entity", where);
 
 	return structs.entity_list->GetClientEntityFromHandle(handle);
 }
@@ -328,7 +328,7 @@ int L_Entity_GetNWAngle(lua_State *L)
 
 int L_Entity___eq(lua_State *L)
 {
-	lua_pushboolean(L, Get<CBaseHandle>(L, 1) == Get<CBaseHandle>(L, 2));
+	lua_pushboolean(L, Get<CBaseHandle>(L, "Entity", 1) == Get<CBaseHandle>(L, "Entity", 2));
 	return 1;
 }
 

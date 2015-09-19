@@ -1,6 +1,9 @@
 #ifndef LAU_H
 #define LAU_H
 
+#include "lua.hpp"
+#include "classes/structures.h"
+
 struct lua_State;
 
 class Lau
@@ -14,10 +17,7 @@ public:
 	{
 		return L;
 	}
-	int MetatableIndex(void)
-	{
-		return metatables;
-	}
+
 	const char *GetLuaDir(void)
 	{
 		return luadir;
@@ -38,7 +38,26 @@ public:
 private:
 	lua_State *L;
 	char *luadir;
-	int metatables;
+	int funcstack;
 };
+
+template <typename t>
+inline t &Get(lua_State *L, const char *name, int where = -1)
+{
+
+	return *(t *)luaL_checkudata(L, where, name);
+
+}
+
+template <typename t>
+inline void LPush(lua_State *L, t &what, const char *meta)
+{
+
+	*(t *)lua_newuserdata(L, sizeof(what)) = what;
+
+	luaL_newmetatable(L, meta);
+	lua_setmetatable(L, -2);
+
+}
 
 #endif

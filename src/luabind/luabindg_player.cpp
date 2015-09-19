@@ -1,4 +1,4 @@
-#include "lua.hpp"
+#include "lau/lau.h"
 #include "../classes/structures.h"
 #include "../classes/clienttools.h"
 #include "../classes/entities.h"
