@@ -1,13 +1,6 @@
-*/Release
-*/Debug
-Release/*
-Debug/*
+build
+lib
+project
+proj
 
-#What is this? do we need it? It's locked.
-/build
-/lib
-/proj
-*.sdf
-*.suo
-
-lua/scripts/*
+lua/scripts

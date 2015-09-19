@@ -1,33 +1,30 @@
+include "lau"
+
 solution "lua-flex"
 	language "C++"
-	location ("./proj")
-	
-	configurations
-	{ 
-		"Release"
-	}
-		
+	location "./project"
+
+	configurations "Release"
+
+	-- if this causes an error for you, update premake5
+	architecture "x86"
+
 	configuration "Release"
-		defines {"NDEBUG"}
+		defines  { "NDEBUG" }
 		optimize "On"
 
 	project "lua-flex"
-		kind "SharedLib"
 
-		targetdir ("build/")
-		
+		flags     "StaticRuntime"
+		kind      "SharedLib"
+
+		targetdir "build"
+
 		buildoptions { "/Os", "/GL", "/MP", "/arch:SSE2" }
-		
-		libdirs {
-			"lib"
-		}
-		links {
-			"lua53"
-		}
 
-		includedirs {
-			"lua53"
-		}
+		libdirs "lib"
+		links   "lau"
+		includedirs "lau/src"
 
 		files {
 			"src/**.cpp",
@@ -39,16 +36,4 @@ solution "lua-flex"
 			"WIN32",
 			"_WINDOWS",
 			"_USRDLL"
-		}
-
-	project "lua53"
-		kind "StaticLib"
-		files "lua53/**"
-
-		targetdir ("lib/")
-
-		defines {
-			"AIM_FLEX",
-			"WIN32",
-			"_LIB",
 		}

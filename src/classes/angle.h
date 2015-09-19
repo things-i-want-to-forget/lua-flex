@@ -116,12 +116,12 @@ inline void QAngle::Clamp(void)
 		p = 89;
 	else if (p < -89)
 		p = -89;
-		
+
 	if (y > 180)
 		y = -179;
 	else if (y < -180)
 		y = 179;
-		
+
 	r = 0;
 }
 
@@ -139,11 +139,25 @@ inline void QAngle::Zero(void)
 
 inline float QAngle::Max(void) const
 {
-	if (p > r && p > y)
-		return p;
-	else if (r > y)
-		return r;
-	return y;
+	float _p, _y, _r;
+	_p = p;
+	if (_p < 0)
+		_p = -_p;
+
+	_r = r;
+	if (_r < 0)
+		_r = -_r;
+
+	_y = y;
+	if (_y < 0)
+		_y = -_y
+
+
+	if (_p > _r && _p > _y)
+		return _p;
+	else if (_r > _y)
+		return _r;
+	return _y;
 }
 inline void QAngle::Approach(const QAngle &other_ang, float amount)
 {
