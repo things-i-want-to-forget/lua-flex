@@ -210,10 +210,12 @@ void __fastcall SetLocalViewAngles_Hook(CPrediction *ths, void *, QAngle &ang)
 
 		lua_State *state = structs.L->GetState();
 
+		LPush(state, ang, "Angle");
+		
 		structs.L->PushHookCall();
 
 		lua_pushstring(state, "SetLocalViewAngles");
-		LPush(state, ang, "Angle");
+		lua_pushvalue(L, -3);
 
 		const char *err = structs.L->SafeCall(2, 1);
 
@@ -223,19 +225,24 @@ void __fastcall SetLocalViewAngles_Hook(CPrediction *ths, void *, QAngle &ang)
 		else
 		{
 
+			QAngle &GetAngle(lua_State *L, int where = -1);
 			if (lua_type(state, -1) == LUA_TUSERDATA)
 			{
 
-				QAngle &GetAngle(lua_State *L, int where = -1);
-
 				ang = GetAngle(state, -1);
+
+			}
+			else
+			{
+
+				ang = GetAngle(L, -2);
 
 			}
 
 		
 		}
 
-		lua_pop(state, 1);
+		lua_pop(state, 2);
 
 
 	}
