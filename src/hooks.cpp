@@ -215,7 +215,7 @@ void __fastcall SetLocalViewAngles_Hook(CPrediction *ths, void *, QAngle &ang)
 		structs.L->PushHookCall();
 
 		lua_pushstring(state, "SetLocalViewAngles");
-		lua_pushvalue(L, -3);
+		lua_pushvalue(state, -3);
 
 		const char *err = structs.L->SafeCall(2, 1);
 
@@ -235,7 +235,7 @@ void __fastcall SetLocalViewAngles_Hook(CPrediction *ths, void *, QAngle &ang)
 			else
 			{
 
-				ang = GetAngle(L, -2);
+				ang = GetAngle(state, -2);
 
 			}
 
@@ -251,8 +251,6 @@ void __fastcall SetLocalViewAngles_Hook(CPrediction *ths, void *, QAngle &ang)
 
 void __fastcall PaintTraverse_Hook(VPanelWrapper *ths, void *, unsigned int panel, bool something1, bool something2)
 {
-	static int lastKey = GetAsyncKeyState('L');
-
 	typedef void(__thiscall *OriginalFn)(void *, ulong, bool, bool);
 	OriginalFn(panel_vt->getold(PAINTTRAVERSE_INDEX))(ths, panel, something1, something2);
 	if (!strcmp(ths->GetName(panel), version == GARRYSMOD ? "OverlayPopupPanel" : "MatSystemTopPanel"))
