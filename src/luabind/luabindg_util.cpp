@@ -1,107 +1,165 @@
 #include "lau/lau.h"
-#include <Windows.h>
-#include <string>
-#include "../offset.h"
-#include "../classes/structures.h"
-#include "../classes/entities.h"
-#include "../classes/sprops.h"
-#include "../classes/engineclient.h"
-#include "../classes/enginetrace.h"
+#include "offset.h"
+#include "classes/structures.h"
+#include "classes/entities.h"
+#include "classes/sprops.h"
+#include "classes/engineclient.h"
+#include "classes/enginetrace.h"
+#include "sigscan/sigscan.h"
+#include "classes/color.h"
 
 #pragma warning(disable : 4244)
 
 extern Structures structs;
 
-class CTraceFilterAutowall : public CTraceFilter
+class CAutowallFilter : public CTraceFilter
 {
 public:
-	CTraceFilterAutowall(ClientEntity *ent, ClientEntity *other)
+
+	bool ShouldHitEntity(ClientEntity *ent, unsigned int mask)
 	{
-		this->ent = ent;
-		this->other = other;
-	}
-	bool ShouldHitEntity(ClientEntity *ent)
-	{
-		return ent == this->ent || other == this->ent;
+
+		return ent->GetRefEHandle() != this->other;
+
 	}
 
 public:
-	ClientEntity *ent;
-	ClientEntity *other;
+
+	CBaseHandle other;
+
 };
-//trace_t &tr = argument
-//Vector &norm = argument
 
-bool CanAutowall(ClientEntity *other, const Vector &_startpos, const Vector &endpos)
+
+
+bool CanAutowall(ClientEntity *other, const Vector &_startpos, const Vector &endpos, float *damage)
 {
-	CTraceFilterAutowall filter(structs.entity_list->GetClientEntity(structs.engine->GetLocalPlayer()), other);
-
-
-
-	int first_contents = 0;
-	trace_t ntr;
 	Ray_t ray;
+	trace_t ntr, ntrexit;
+
+	ClientEntity *me =
+		structs.entity_list->GetClientEntity(
+			structs.engine->GetLocalPlayer()
+			);
+
+	FileWeaponInfo_t *data = me->GetActiveWeapon()->GetCSWpnData();
+
+	static bool(__fastcall *TraceToExit)(Vector *end, trace_t *enter, Vector start, Vector dir, trace_t *exit) = 0;
+
+	if (!TraceToExit)
+		TraceToExit = (decltype(TraceToExit))SigScan(
+			"\x55"
+			"\x8B\xEC"
+			"\x83\xEC?"
+			"\xF3\x0F???"
+			"\x33\xC0"
+			"\xF3\x0F",
+			GetModuleHandleA("client.dll")
+			);
+
+	//returns false if wallbangable
+	//static bool(__thiscall *BulletHandler)(ClientEntity *me, float &penetration1, int &SurfaceMat, int *usestaticvalues, trace_t *ray, Vector *normaldelta, 
+	//	float _setto0f_8, float surfacepenetration, float rangemodifier, int unknown, int _setto0x1002_12, float penetration2, int *hitsleft,
+	//	Vector *ResultPos, float hitx, float hity, float *damage) = 0;
+	//static bool (__fastcall *BulletHandler)(Vector *buffer, Ray_t *bufferray, Vector, Vector, trace_t *result)
+	//
+	//if (!BulletHandler)
+	//	BulletHandler = (decltype(BulletHandler))SigScan(
+	//		"\x55\x8B\xEC\x83\xEC\x70\x8B\x55?\x56\x8B\x75?\x89\x4D?\x32\xC9\x8B\x12\x57\x8A\x46?",
+	//		GetModuleHandleA("client.dll")
+	//	);
 
 	ray.Init(_startpos, endpos);
 
-	structs.trace->TraceRay(ray, 0x4600400B, &filter, ntr);
-	if (ntr.fraction >= 0.999f)
+	structs.trace->TraceRay(ray, 0x4600400B, 0, ntr);
+
+	if (ntr.fraction >= 0.99f || ntr.hitent == other)
 		return true;
-	Vector vEnd = ntr.endpos;
-	ray.Init(endpos, _startpos);
 
-	structs.trace->TraceRay(ray, 0x4600400B, &filter, ntr);
-	float len = (vEnd - ntr.endpos).Length();
+	Vector dir = (endpos - _startpos).GetNormalized();
 
+	int max = 5;
+	float distanceleft = data->range();
+	float distancetotal = 0.f;
 
-	surfacedata_t *prop = structs.sprops->GetSurfaceData(ntr.surface.surfaceProps);
-	if (!prop)
-		return false;
-
-	auto v38 = prop->game.material;
-	auto v37 = (ntr.bone & (1 << 7));
-	float v39, v40;
-	if (v38 == 70) // MAT_FLESH
+	while (max--)
 	{
-		return false;
-	}
-	else if (v38 == 71 || v38 == 89)
-	{
-		v39 = 3.0f;
-		v40 = 0.05f;
-	}
-	else
-	{
-		v40 = 0.16f;
-		v39 = 0.5f;
-	}
 
-	if (prop->game.material == prop->gamematerial())
-	{
-		if ((prop->gamematerial() & 0xFFFD) == 85) // MAT_GRASS
+		distancetotal += ntr.fraction * distanceleft;
+		distanceleft -= ntr.fraction * distanceleft;
+		*damage *= powf(data->range_modifier(), distancetotal * 0.002f);
+
+
+		Vector endpoint;
+
+		if (!TraceToExit(&endpoint, &ntr, ntr.endpos, dir, &ntrexit))
+			return false;
+		__asm add esp, 01Ch;
+
+		float entermod, exitmod;
+
+		surfacedata_t *entersurf = structs.sprops->GetSurfaceData(ntr.surface.surfaceProps);
+
+		entermod = entersurf->game.penetration;
+		exitmod = structs.sprops->GetSurfaceData(ntrexit.surface.surfaceProps)->game.penetration;
+
+		float mod = 0.f;
+		float mod2 = 0.16f;
+
+		if (ntr.contents & 8 || entersurf->game.gamematerial == 89 || entersurf->game.gamematerial == 71)
 		{
-			v39 = 3.0f;
+
+			mod2 = 0.05f;
+			mod = 3.f;
+
 		}
-		else if (prop->gamematerial() == 19) //  ??????????
+		else
+			mod = (entermod + exitmod) / 2.f;
+
+		if (ntr.surface.surfaceProps == ntrexit.surface.surfaceProps)
 		{
-			v39 = 2.0f;
+
+			if (ntr.surface.surfaceProps == 87 || ntr.surface.surfaceProps == 85)
+				mod = 3.f;
+
+			else if (ntr.surface.surfaceProps == 76)
+				mod = 2.f;
+
 		}
+
+		float length = ntr.endpos.Distance(ntrexit.endpos);
+
+		float inversemod = fmaxf(0.f, 1.f / mod);
+
+		length *= length;
+
+		length *= inversemod;
+
+		length /= 24;
+
+
+
+		*damage -= fmaxf(0.f, length + (*damage * mod2) + inversemod * 3.f * fmaxf(0.f, 3.f / data->penetration() * 1.25f));
+
+		if (*damage < 1.f)
+			return false;
+
+		if (ntrexit.endpos.Distance(endpos) == 0.f)
+			break;
+
+		if (ntrexit.hitent && ntrexit.hitent == other)
+			break;
+
+		ray.Init(endpoint, endpos);
+
+		structs.trace->TraceRay(ray, 0x4600400B, 0, ntr);
+
+
 	}
 
-	float distend = (ntr.endpos - ntr.endpos).Length();
-	auto v56 = fmaxf(1 / v39, 0.0f);
-	ClientEntity *wep = structs.entity_list->GetClientEntity(structs.engine->GetLocalPlayer())->GetActiveWeapon();
-	auto a13 = wep->GetCSWpnData()->penetration();
-	auto v58 = v56 * ((double)(3.0) * fmax(0.0, 3.0f / a13)) * 1.25 + v40;
+	return *damage >= 1;
 
-	auto v57 = wep->GetCSWpnData()->penetration() * 25.0f * prop->penetration();
-
-	auto v59 = (float)(distend * distend) * v56 / 24 + v58;
-
-	auto v61 = v57 - fmaxf(0.0f, v59);
-
-	return (v61 - len) > 0;
 }
+
 
 // entity, startpos, endpos
 int L_util_CanAutowall(lua_State *L)
@@ -112,8 +170,11 @@ int L_util_CanAutowall(lua_State *L)
 	Vector &start = GetVector(L, 2);
 	Vector &endpos = GetVector(L, 3);
 
-	lua_pushboolean(L, CanAutowall(e, start, endpos));
-	return 1;
+	float damage = e->GetActiveWeapon()->GetCSWpnData()->damage();
+
+	lua_pushboolean(L, CanAutowall(e, start, endpos, &damage));
+	lua_pushnumber(L, damage);
+	return 2;
 }
 
 

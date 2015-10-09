@@ -1,13 +1,23 @@
 #ifndef ENTITIES_H
 #define ENTITIES_H
+
 #include "clientclass.h"
 #include "vector.h"
 #include "structures.h"
 #include "cliententitylist.h"
 #include "globals.h"
-#include <Windows.h>
-#include "../sigscan/sigscan.h"
+#include "sigscan/sigscan.h"
 #include "math.h"
+
+#include <string.h>
+
+
+
+#ifdef _WIN32
+
+#include <Windows.h>
+
+#endif
 
 
 struct FileWeaponInfo_t
@@ -23,12 +33,22 @@ struct FileWeaponInfo_t
 	char anim_prefix[16];
 	inline float &penetration(void)
 	{
-		float *a = (float *)(0x774 + (char *)this);
+		float *a = (float *)(0x7C4 + (char *)this);
 		return *a;
 	}
 	inline int &damage(void)
 	{
-		int *a = (int *)(0x778 + (char *)this);
+		int *a = (int *)(0x7C8 + (char *)this);
+		return *a;
+	}
+	inline float &range(void)
+	{
+		float *a = (float *)(0x7CC + (char *)this);
+		return *a;
+	}
+	inline float &range_modifier(void)
+	{
+		float *a = (float *)(0x7D0 + (char *)this);
 		return *a;
 	}
 };
@@ -99,10 +119,15 @@ public:
 };
 class CBaseAnimating
 {
+#ifdef _WIN32
+	const int offset = 0;
+#else
+	const int offset = 1;
+#endif
 	template<typename t>
 	t get(unsigned short which)
 	{
-		return t((*(char ***)(this))[which]);
+		return t((*(char ***)(this))[which + offset]);
 	}
 public:
 	inline bool SetupBones(matrix3x4_t *bones, float time)
@@ -114,10 +139,15 @@ public:
 
 class ClientNetworkable
 {
+#ifdef _WIN32
+	const int offset = 0;
+#else
+	const int offset = 1;
+#endif
 	template<typename t>
 	t get(unsigned short which)
 	{
-		return t((*(char ***)(this))[which]);
+		return t((*(char ***)(this))[which + offset]);
 	}
 public:
 	inline ClientClass *GetClientClass(void)
@@ -150,10 +180,16 @@ public:
 
 class ClientEntity
 {
+#ifdef _WIN32
+	const int offset = 0;
+#else
+	const int offset = 1;
+#endif
+
 	template<typename t>
 	inline t get(unsigned short which)
 	{
-		return t((*(char ***)(this))[which]);
+		return t((*(char ***)(this))[which + offset]);
 	}
 	inline int getoffset(const char *name)
 	{

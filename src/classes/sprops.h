@@ -48,12 +48,13 @@ struct surfacegameprops_t
 	// game movement data
 	float			maxSpeedFactor;			// Modulates player max speed when walking on this surface
 	float			jumpFactor;				// Indicates how much higher the player should jump when on the surface
-	float unk1, unk2, unk3;
+	float unk1, penetration, unk3;
 	// Game-specific data
 	unsigned short	material;
 	// Indicates whether or not the player is on a ladder.
 	unsigned char	climbable;
 	unsigned char	pad;
+	unsigned short gamematerial;
 };
 
 //-----------------------------------------------------------------------------
@@ -65,15 +66,6 @@ struct surfacedata_t
 	surfaceaudioparams_t	audio;		// audio parameters
 	surfacesoundnames_t		sounds;		// names of linked sounds
 	surfacegameprops_t		game;		// Game data / properties
-
-	float &penetration(void)
-	{
-		return *(float*)(0x4C + (char *)this);
-	}
-	unsigned short &gamematerial(void)
-	{
-		return *(unsigned short *)(0x54 + (char *)this);
-	}
 };
 
 class CPhysicsSurfaceProps
