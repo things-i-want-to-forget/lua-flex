@@ -10,14 +10,7 @@
 #include "math.h"
 
 #include <string.h>
-
-
-
-#ifdef _WIN32
-
 #include <Windows.h>
-
-#endif
 
 
 struct FileWeaponInfo_t
@@ -119,15 +112,10 @@ public:
 };
 class CBaseAnimating
 {
-#ifdef _WIN32
-	const int offset = 0;
-#else
-	const int offset = 1;
-#endif
 	template<typename t>
 	t get(unsigned short which)
 	{
-		return t((*(char ***)(this))[which + offset]);
+		return t((*(char ***)(this))[which]);
 	}
 public:
 	inline bool SetupBones(matrix3x4_t *bones, float time)
@@ -139,15 +127,10 @@ public:
 
 class ClientNetworkable
 {
-#ifdef _WIN32
-	const int offset = 0;
-#else
-	const int offset = 1;
-#endif
 	template<typename t>
 	t get(unsigned short which)
 	{
-		return t((*(char ***)(this))[which + offset]);
+		return t((*(char ***)(this))[which]);
 	}
 public:
 	inline ClientClass *GetClientClass(void)
@@ -180,16 +163,11 @@ public:
 
 class ClientEntity
 {
-#ifdef _WIN32
-	const int offset = 0;
-#else
-	const int offset = 1;
-#endif
 
 	template<typename t>
 	inline t get(unsigned short which)
 	{
-		return t((*(char ***)(this))[which + offset]);
+		return t((*(char ***)(this))[which]);
 	}
 	inline int getoffset(const char *name)
 	{
