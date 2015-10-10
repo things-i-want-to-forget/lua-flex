@@ -95,7 +95,7 @@ struct csurface_t
 {
 	const char	*name; // 3C
 	short	surfaceProps; // 40
-	unsigned short	flags; // 44
+	unsigned short	flags; // 42
 };
 struct cplane_t
 {
@@ -122,10 +122,10 @@ struct trace_t
 	//CGameTrace
 	float fraction_left_solid; // 38
 	csurface_t surface; // 3C
-	int hitgroup;
-	short bone;
-	unsigned short somethingidk;
-	ClientEntity *hitent;
+	int hitgroup; // 44
+	short bone; // 48
+	unsigned short somethingidk; // 4A
+	ClientEntity *hitent; // 4C
 	int hitbox;
 
 	char extra[256];
