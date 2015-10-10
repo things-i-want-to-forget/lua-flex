@@ -11,6 +11,7 @@ CUserCmd *&GetCUserCmd(lua_State *L, int where = -1)
 	return Get<CUserCmd *>(L, "CUserCmd", where);
 
 }
+extern bool bSendPacket;
 
 int L_CMD___index(lua_State *L)
 {
@@ -48,8 +49,11 @@ int L_CMD___index(lua_State *L)
 	else if (!strcmp(str, "sidemove"))
 		lua_pushnumber(L, cmd->sidemove());
 
-	else if (!strcmp(str, "forwardmove")) 
+	else if (!strcmp(str, "forwardmove"))
 		lua_pushnumber(L, cmd->forwardmove());
+
+	else if (!strcmp(str, "sendpacket"))
+		lua_pushboolean(L, bSendPacket != false);
 
 	else 
 	{
@@ -86,6 +90,12 @@ int L_CMD___newindex(lua_State *L)
 
 	else if (!strcmp(str, "buttons"))
 		cmd->buttons() = lua_tointeger(L, 3);
+
+	else if (!strcmp(str, "sendpacket"))
+		bSendPacket = 1 == lua_toboolean(L, 3);
+
+	else if (!strcmp(str, "tickcount"))
+		cmd->tickcount = lua_tointeger(L, 3);
 
 	else if (!strcmp(str, "mousex"))
 		cmd->mousex() = lua_tonumber(L, 3);

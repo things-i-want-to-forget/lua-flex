@@ -103,7 +103,6 @@ bool CanAutowall(ClientEntity *other, const Vector &_startpos, const Vector &end
 
 	int hitsleft = 4;
 	Vector result(_startpos);
-	float tempdamage;
 
 	for (int i = 0; i < structs.sprops->SurfacePropCount(); i++)
 	{
@@ -120,17 +119,22 @@ bool CanAutowall(ClientEntity *other, const Vector &_startpos, const Vector &end
 		structs.trace->TraceRay(ray, 0x4600400B, 0, ntr);
 
 		if (ntr.hitgroup != 0)
-			return ntr.hitent == other;
+			break;
 
 
-		if ( BulletHandler(me, data->penetration(), material, &usestaticvalues, &ntr, &normal,
+		if (BulletHandler(me, data->penetration(), material, &usestaticvalues, &ntr, &normal,
 			0.f, entersurf->game.penetration, entersurf->game.damagepenetration, 0, 0x1002, data->penetration(), &hitsleft,
-			&result, 0.f, 0.f, damage) )
+			&result, 0.f, 0.f, damage))
 
 			break;
 
+
 	} while (hitsleft > 0);
 
+	*damage *= powf(data->range_modifier(), _startpos.Distance(result) * 0.002);
+
+	if (ntr.hitgroup != 0)
+		return ntr.hitent && ntr.hitent->GetRefEHandle() == other->GetRefEHandle();
 
 	return false;
 

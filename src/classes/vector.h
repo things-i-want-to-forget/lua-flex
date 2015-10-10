@@ -87,7 +87,8 @@ public:
 		return sqrtf(LengthSqr());
 	}
 
-	inline float Distance(Vector v2) {
+	inline float Distance(Vector v2) const
+	{
 		return (v2 - *this).Length();
 	}
 
