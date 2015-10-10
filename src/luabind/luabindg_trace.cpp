@@ -1,7 +1,8 @@
 #include "lau/lau.h"
-#include "../classes/structures.h"
-#include "../classes/enginetrace.h"
-#include "../classes/entities.h"
+#include "classes/structures.h"
+#include "classes/enginetrace.h"
+#include "classes/entities.h"
+#include "classes/sprops.h"
 
 #pragma warning(disable : 4244) // NICE ONE LUA
 
@@ -73,7 +74,8 @@ int Ltrace_Ray(lua_State *L)
 		lua_pushinteger(L, result.bone);
 		lua_setfield(L, -2, "bone");
 
-		lua_pushinteger(L, result.bone);// yes this is right  - it's overloaded
+		surfacedata_t *dat = structs.sprops->GetSurfaceData(result.surface.surfaceProps);
+		lua_pushinteger(L, dat->game.gamematerial);// yes this is right  - it's overloaded
 		lua_setfield(L, -2, "material");
 
 		lua_pushinteger(L, result.disp_flags);

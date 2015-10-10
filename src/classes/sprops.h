@@ -11,7 +11,7 @@ struct surfacephysicsparams_t
 	float			dampening;
 };
 
-struct surfaceaudioparams_t
+struct surfaceaudioparams_t // +16
 {
 	// sounds / audio data
 	float			reflectivity;		// like elasticity, but how much sound should be reflected by this surface
@@ -25,7 +25,7 @@ struct surfaceaudioparams_t
 	// NOTE: Hard impacts must meet both hardnessFactor AND velocity thresholds
 };
 
-struct surfacesoundnames_t
+struct surfacesoundnames_t // +36
 {
 	unsigned short	stepleft;
 	unsigned short	stepright;
@@ -43,18 +43,17 @@ struct surfacesoundnames_t
 	unsigned short	strainSound;
 };
 
-struct surfacegameprops_t
+struct surfacegameprops_t // +56
 {
 	// game movement data
 	float			maxSpeedFactor;			// Modulates player max speed when walking on this surface
-	float			jumpFactor;				// Indicates how much higher the player should jump when on the surface
-	float unk1, penetration, unk3;
+	float			jumpFactor;				// Ini jdicates how much higher the player should jump when on the surface
+	float unk1, penetration, damagepenetration;
 	// Game-specific data
-	unsigned short	material;
+	unsigned short	gamematerial; // +84
 	// Indicates whether or not the player is on a ladder.
 	unsigned char	climbable;
 	unsigned char	pad;
-	unsigned short gamematerial;
 };
 
 //-----------------------------------------------------------------------------
