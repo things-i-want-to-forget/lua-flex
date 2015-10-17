@@ -239,10 +239,10 @@ void __fastcall SetLocalViewAngles_Hook(CPrediction *ths, void *, QAngle &ang)
 
 			}
 
-		
+			lua_pop(state, 2);
+
 		}
 
-		lua_pop(state, 2);
 
 
 	}

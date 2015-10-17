@@ -5,6 +5,8 @@
 #include "../classes/color.h"
 #include <Windows.h>
 #include <string>
+#include <locale>
+#include <codecvt>
 
 #pragma warning(disable : 4996)
 
@@ -89,19 +91,13 @@ int L_surface_SetTextColor(lua_State *L)
 	return 0;
 }
 
-static wchar_t *chrtowc(const char* text)
-{
-	size_t size = strlen(text) + 1;
-	wchar_t* wa = new wchar_t[size];
-	mbstowcs(wa, text, size);
-	return wa;
-}
-
 int L_surface_DrawText(lua_State *L)
 {
-	wchar_t *temp = chrtowc(lua_tostring(L, 1));
-	structs.surface->DrawPrintText(temp, lstrlenW(temp));
-	delete[] temp;
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert; // converter object saved somewhere
+
+	std::wstring output = convert.from_bytes(luaL_checkstring(L, 1));
+
+	structs.surface->DrawPrintText(output.c_str(), lstrlenW(output.c_str()));
 	return 0;
 }
 
@@ -113,11 +109,15 @@ int L_surface_DrawLine(lua_State *L)
 
 int L_surface_GetTextSize(lua_State *L)
 {
+
 	int w, h;
 
-	wchar_t *temp = chrtowc(lua_tostring(L, 2));
-	structs.surface->DrawGetTextSize(lua_tointeger(L, 1), temp, w, h);
-	delete[] temp;
+
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert; // converter object saved somewhere
+
+	std::wstring output = convert.from_bytes(luaL_checkstring(L, 2));
+
+	structs.surface->DrawGetTextSize(lua_tointeger(L, 1), output.c_str(), w, h);
 
 	lua_pushinteger(L, w);
 	lua_pushinteger(L, h);

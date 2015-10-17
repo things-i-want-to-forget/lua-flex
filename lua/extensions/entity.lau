@@ -4,7 +4,7 @@ local function nothing(self, w) return w end
 
 local function netvar(mt, type, name, var, mod)
 	local f = mt["GetNW"..type];
-	
+
 	local offset = -1;
 	local r;
 	mt[name] = function(self)

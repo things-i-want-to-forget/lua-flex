@@ -8,7 +8,7 @@
 
 #pragma warning(disable : 4244)
 
-static ClientEntity *GetEntity(lua_State *L, int where = -1)
+ClientEntity *GetEntity(lua_State *L, int where = -1)
 {
 	CBaseHandle &handle = Get<CBaseHandle>(L, "Entity", where);
 

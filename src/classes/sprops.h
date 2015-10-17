@@ -34,6 +34,7 @@ struct surfacesoundnames_t // +36
 	unsigned short	impactHard;
 
 	unsigned short	scrapeSmooth;
+
 	unsigned short	scrapeRough;
 
 	unsigned short	bulletImpact;

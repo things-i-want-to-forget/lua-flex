@@ -86,6 +86,9 @@ int Ltrace_Ray(lua_State *L)
 		LPush(L, result.startpos, "Vector");
 		lua_setfield(L, -2, "startpos");
 
+		LPush(L, result.plane.normal, "Vector");
+		lua_setfield(L, -2, "normal");
+
 		lua_pushnumber(L, result.fraction);
 		lua_setfield(L, -2, "fraction");
 

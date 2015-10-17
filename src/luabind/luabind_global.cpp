@@ -6,6 +6,7 @@
 #include "../lau/lau.h"
 #include "../classes/engineclient.h"
 #include "../classes/entities.h"
+#include "classes/usercmd.h"
 #include "../classes/globals.h"
 #include <Windows.h>
 #pragma comment(lib, "tier0.lib")
@@ -163,6 +164,25 @@ int L_GetScreenSize(lua_State *L)
 	return 2;
 }
 
+int L_GenerateUserCmd(lua_State *L)
+{
+
+	CUserCmd *cmd = (CUserCmd *)malloc(0x300);
+	LPush(L, cmd, "CUserCmd");
+
+	return 1;
+
+}
+
+int L_DestroyUserCmd(lua_State *L)
+{
+
+	free(Get<CUserCmd *>(L, "CUserCmd", 1));
+
+	return 0;
+
+}
+
 luaL_Reg GlobalLibrary[] = {
 	{ "print", L_print },
 	{ "Vector", L_Vector },
@@ -177,5 +197,7 @@ luaL_Reg GlobalLibrary[] = {
 	{ "LocalPlayer", L_LocalPlayer },
 	{ "GetAsyncKeyState", L_GetAsyncKeyState },
 	{ "GetScreenSize", L_GetScreenSize },
+	{ "GenerateUserCmd", L_GenerateUserCmd },
+	{ "DestroyUserCmd", L_DestroyUserCmd },
 	{ 0, 0 }
 };
