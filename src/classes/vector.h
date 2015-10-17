@@ -5,6 +5,9 @@
 #include <cmath>
 #include "drawing.h"
 #include "math.h"
+#include "xmmintrin.h"
+
+#define VECTOR_FUNCTION static
 
 class Vector;
 class QAngle;
@@ -50,7 +53,13 @@ public:
 	}
 	inline float Dot(const Vector &o) const
 	{
-		return x * o.x + y * o.y + z * o.z;
+
+		float out[4];
+
+		_mm_store_ps(out, _mm_mul_ps(_mm_set_ps(x, y, z, 0), _mm_set_ps(o.x, o.y, o.z, 0)));
+
+		return out[3] + out[2] + out[1];
+
 	}
 	inline Vector Transform(matrix3x4_t matrix)
 	{
@@ -60,7 +69,12 @@ public:
 	}
 	inline float Dot(const float *o) const
 	{
-		return x * o[0] + y * o[1] + z * o[2];
+		float out[4];
+
+		_mm_store_ps(out, _mm_mul_ps(_mm_set_ps(x, y, z, 0), _mm_set_ps(o[0], o[1], o[2], 0)));
+
+		return out[3] + out[2] + out[1];
+
 	}
 	inline void Rotate(const QAngle &angle)
 	{
@@ -80,11 +94,22 @@ public:
 	}
 	inline float LengthSqr(void) const
 	{
-		return y * y + z * z + x * x;
+
+		float out[4];
+		_mm_store_ps(out, _mm_mul_ps(_mm_set_ps(x,y,z,1), _mm_set_ps(x,y,z,1)));
+
+		return out[3] + out[2] + out[1];
+
 	}
 	inline float Length(void) const
 	{
-		return sqrtf(LengthSqr());
+
+		float out;
+
+		_mm_store_ss(&out, _mm_sqrt_ss(_mm_set_ss(LengthSqr())));
+
+		return out;
+
 	}
 
 	inline float Distance(Vector v2) const
@@ -94,7 +119,11 @@ public:
 
 	Vector operator-(const Vector &b)
 	{
-		return Vector(x - b.x, y - b.y, z - b.z);
+		float out[4];
+
+		_mm_store_ps(out, _mm_sub_ps(_mm_set_ps(x, y, z, 0), _mm_set_ps(b.x, b.y, b.z, 0)));
+
+		return Vector(out[3], out[2], out[1]);
 	}
 
 	Vector operator *(float amount)
@@ -119,15 +148,21 @@ public:
 	}
 };
 
-inline Vector operator+(const Vector &a, const Vector &b)
+VECTOR_FUNCTION Vector operator+(const Vector &a, const Vector &b)
 {
 	return Vector(a.x + b.x, a.y + b.y, a.z + b.z);
 }
-inline Vector operator-(const Vector &a, const Vector &b)
+
+VECTOR_FUNCTION Vector operator-(const Vector &a, const Vector &b)
 {
-	return Vector(a.x - b.x, a.y - b.y, a.z - b.z);
+	float out[4];
+
+	_mm_store_ps(out, _mm_sub_ps(_mm_set_ps(a.x, a.y, a.z, 0), _mm_set_ps(b.x, b.y, b.z, 0)));
+
+	return Vector(out[3], out[2], out[1]);
 }
-inline Vector &operator+=(Vector &a, const Vector &b)
+
+VECTOR_FUNCTION Vector &operator+=(Vector &a, const Vector &b)
 {
 	a.x += b.x;
 	a.y += b.y;
@@ -135,7 +170,7 @@ inline Vector &operator+=(Vector &a, const Vector &b)
 	return a;
 }
 
-inline Vector &operator /=(Vector &v, float n)
+VECTOR_FUNCTION Vector &operator /=(Vector &v, float n)
 {
 	v.x /= n;
 	v.y /= n;
@@ -143,20 +178,22 @@ inline Vector &operator /=(Vector &v, float n)
 	return v;
 }
 
-inline Vector operator*(const Vector &v, const float &v2)
+VECTOR_FUNCTION Vector operator*(const Vector &v, const float &v2)
 {
 	return Vector(v.x * v2, v.y * v2, v.z * v2);
 }
 
-inline Vector operator/(const Vector &v, const float &v2)
+VECTOR_FUNCTION Vector operator/(const Vector &v, const float &v2)
 {
 	return Vector(v / v2);
 }
 
 
-inline bool operator==(const Vector &v, const Vector &v2)
+VECTOR_FUNCTION bool operator==(const Vector &v, const Vector &v2)
 {
-	return v.x == v2.x && v.y == v2.y && v.z == v2.z;
+
+	return _mm_movemask_ps(_mm_cmpneq_ps(_mm_set_ps(v.x, v.y, v.z, 0), _mm_set_ps(v2.x, v2.y, v2.z, 0))) == 0;
+
 }
 
 class VectorAligned : public Vector

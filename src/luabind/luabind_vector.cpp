@@ -226,9 +226,9 @@ int L_Vector_Angle(lua_State *L)
 int L_Vector_LengthSqr(lua_State *L) 
 {
 
-	Vector *vector = ( Vector * ) lua_touserdata(L, 1);
+	Vector &vector = GetVector(L, 1);
 
-	lua_pushnumber(L, vector->LengthSqr());
+	lua_pushnumber(L, vector.LengthSqr());
 	return 1;
 
 }
@@ -236,9 +236,9 @@ int L_Vector_LengthSqr(lua_State *L)
 int L_Vector_Length(lua_State *L) 
 {
 
-	Vector *vector = ( Vector * ) lua_touserdata(L, 1);
+	Vector &vector = GetVector(L, 1);
 
-	lua_pushnumber(L, vector->Length());
+	lua_pushnumber(L, vector.Length());
 	return 1;
 
 }

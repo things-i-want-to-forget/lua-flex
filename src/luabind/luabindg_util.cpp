@@ -104,13 +104,6 @@ bool CanAutowall(ClientEntity *other, const Vector &_startpos, const Vector &end
 	int hitsleft = 4;
 	Vector result(_startpos);
 
-	for (int i = 0; i < structs.sprops->SurfacePropCount(); i++)
-	{
-
-
-
-	}
-
 	do
 	{
 

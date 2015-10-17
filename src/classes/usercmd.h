@@ -35,6 +35,10 @@ public:
 	{
 		return *(float*)((version >= CSGO ? 12 : 0) + _offset(forwardmove_) + (char *)this);
 	}
+	float &upmove(void)
+	{
+		return *(float*)((version >= CSGO ? 12 : 0) + _offset(upmove_) + (char *)this);
+	}
 	Vector &movement(void)
 	{
 		return *(Vector *)((version >= CSGO ? 12 : 0) + _offset(forwardmove_) + (char *)this);

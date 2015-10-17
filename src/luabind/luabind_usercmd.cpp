@@ -52,6 +52,9 @@ int L_CMD___index(lua_State *L)
 	else if (!strcmp(str, "forwardmove"))
 		lua_pushnumber(L, cmd->forwardmove());
 
+	else if (!strcmp(str, "upmove"))
+		lua_pushnumber(L, cmd->upmove());
+
 	else if (!strcmp(str, "sendpacket"))
 		lua_pushboolean(L, bSendPacket != false);
 
@@ -75,39 +78,42 @@ int L_CMD___newindex(lua_State *L)
 
 	CUserCmd *cmd = GetCUserCmd(L, 1);
 
-	const char *str = lua_tostring(L, 2);
+	const char *str = luaL_checkstring(L, 2);
 	if (!strcmp(str, "angles"))
 		cmd->angles = GetAngle(L, 3);
 
 	else if (!strcmp(str, "p"))
-		cmd->angles.p = lua_tonumber(L, 3);
+		cmd->angles.p = luaL_checknumber(L, 3);
 
 	else if (!strcmp(str, "y"))
-		cmd->angles.y = lua_tonumber(L, 3);
+		cmd->angles.y = luaL_checknumber(L, 3);
 
 	else if (!strcmp(str, "r"))
-		cmd->angles.r = lua_tonumber(L, 3);
+		cmd->angles.r = luaL_checknumber(L, 3);
 
 	else if (!strcmp(str, "buttons"))
-		cmd->buttons() = lua_tointeger(L, 3);
+		cmd->buttons() = luaL_checkinteger(L, 3);
 
 	else if (!strcmp(str, "sendpacket"))
 		bSendPacket = 1 == lua_toboolean(L, 3);
 
 	else if (!strcmp(str, "tickcount"))
-		cmd->tickcount = lua_tointeger(L, 3);
+		cmd->tickcount = luaL_checkinteger(L, 3);
 
 	else if (!strcmp(str, "mousex"))
-		cmd->mousex() = lua_tonumber(L, 3);
+		cmd->mousex() = luaL_checknumber(L, 3);
 
 	else if (!strcmp(str, "mousey"))
-		cmd->mousey() = lua_tonumber(L, 3);
+		cmd->mousey() = luaL_checknumber(L, 3);
 
 	else if (!strcmp(str, "sidemove"))
-		cmd->sidemove() = lua_tonumber(L, 3);
+		cmd->sidemove() = luaL_checknumber(L, 3);
 
 	else if (!strcmp(str, "forwardmove"))
-		cmd->forwardmove() = lua_tonumber(L, 3);
+		cmd->forwardmove() = luaL_checknumber(L, 3);
+
+	else if (!strcmp(str, "upmove"))
+		cmd->upmove() = luaL_checknumber(L, 3);
 
 	else
 	{

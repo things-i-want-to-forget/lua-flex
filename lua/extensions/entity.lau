@@ -2,13 +2,20 @@ local m = FindMetaTable"Entity";
 
 local function nothing(self, w) return w end
 
-local function netvar(mt, type, name, var, mod)
+local function netvar(mt, type, name, var, mod, offset2)
 	local f = mt["GetNW"..type];
 
 	local offset = -1;
 	local r;
+	offset2 = offset2 or 0;
+	local hasgotten = false;
+
 	mt[name] = function(self)
 		r, offset = f(self, var, offset);
+		if(not hasgotten) then
+			offset += offset2;
+			hasgotten = true
+		end
 		return (mod or nothing)(self, r);
 	end
 end
@@ -19,6 +26,9 @@ netvar(m, "Angle", "EyeAngles", "m_angEyeAngles[0]");
 netvar(m, "Vector", "ShootPos", "m_vecViewOffset[0]", function(self, w) return w + self:GetPos(); end);
 netvar(m, "Int", "Health", "m_iHealth");
 netvar(m, "Int", "Team", "m_iTeamNum");
+
+netvar(m, "Int", "LifeState", "m_lifeState", function(self,w) return w & 0xFF; end);
+netvar(m, "Int", "MoveType", "m_lifeState", function(self, w) return w & 0xFF; end, -3);
 
 netvar(m, "Angle", "Rotation", "m_angRotation");
 
