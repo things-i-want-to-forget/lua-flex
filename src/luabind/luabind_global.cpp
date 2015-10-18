@@ -183,6 +183,13 @@ int L_DestroyUserCmd(lua_State *L)
 
 }
 
+int L_RunConsoleCommand(lua_State *L)
+{
+	structs.engine->ClientCmd_Unrestricted(luaL_checkstring(L, 1));
+
+	return 0;
+}
+
 luaL_Reg GlobalLibrary[] = {
 	{ "print", L_print },
 	{ "Vector", L_Vector },
@@ -199,5 +206,6 @@ luaL_Reg GlobalLibrary[] = {
 	{ "GetScreenSize", L_GetScreenSize },
 	{ "GenerateUserCmd", L_GenerateUserCmd },
 	{ "DestroyUserCmd", L_DestroyUserCmd },
+	{ "RunConsoleCommand", L_RunConsoleCommand },
 	{ 0, 0 }
 };
