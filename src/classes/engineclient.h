@@ -69,6 +69,11 @@ public:
 	{
 		return get<CNetChannel *(__thiscall *)(void *)>(78)(this);
 	}
+	
+	void ClientCmd_Unrestricted(const char *cmd)
+	{
+		return get<void(__thiscall *)(void *, const char *)>(108)(this, cmd);
+	}
 };
 
 #endif // ENGINECLIENT_H
