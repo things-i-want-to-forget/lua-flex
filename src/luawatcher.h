@@ -1,11 +1,23 @@
 #ifndef LUA_WATCHER
 #define LUA_WATCHER
-#include "lua.hpp"
-#include "windows.h"
-#include "classes/structures.h"
+#include <Windows.h>
 
-namespace fileChecker {          // file with attributes to copy
-	void checkDir();
-}
+typedef void(*NotifyFileChanged_t)();
+
+class CFileWatcher
+{
+
+private:
+
+	HANDLE handle;
+	OVERLAPPED overlapped;
+	NotifyFileChanged_t changed;
+
+public:
+	CFileWatcher(const char *file, NotifyFileChanged_t changed);
+	bool Query(void)
+
+};
+
 
 #endif

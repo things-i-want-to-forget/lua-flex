@@ -1,52 +1,49 @@
 #include "luawatcher.h"
 #include "classes/structures.h"
 #include "lau/lau.h"
+#include <Windows.h>
 
-namespace fileChecker {
-	void checkDir()
+CFileWatcher::CFileWatcher(const char *dir, NotifyFileChanged_t changed)
+{
+	handle = CreateFileA(
+		dir,
+		FILE_LIST_DIRECTORY,
+		FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+		NULL,
+		OPEN_EXISTING,
+		FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED,
+		NULL
+	);
+
+	this->changed = changed;
+}
+
+bool CFileWatcher::Query(void)
+{
+	char buffer[1024];
+	if (ReadDirectoryChangesW(handle, &buffer, sizeof(buffer), true, FILE_NOTIFY_CHANGE_FILE_NAME | FILE_NOTIFY_CHANGE_CREATION | FILE_NOTIFY_CHANGE_LAST_WRITE, NULL, &overlapped, NULL))
 	{
-		static OVERLAPPED over;
-		static HANDLE hDir = 0;
-		if (!hDir)
+		
+		DWORD bytes = 0;
+		GetOverlappedResult(handle, &overlapped, &bytes, FALSE);
+		ResetEvent(overlapped.hEvent);
+		if (bytes <= 0)
+			return;
+
+		int offset = 0;
+		FILE_NOTIFY_INFORMATION *notify = 0;
+		do
 		{
-			hDir = CreateFileA(
-				"C:\\aim-flex\\lua",           // pointer to the file name
-				FILE_LIST_DIRECTORY,    // access (read/write) mode
-				FILE_SHARE_READ         // share mode
-				| FILE_SHARE_WRITE
-				| FILE_SHARE_DELETE,
-				NULL, // security descriptor
-				OPEN_EXISTING,         // how to create
-				FILE_FLAG_BACKUP_SEMANTICS // file attributes
-				| FILE_FLAG_OVERLAPPED,
-				NULL);
-		}
-		char buffer[1024];
-		if (ReadDirectoryChangesW(hDir, &buffer, sizeof(buffer), true, FILE_NOTIFY_CHANGE_FILE_NAME | FILE_NOTIFY_CHANGE_CREATION | FILE_NOTIFY_CHANGE_LAST_WRITE, NULL, &over, NULL)) {
-			DWORD bytes = 0;
-			GetOverlappedResult(hDir, &over, &bytes, FALSE);
-			ResetEvent(over.hEvent);
-			if (bytes > 0) 
+			notify = (FILE_NOTIFY_INFORMATION *)&buffer[offset];
+			offset += notify->NextEntryOffset;
+			if (notify->FileNameLength > 0) 
 			{
-				int offset = 0;
-				FILE_NOTIFY_INFORMATION *notify = 0;
-				do
-				{
-					notify = (FILE_NOTIFY_INFORMATION*)(buffer + offset);
-					offset += notify->NextEntryOffset;
-					if (notify->FileNameLength > 0) {
-						if (structs.L->RunLuaFile("init.lua", true) == -1)
-						{
-							MessageBoxA(0, lua_tostring(structs.L->GetState(), -1), "ERROR", MB_OK);
-							lua_pop(structs.L->GetState(), 1);
-						}
-						break;
-					}
-				} while (notify && notify->NextEntryOffset != 0);
+				changed();
 			}
-		}
-		memset(&over, 0, sizeof(over));
-		ResetEvent(over.hEvent);
-		CancelIo(hDir);
+		} while (notify && notify->NextEntryOffset != 0);
 	}
+	memset(&overlapped, 0, sizeof(overlapped));
+
+	ResetEvent(overlapped.hEvent);
+	CancelIo(handle);
 }

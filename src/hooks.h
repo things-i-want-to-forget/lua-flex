@@ -1,6 +1,8 @@
 #include "vtable.h"
 
-namespace hook {
+namespace HOOK
+{
+
 	extern VTable *client_mode_vt;
 	extern VTable *prediction_vt;
 	extern VTable *panel_vt;
