@@ -24,7 +24,7 @@ solution "lua-flex"
 
 		buildoptions { "/Os", "/MP", "/arch:SSE2" }
 
-		libdirs { "lib", "lau/build" }
+		libdirs { "lib", "lau/build", "constlib" }
 		links   { "user32", "lau/lib/lau531" }
 		includedirs {
 			"lau/src",

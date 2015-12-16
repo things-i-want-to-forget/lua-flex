@@ -37,6 +37,8 @@ project "lau531"
     kind "StaticLib"
     targetdir "lib"
 
+    buildoptions "/TP /wd4624"
+
     links ( lua_os_links[ os.get() ] )
 
     defines ( lua_os_defines[ os.get() ] )

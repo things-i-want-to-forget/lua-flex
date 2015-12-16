@@ -240,6 +240,7 @@ static void close_state (lua_State *L) {
     luaZ_freebuffer(L, &g->buff);
     freestack(L);
     lua_assert(gettotalbytes(g) == sizeof(LG));
+	delete &L->mutex;
     (*g->frealloc)(g->ud, fromstate(L), sizeof(LG), 0);    /* free main block */
 }
 
@@ -292,6 +293,7 @@ LUA_API lua_State *lua_newstate (lua_Alloc f, void *ud) {
     if (l == NULL) return NULL;
     L = &l->l.l;
     g = &l->g;
+	new (&L->mutex) std::mutex;
     L->next = NULL;
     L->tt = LUA_TTHREAD;
     g->currentwhite = bitmask(WHITE0BIT);

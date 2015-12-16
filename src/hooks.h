@@ -1,6 +1,6 @@
 #include "vtable.h"
 
-namespace HOOK
+namespace HOOKS
 {
 
 	extern VTable *client_mode_vt;

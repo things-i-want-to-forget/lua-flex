@@ -100,7 +100,10 @@ int L_IsInGame(lua_State *L)
 int L_include(lua_State *L)
 {
 
-	return structs.L->RunLuaFile(lua_tostring(L, 1));
+	if (!structs.L->RunLuaFile(lua_tostring(L, 1)))
+		lua_error(L);
+
+	return 1;
 
 }
 

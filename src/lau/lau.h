@@ -23,13 +23,12 @@ public:
 		return luadir;
 	}
 
-	int LoadBuffer(const char *contents, int content_length, const char *name = "=load");
 	long ReadLuaFile(const char *relpath, char **output);
 
 	// returns the amount of returns from running the file
 	// or -1 on error
-	int RunLuaFile(const char *relpath, bool safe = false);
-	void PushHookCall(void);
+	bool RunLuaFile(const char *relpath, bool safe = false);
+	bool PushHookCall(void);
 
 	const char *SafeCall(int args, int rets = 0);
 
@@ -50,7 +49,7 @@ inline t &Get(lua_State *L, const char *name, int where = -1)
 }
 
 template <typename t>
-inline void LPush(lua_State *L, t &what, const char *meta)
+inline void LPush(lua_State *L, t what, const char *meta)
 {
 
 	*(t *)lua_newuserdata(L, sizeof(what)) = what;

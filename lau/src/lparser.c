@@ -1235,7 +1235,7 @@ static void assignment (LexState *ls, struct LHS_assign *lh, int nvars) {
                 expdesc copy;
                 memcpy(&copy, &lh->v, sizeof(copy));
 
-                OpCode opc = (op - OPR_ADD) + OP_ADD;
+				OpCode opc = OpCode((op - OPR_ADD) + OP_ADD);
                 if(op == OPR_CONCAT)
                     opc = OP_CONCAT;
                 keychange(ls, opc, &lh->v, &copy, &e);

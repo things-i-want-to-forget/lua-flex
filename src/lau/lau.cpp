@@ -55,45 +55,42 @@ long Lau::ReadLuaFile(const char *relpath, char **output)
 	return length;
 }
 
-int Lau::LoadBuffer(const char *contents, int content_length, const char *name)
+bool Lau::RunLuaFile(const char *relpath, bool safe)
 {
 
-	return luaL_loadbuffer(GetState(), contents, content_length, name);
-
-}
-
-int Lau::RunLuaFile(const char *relpath, bool safe)
-{
-
-	int top;
 	char *contents;
 	long length;
 	int code;
-
-	top = lua_gettop(L);
+	bool ret = false;
 
 	if ((length = ReadLuaFile(relpath, &contents)) != 0)
 	{
-		code = LoadBuffer(contents, length, relpath);
+
+		code = luaL_loadbuffer(L, contents, length, relpath);
 		delete[] contents;
 		if (code == 0)
 		{
 			if (safe)
 			{
-				int r = lua_pcall(L, 0, 0, 0);
-				return r != 0 ? -1 : 0;
+
+				const char *str = SafeCall(0, 1);
+				if (str)
+					lua_pushstring(L, str);
+				else
+					ret = true;
+
 			}
 			else
-				lua_call(L, 0, LUA_MULTRET);
-			return lua_gettop(L) - top;
+				lua_call(L, 0, 1), ret = true;
+
+
 		}
 
-		lua_error(L);
-
-		return -1;
 	}
+	else
+		lua_pushstring(L, "File or file contents didn't exist!");
 
-	return -1;
+	return ret;
 
 }
 
@@ -108,18 +105,38 @@ const char *Lau::SafeCall(int args, int rets)
 	return err;
 }
 
-void Lau::PushHookCall(void)
+bool Lau::PushHookCall(void)
 {
+
+	bool ret = true;
+
 	lua_pushglobaltable(L);
 	lua_getfield(L, -1, "hook");
+
+	ret = lua_type(L, -1) == LUA_TTABLE; // check for TABLE type
+	if (!ret)
+	{
+		lua_pop(L, 2);
+		return false;
+	}
+
 	lua_getfield(L, -1, "Call");
 	lua_remove(L, -2); // pop hook table
 	lua_remove(L, -2); // pop global table
+
+	ret = lua_type(L, -1) == LUA_TFUNCTION;
+
+	if (!ret)
+		lua_pop(L, 1);
+
+	return ret;
+
 }
 
 extern luaL_Reg LuaAngleMetaTable[];
 extern luaL_Reg LuaVectorMetaTable[];
 extern luaL_Reg LuaEntityMetaTable[];
+extern luaL_Reg LuaClientClassMetaTable[];
 
 extern luaL_Reg LuaCMDMetaTable[];
 
@@ -129,6 +146,7 @@ extern luaL_Reg SurfaceLibrary[];
 extern luaL_Reg PlayerLibrary[];
 extern luaL_Reg UtilLibrary[];
 extern luaL_Reg TraceLibrary[];
+extern luaL_Reg EngineLibrary[];
 
 void Lau::Init(void)
 {
@@ -157,6 +175,12 @@ void Lau::Init(void)
 		luaL_setfuncs(L, LuaCMDMetaTable, 0);
 	}
 	lua_pop(L, 1);
+
+	luaL_newmetatable(L, "ClientClass");
+	{
+		luaL_setfuncs(L, LuaClientClassMetaTable, 0);
+	}
+	lua_pop(L, 1);
 	
 
 	lua_pushglobaltable(L);
@@ -168,6 +192,12 @@ void Lau::Init(void)
 			luaL_setfuncs(L, SurfaceLibrary, 0);
 		}
 		lua_setfield(L, -2, "surface");
+
+		lua_newtable(L);
+		{
+			luaL_setfuncs(L, EngineLibrary, 0);
+		}
+		lua_setfield(L, -2, "engine");
 
 		lua_newtable(L);
 		{
@@ -195,10 +225,10 @@ void Lau::Init(void)
 	}
 	lua_pop(L, 1);
 
-	if (RunLuaFile("init.lua", true) != 0)
+	if (!RunLuaFile("init.lua", true))
 	{
 		MessageBoxA(0, lua_tostring(L, -1), "ERROR", 0);
-		lua_pop(L, 1);
 	}
+	lua_pop(L, 1);
 
 }

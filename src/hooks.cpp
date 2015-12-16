@@ -27,63 +27,18 @@
 #define CLCREATEMOVE_INDEX (21)
 __declspec(dllimport) void __cdecl ConColorMsg(const Color &, const char *, ...);
 
-VTable *hook::client_mode_vt = 0;
-VTable *hook::prediction_vt = 0;
-VTable *hook::panel_vt = 0;
-VTable *hook::client_vt = 0;
+VTable *HOOKS::client_mode_vt = 0;
+VTable *HOOKS::prediction_vt = 0;
+VTable *HOOKS::panel_vt = 0;
+VTable *HOOKS::client_vt = 0;
 
 HHOOK KeyboardHookLLNext;
-
-LRESULT __stdcall KeyboardHookLL(int code, WPARAM wParam, LPARAM lParam)
-{
-	ConColorMsg(Color(255, 255, 255, 255), "imgay %p %p\n", wParam, lParam);
-	bool callnexthook = true;
-
-	if (code == HC_ACTION)
-	{
-
-		UINT vkey = ((PKBDLLHOOKSTRUCT)wParam)->vkCode;
-		char chr; // totally not stolen xdddd
-		if (wParam == VK_RETURN)
-		{
-			chr = '\n';
-		}
-		else
-		{
-			static BYTE ks[256];
-			GetKeyboardState(ks);
-
-			WORD w;
-			UINT scan = 0;
-			ToAscii(vkey, scan, ks, &w, 0);
-			chr = char(w);
-		}
-
-		auto state = structs.L->GetState();
-
-		structs.L->PushHookCall();
-		lua_pushstring(state, "KeyPressed");
-		lua_pushlstring(state, &chr, 1);
-		
-
-		if (structs.L->SafeCall(2, 1) == 0 && lua_toboolean(state, -1))
-			callnexthook = false;
-
-		lua_pop(state, 1);
-	}
-
-	if (callnexthook)
-		return CallNextHookEx(KeyboardHookLLNext, code, wParam, lParam);
-
-	return 0;
-}
-
 
 extern EngineVersion version;
 extern unsigned long font;
 
 using namespace csgolua;
-using namespace hook;
+using namespace HOOKS;
 
 bool bSendPacket = true;
 
@@ -180,16 +135,19 @@ bool __fastcall CreateMove_Hook(ClientModeShared *ths, void*, float frametime, C
 	{
 		auto state = structs.L->GetState();
 
-		structs.L->PushHookCall();
-
-		lua_pushstring(state, "CreateMove");
-		LPush(state, cmd, "CUserCmd");
-		lua_pushnumber(state, frametime);
-
-		const char *err = structs.L->SafeCall(3, 0);
-		if (err)
+		if (structs.L->PushHookCall())
 		{
-			ConColorMsg(print_color, "%s\n", err);
+
+			lua_pushstring(state, "CreateMove");
+			LPush(state, cmd, "CUserCmd");
+			lua_pushnumber(state, frametime);
+
+			const char *err = structs.L->SafeCall(3, 0);
+			if (err)
+			{
+				ConColorMsg(print_color, "%s\n", err);
+			}
+
 		}
 	}
 
@@ -211,74 +169,71 @@ void __fastcall SetLocalViewAngles_Hook(CPrediction *ths, void *, QAngle &ang)
 		lua_State *state = structs.L->GetState();
 
 		LPush(state, ang, "Angle");
-		
-		structs.L->PushHookCall();
 
-		lua_pushstring(state, "SetLocalViewAngles");
-		lua_pushvalue(state, -3);
-
-		const char *err = structs.L->SafeCall(2, 1);
-
-		if (err)
-			ConColorMsg(print_color, "%s\n", err);
-
-		else
+		if (structs.L->PushHookCall())
 		{
 
-			QAngle &GetAngle(lua_State *L, int where = -1);
-			if (lua_type(state, -1) == LUA_TUSERDATA)
-			{
+			lua_pushstring(state, "SetLocalViewAngles");
+			lua_pushvalue(state, -3);
 
-				ang = GetAngle(state, -1);
+			const char *err = structs.L->SafeCall(2, 1);
 
-			}
+			if (err)
+				ConColorMsg(print_color, "%s\n", err);
+
 			else
 			{
 
-				ang = GetAngle(state, -2);
+				QAngle &GetAngle(lua_State *L, int where = -1);
+				if (lua_type(state, -1) == LUA_TUSERDATA)
+					ang = GetAngle(state, -1);
+
+				else
+					ang = GetAngle(state, -2);
+
+				lua_pop(state, 2);
 
 			}
 
-			lua_pop(state, 2);
-
 		}
-
 
 
 	}
 	return OriginalFn(prediction_vt->getold(SETLOCALVIEWANGLES_INDEX))(ths, ang);
 }
 
+
 void __fastcall PaintTraverse_Hook(VPanelWrapper *ths, void *, unsigned int panel, bool something1, bool something2)
 {
+	static CFileWatcher *watcher = 0;
+	if (!watcher)
+		watcher = new CFileWatcher("C:\\aim-flex\\lua\\");
+
 	typedef void(__thiscall *OriginalFn)(void *, ulong, bool, bool);
 	OriginalFn(panel_vt->getold(PAINTTRAVERSE_INDEX))(ths, panel, something1, something2);
 	if (!strcmp(ths->GetName(panel), version == GARRYSMOD ? "OverlayPopupPanel" : "MatSystemTopPanel"))
 	{
 		auto state = structs.L->GetState();
-		structs.L->PushHookCall();
 
-		lua_pushstring(state, "Paint");
+		if (structs.L->PushHookCall())
+		{
 
-		const char *err = structs.L->SafeCall(1);
+			lua_pushstring(state, "Paint");
 
-		if (err)
-			ConColorMsg(print_color, "%s\n", err);
+			const char *err = structs.L->SafeCall(1);
 
-		fileChecker::checkDir();
+			if (err)
+				ConColorMsg(print_color, "%s\n", err);
+		}
+
+		if (watcher->Query())
+			structs.L->Init();
+
 	}
 }
 
-void hook::InitHooks() {
-
-	/*KeyboardHookLLNext = SetWindowsHookExA(WH_KEYBOARD_LL, &KeyboardHookLL, GetModuleHandleA("kernel32.dll"), 0);
-
-	if (KeyboardHookLLNext == NULL)
-	{
-		char temp[256];
-		sprintf_s(temp, "%p, %p", KeyboardHookLLNext, GetLastError());
-		MessageBoxA(0, temp, temp, 0);
-	}*/
+void HOOKS::InitHooks() 
+{
 
 	client_vt = new VTable(structs.client);
 	if (version == CSGO)
@@ -295,4 +250,5 @@ void hook::InitHooks() {
 
 	panel_vt = new VTable(structs.panel);
 	panel_vt->hook(PAINTTRAVERSE_INDEX, &PaintTraverse_Hook);
+
 }

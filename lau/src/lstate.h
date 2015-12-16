@@ -7,6 +7,8 @@
 #ifndef lstate_h
 #define lstate_h
 
+#include <mutex>
+
 #include "lua.h"
 
 #include "lobject.h"
@@ -171,6 +173,7 @@ struct lua_State {
     unsigned short nCcalls;    /* number of nested C calls */
     lu_byte hookmask;
     lu_byte allowhook;
+	std::mutex mutex;
 };
 
 
