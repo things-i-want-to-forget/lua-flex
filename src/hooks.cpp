@@ -158,8 +158,11 @@ bool __fastcall CreateMove_Hook(ClientModeShared *ths, void*, float frametime, C
 }
 
 
-void __fastcall SetLocalViewAngles_Hook(CPrediction *ths, void *, QAngle &ang)
+void __fastcall SetLocalViewAngles_Hook(CPrediction *ths, void *, QAngle &target_ang)
 {
+
+	QAngle ang = target_ang;
+
 	typedef void(__thiscall *OriginalFn)(void *, QAngle &);
 	auto me = structs.entity_list->GetClientEntity(structs.engine->GetLocalPlayer());
 
@@ -168,13 +171,12 @@ void __fastcall SetLocalViewAngles_Hook(CPrediction *ths, void *, QAngle &ang)
 
 		lua_State *state = structs.L->GetState();
 
-		LPush(state, ang, "Angle");
 
 		if (structs.L->PushHookCall())
 		{
 
 			lua_pushstring(state, "SetLocalViewAngles");
-			lua_pushvalue(state, -3);
+			LPush(state, ang, "Angle");
 
 			const char *err = structs.L->SafeCall(2, 1);
 
@@ -188,10 +190,7 @@ void __fastcall SetLocalViewAngles_Hook(CPrediction *ths, void *, QAngle &ang)
 				if (lua_type(state, -1) == LUA_TUSERDATA)
 					ang = GetAngle(state, -1);
 
-				else
-					ang = GetAngle(state, -2);
-
-				lua_pop(state, 2);
+				lua_pop(state, 1);
 
 			}
 

@@ -56,3 +56,27 @@ end
 function m:Alive()
 	return self:Health() > 0
 end
+
+local function RecurseAndCheckRecvTable(table, name)
+
+	if (table:GetName() == name) then return true; end
+
+    for i = 1, table:GetPropertyCount() do
+
+        local prop = table:GetProperty(i - 1);
+
+        if (prop:GetName() == "baseclass") then
+            return RecurseAndCheckRecvTable(prop:GetDatatable(), name);
+		end
+
+	end
+
+	return false;
+
+end
+
+function m:IsWeapon()
+
+	return RecurseAndCheckRecvTable(self:GetClientClass():GetRecvTable(), "DT_WeaponCSBase");
+
+end

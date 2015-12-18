@@ -33,24 +33,22 @@ long Lau::ReadLuaFile(const char *relpath, char **output)
 {
 	char temp[MAX_PATH + 1];
 	sprintf_s(temp, "%s%s", luadir, relpath);
-	_(temp);
 
 	FILE *file;
 	errno_t code;
 	if ((code = fopen_s(&file, temp, "rb")) != 0)
 		return 0;
-	_("b");
+
 	fseek(file, 0, SEEK_END);
 	long length = ftell(file);
 	fseek(file, 0, SEEK_SET);
 
-	_("c");
+
 	*output = new char[length];
 
 	fread(*output, 1, length, file);
 
 	fclose(file);
-	_("d");
 
 	return length;
 }
@@ -137,6 +135,8 @@ extern luaL_Reg LuaAngleMetaTable[];
 extern luaL_Reg LuaVectorMetaTable[];
 extern luaL_Reg LuaEntityMetaTable[];
 extern luaL_Reg LuaClientClassMetaTable[];
+extern luaL_Reg LuaRecvTableMetaTable[];
+extern luaL_Reg LuaRecvPropMetaTable[];
 
 extern luaL_Reg LuaCMDMetaTable[];
 
@@ -173,6 +173,18 @@ void Lau::Init(void)
 	luaL_newmetatable(L, "CUserCmd");
 	{
 		luaL_setfuncs(L, LuaCMDMetaTable, 0);
+	}
+	lua_pop(L, 1);
+
+	luaL_newmetatable(L, "RecvTable");
+	{
+		luaL_setfuncs(L, LuaRecvTableMetaTable, 0);
+	}
+	lua_pop(L, 1);
+
+	luaL_newmetatable(L, "RecvProp");
+	{
+		luaL_setfuncs(L, LuaRecvPropMetaTable, 0);
 	}
 	lua_pop(L, 1);
 

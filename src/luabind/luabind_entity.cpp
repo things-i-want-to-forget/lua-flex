@@ -28,20 +28,27 @@ int L_Entity_IsValid(lua_State *L)
 	return 1;
 }
 
-int L_Entity_IsPlayer(lua_State *L)
+int L_Entity_GetClientClass(lua_State *L)
 {
-	ClientEntity *e = GetEntity(L, 1);
-	VALIDATE(e);
-	lua_pushboolean(L, structs.tools->IsPlayer(e));
+
+	ClientEntity *ent = GetEntity(L, 1);
+
+	VALIDATE(ent);
+
+	LPush<ClientClass *>(L, ent->GetNetworkable()->GetClientClass(), "ClientClass");
+
 	return 1;
+
 }
 
-int L_Entity_IsWeapon(lua_State *L)
+int L_Entity_IsPlayer(lua_State *L)
 {
-	ClientEntity *e = GetEntity(L, 1);
-	VALIDATE(e);
-	lua_pushboolean(L, structs.tools->IsWeapon(e));
+
+	int index = (Get<CBaseHandle>(L, "Entity", 1) & ((1 << 12) - 1));
+
+	lua_pushboolean(L,  index >= 1 && index <= 64);
 	return 1;
+
 }
 
 int L_Entity_GetPos(lua_State *L)
@@ -124,6 +131,24 @@ int L_Entity_GetHitBoxBB(lua_State *L)
 	LPush(L, hb->bbmax, "Vector");
 
 	return 2;
+}
+
+int L_Entity_GetEHandle(lua_State *L)
+{
+
+	lua_pushinteger(L, Get<CBaseHandle>(L, "Entity", 1));
+
+	return 1;
+
+}
+
+int L_Entity_EntIndex(lua_State *L)
+{
+
+	lua_pushinteger(L, Get<CBaseHandle>(L, "Entity", 1) & ((1 << 12) - 1));
+
+	return 1;
+
 }
 
 int L_Entity_GetHitboxCount(lua_State *L)
@@ -310,6 +335,8 @@ int L_Entity_GetNWVector(lua_State *L)
 
 	return 2;
 }
+
+
 int L_Entity_GetNWAngle(lua_State *L)
 {
 	ClientEntity *e = GetEntity(L, 1);
@@ -343,15 +370,16 @@ int L_Entity___index(lua_State *L)
 
 
 luaL_Reg LuaEntityMetaTable[] = {
+	{ "GetEHandle", L_Entity_GetEHandle },
 	{ "GetHitboxGroup", L_Entity_GetHitBoxGroup },
 	{ "GetHitboxBone", L_Entity_GetHitboxBone },
 	{ "GetHitboxBB", L_Entity_GetHitBoxBB },
 	{ "GetHitboxName", L_Entity_GetHitboxName },
-	{ "IsWeapon", L_Entity_IsWeapon },
 	{ "IsValid", L_Entity_IsValid },
 	{ "IsPlayer", L_Entity_IsPlayer },
 	{ "GetPos", L_Entity_GetPos },
 	{ "IsDormant", L_Entity_IsDormant },
+	{ "GetClientClass", L_Entity_GetClientClass },
 	{ "SetupBones", L_Entity_SetupBones },
 	{ "GetHitboxCount", L_Entity_GetHitboxCount },
 	{ "OnGround", L_Entity_OnGround },
@@ -372,6 +400,7 @@ luaL_Reg LuaEntityMetaTable[] = {
 	{ "GetNWAngle", L_Entity_GetNWAngle },
 	{ "GetNWVector", L_Entity_GetNWVector },
 	{ "GetNWBool", L_Entity_GetNWBool },
+	{ "EntIndex", L_Entity_EntIndex },
 	{ "__index", L_Entity___index },
 	{ "__eq", L_Entity___eq },
 	{ 0, 0 }
