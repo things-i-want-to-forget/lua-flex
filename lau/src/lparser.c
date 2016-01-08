@@ -586,6 +586,7 @@ static int block_follow (LexState *ls, int withuntil) {
         switch (ls->t.token) {
                 case TK_ELSE: case TK_ELSEIF:
                 case TK_END: case TK_EOS:
+                case '}':
                         return 1;
                 case TK_UNTIL: return withuntil;
                 default: return 0;
@@ -791,9 +792,15 @@ static void body (LexState *ls, expdesc *e, int ismethod, int line) {
         }
         parlist(ls);
         checknext(ls, ')');
+        int braces = testnext(ls, '{');
         statlist(ls);
         new_fs.f->lastlinedefined = ls->linenumber;
-        check_match(ls, TK_END, TK_FUNCTION, line);
+
+        if (braces)
+            check_match(ls, '}', '{', line);
+        else
+            check_match(ls, TK_END, TK_FUNCTION, line);
+
         codeclosure(ls, e);
         close_func(ls);
 }
