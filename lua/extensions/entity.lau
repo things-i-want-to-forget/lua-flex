@@ -38,6 +38,8 @@ netvar(m, "Angle", "Punch", "m_aimPunchAngle");
 netvar(m, "Angle", "ViewPunch", "m_viewPunchAngle");
 netvar(m, "Int", "TickBase", "m_nTickBase");
 
+netvar(m, "Int", "ShotsFired", "m_iShotsFired")
+
 --weapons
 netvar(m, "Int", "Ammo", "m_iClip1");
 netvar(m, "Float", "NextPrimaryAttack", "m_flNextPrimaryAttack");
