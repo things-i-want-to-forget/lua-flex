@@ -47,9 +47,6 @@ netvar(m, "Float", "NextPrimaryAttack", "m_flNextPrimaryAttack");
 local function CurTime()
 	return LocalPlayer():TickBase() * TickInterval();
 end
-function m:CanShoot()
-	return self:GetActiveWeapon():Ammo() > 0 and self:GetActiveWeapon():NextPrimaryAttack() <= CurTime();
-end
 
 function m:AimVector()
 	return self:EyeAngles():Vector()

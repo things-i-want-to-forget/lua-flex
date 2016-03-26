@@ -384,6 +384,7 @@ luaL_Reg LuaEntityMetaTable[] = {
 	{ "GetHitboxCount", L_Entity_GetHitboxCount },
 	{ "OnGround", L_Entity_OnGround },
 	{ "IsOnGround", L_Entity_OnGround },
+	{ "CanShoot", L_Entity_CanShoot },
 	{ "GetActiveWeapon", L_Entity_GetActiveWeapon },
 	{ "GetWeaponName", L_Entity_GetWeaponName },
 	{ "GetPenetration", L_Entity_GetPenetration },
