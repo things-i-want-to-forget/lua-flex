@@ -93,13 +93,10 @@ bool CanAutowall(ClientEntity *other, const Vector &_startpos, const Vector &end
 			GetModuleHandleA("client.dll")
 		);
 
-	surfacedata_t *entersurf = structs.sprops->GetSurfaceData(ntr.surface.surfaceProps);
 	int usestaticvalues = 0;
 
 	Vector normal = (endpos - _startpos).GetNormalized();
 	float lengthleft = (endpos - _startpos).Length();
-
-	int material = entersurf->game.gamematerial;
 
 	int hitsleft = 4;
 	Vector result(_startpos);
@@ -113,6 +110,9 @@ bool CanAutowall(ClientEntity *other, const Vector &_startpos, const Vector &end
 
 		if (ntr.hitgroup != 0)
 			break;
+			
+		surfacedata_t *entersurf = structs.sprops->GetSurfaceData(ntr.surface.surfaceProps);
+		int material = entersurf->game.gamematerial;
 
 
 		if (BulletHandler(me, data->penetration(), material, &usestaticvalues, &ntr, &normal,
